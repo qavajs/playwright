@@ -1,11 +1,10 @@
 import { join } from 'node:path';
 import { PlaywrightWorld } from '@qavajs/playwright-runner-adapter';
-import memory from '@qavajs/memory';
 import { PageObject, $, $$ } from '@qavajs/po-playwright';
 
 export class QavajsPlaywrightWorld extends PlaywrightWorld {
     config: any;
-    memory: Memory;
+    memory!: Memory;
     po!: PageObject;
     $!: typeof $;
     $$!: typeof $$;
@@ -15,9 +14,6 @@ export class QavajsPlaywrightWorld extends PlaywrightWorld {
         const config = require(join(process.cwd(), process.env.CONFIG ?? 'config.js'));
         const profile = process.env.PROFILE ?? 'default';
         this.config = config[profile];
-        memory.register(this.config.memory);
-        memory.setLogger(this);
-        this.memory = memory;
     }
 
     async element(alias: string) {

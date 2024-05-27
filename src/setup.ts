@@ -1,6 +1,7 @@
 import { setWorldConstructor, Before } from '@cucumber/cucumber';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { po, $, $$ } from '@qavajs/po-playwright';
+import memory from '@qavajs/memory';
 
 setWorldConstructor(QavajsPlaywrightWorld);
 
@@ -10,4 +11,7 @@ Before(async function (this: QavajsPlaywrightWorld) {
     this.po = po;
     this.$ = $;
     this.$$ = $$;
+    memory.register(this.config.memory);
+    memory.setLogger(this);
+    this.memory = memory;
 });
