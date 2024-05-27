@@ -1,5 +1,5 @@
 import { DataTable } from '@cucumber/cucumber';
-import {QavajsPlaywrightWorld} from '../PlaywrightWorld';
+import {QavajsPlaywrightWorld} from '../QavajsPlaywrightWorld';
 
 function normalizeScenarioName(name: string): string {
     return name.replace(/\W/g, '-')

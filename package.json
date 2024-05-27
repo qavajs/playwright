@@ -1,6 +1,6 @@
 {
   "name": "@qavajs/steps-playwright",
-  "version": "0.47.0",
+  "version": "0.1.0",
   "description": "steps to interact with playwright",
   "main": "./index.js",
   "scripts": {
@@ -13,11 +13,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/qavajs/steps-playwright.git"
+    "url": "git+https://github.com/qavajs/playwright.git"
   },
   "authors": [
-    "Alexandr Galichenko",
-    "Alexandr Legchilov"
+    "Alexandr Galichenko"
   ],
   "license": "MIT",
   "bugs": {

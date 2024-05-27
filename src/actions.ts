@@ -1,6 +1,6 @@
 import { When } from '@cucumber/cucumber';
-import { expect, Browser, BrowserContext, Page } from '@playwright/test';
-import { QavajsPlaywrightWorld } from './PlaywrightWorld';
+import { expect, Page } from '@playwright/test';
+import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import {parseCoords, parseCoordsAsObject, sleep} from './utils/utils';
 
 /**

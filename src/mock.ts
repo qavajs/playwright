@@ -1,6 +1,6 @@
 import { When } from '@cucumber/cucumber';
 import { Route } from '@playwright/test';
-import { QavajsPlaywrightWorld } from './PlaywrightWorld';
+import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
 /**
  * Create simple mock instance

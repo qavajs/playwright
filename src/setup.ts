@@ -1,5 +1,5 @@
 import { setWorldConstructor, Before } from '@cucumber/cucumber';
-import { QavajsPlaywrightWorld } from './PlaywrightWorld';
+import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { po, $, $$ } from '@qavajs/po-playwright';
 
 setWorldConstructor(QavajsPlaywrightWorld);

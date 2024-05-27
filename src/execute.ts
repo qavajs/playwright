@@ -1,5 +1,5 @@
 import { When } from '@cucumber/cucumber';
-import { QavajsPlaywrightWorld } from './PlaywrightWorld';
+import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
 /**
  * Execute client function

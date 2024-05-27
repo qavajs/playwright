@@ -1,6 +1,6 @@
 import { DataTable, When } from '@cucumber/cucumber';
 import { dataTable2Object } from './utils/utils';
-import {QavajsPlaywrightWorld} from './PlaywrightWorld';
+import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
 /**
  * Save text of element to memory

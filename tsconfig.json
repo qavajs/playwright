@@ -15,7 +15,6 @@
     "strict": true,
     "skipLibCheck": true,
     "types": [
-      "./globals.d.ts",
       "node"
     ]
   }

@@ -1,7 +1,6 @@
 import { When } from '@cucumber/cucumber';
 import { Cookie } from '@playwright/test';
-import { QavajsPlaywrightWorld } from './PlaywrightWorld';
-
+import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
 /**
  * Set cookie
