@@ -5,7 +5,6 @@
   "main": "./index.js",
   "scripts": {
     "build": "tsc",
-    "test": "vitest --coverage run",
     "start:server": "ts-node test-e2e/support/server.ts",
     "install:browsers": "playwright install",
     "debug:e2e": "playwright test --config test-e2e/playwright.config.ts --ui",
@@ -32,8 +31,7 @@
     "@types/node": "^20.12.12",
     "express": "^4.19.2",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
-    "vitest": "^1.6.0"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@playwright/test": "^1.44.0"
