@@ -11,5 +11,5 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :microscope: - experimental
 
 ## [0.1.0]
-- :rocket: updated dependencies
+- :rocket: initial implementation
 

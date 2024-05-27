@@ -9,7 +9,7 @@ jobs:
   test:
     strategy:
       matrix:
-        version: [ 18, 20, 22 ]
+        version: [ 20, 22 ]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,5 +25,5 @@ jobs:
         uses: mikepenz/action-junit-report@v4
         if: always()
         with:
-          report_paths: './test-e2e/report.xml'
+          report_paths: './test-e2e/report/report.xml'
           fail_on_failure: true
