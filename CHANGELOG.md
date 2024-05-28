@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore
 :microscope: - experimental
 
+## [0.2.0]
+- :pencil: updated dependencies
+ 
 ## [0.1.0]
 - :rocket: initial implementation
 
