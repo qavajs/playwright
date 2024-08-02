@@ -1,1 +1,1 @@
-export * from 'src/QavajsPlaywrightWorld';
+export * from './src/QavajsPlaywrightWorld';

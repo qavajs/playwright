@@ -43,12 +43,5 @@ Install playwright browsers
 Build lib
 `npm run build`
 
-Execute unit test (with vitest)
-`npm run test`
-
 Execute e2e browser tests
 `npm run test:e2e`
-
-Execute e2e electron tests
-`npm run test:e2e:electron`
-

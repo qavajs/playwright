@@ -11,6 +11,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :microscope: - experimental
 
 ## [0.2.0]
+- :rocket: added built-in page object
+- :beetle: added utils.ts to steps bundle
 - :pencil: updated dependencies
  
 ## [0.1.0]
