@@ -24,11 +24,13 @@ export default {
 ```
 playwright.config.ts
 ```typescript
-proces.env.CONFIG = 'cucumber.ts';
-proces.env.PROFILE = 'default';
+import { defineCucumber } from '@qavajs/playwright-runner-adapter';
 
 export default defineConfig({
-    testDir: resolve('node_modules/@qavajs/playwright-runner-adapter/adapter'),
+    testDir: defineCucumber({
+        config: 'test-e2e/config.ts',
+        profile: 'smoke'
+    }),
     ...
 });
 ```
