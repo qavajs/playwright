@@ -1,4 +1,5 @@
-import { $, $$, Component } from '@qavajs/po-playwright';
+import { $, $$, Component } from '../../po';
+
 export default class App {
     SimpleTextElement = $('#textValue');
     SimpleTextListItems = $$('#textValueList li');

@@ -24,11 +24,13 @@ export default {
 ```
 playwright.config.ts
 ```typescript
-proces.env.CONFIG = 'cucumber.ts';
-proces.env.PROFILE = 'default';
+import { defineCucumber } from '@qavajs/playwright-runner-adapter';
 
 export default defineConfig({
-    testDir: resolve('node_modules/@qavajs/playwright-runner-adapter/adapter'),
+    testDir: defineCucumber({
+        config: 'test-e2e/config.ts',
+        profile: 'smoke'
+    }),
     ...
 });
 ```
@@ -43,12 +45,5 @@ Install playwright browsers
 Build lib
 `npm run build`
 
-Execute unit test (with vitest)
-`npm run test`
-
 Execute e2e browser tests
 `npm run test:e2e`
-
-Execute e2e electron tests
-`npm run test:e2e:electron`
-

@@ -1,8 +1,5 @@
-import {defineConfig, devices} from '@playwright/test';
-import {resolve} from 'node:path';
-
-process.env.CONFIG = 'test-e2e/config.ts'
-process.env.PROFILE = 'default'
+import { defineConfig, devices } from '@playwright/test';
+import { defineCucumber } from '@qavajs/playwright-runner-adapter';
 
 /**
  * Read environment variables from file.
@@ -14,7 +11,9 @@ process.env.PROFILE = 'default'
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-    testDir: resolve('./node_modules/@qavajs/playwright-runner-adapter/adapter'),
+    testDir: defineCucumber({
+        config: 'test-e2e/config.ts'
+    }),
     /* Run tests in files in parallel */
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */

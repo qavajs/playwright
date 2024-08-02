@@ -1,10 +1,11 @@
 import { join } from 'node:path';
 import { PlaywrightWorld } from '@qavajs/playwright-runner-adapter';
 import { PageObject, $, $$ } from '@qavajs/po-playwright';
+import memory from '@qavajs/memory';
 
 export class QavajsPlaywrightWorld extends PlaywrightWorld {
     config: any;
-    memory!: Memory;
+    memory!: typeof memory;
     po!: PageObject;
     $!: typeof $;
     $$!: typeof $$;
