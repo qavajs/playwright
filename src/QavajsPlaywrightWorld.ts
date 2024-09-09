@@ -2,6 +2,7 @@ import { join } from 'node:path';
 import { PlaywrightWorld } from '@qavajs/playwright-runner-adapter';
 import { PageObject, $, $$ } from '@qavajs/po-playwright';
 import memory from '@qavajs/memory';
+import { expect } from './validationExpect';
 
 export class QavajsPlaywrightWorld extends PlaywrightWorld {
     config: any;
@@ -9,6 +10,7 @@ export class QavajsPlaywrightWorld extends PlaywrightWorld {
     po!: PageObject;
     $!: typeof $;
     $$!: typeof $$;
+    expect = expect;
 
     constructor(options: any) {
         super(options);

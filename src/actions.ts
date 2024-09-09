@@ -1,7 +1,7 @@
 import { When } from '@cucumber/cucumber';
-import { expect, Page } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
-import {parseCoords, parseCoordsAsObject, sleep} from './utils/utils';
+import { parseCoords, parseCoordsAsObject, sleep } from './utils/utils';
 
 /**
  * Opens provided url
@@ -91,9 +91,8 @@ When('I clear {string}', async function (alias: string) {
  * Switch to parent frame
  * @example I switch to parent frame
  */
-When('I switch to parent frame', async function () {
-    // @ts-ignore
-    this.po.driver = this.page;
+When('I switch to parent frame', async function (this: QavajsPlaywrightWorld) {
+    this.po.setDriver(this.page);
 });
 
 /**
@@ -102,9 +101,8 @@ When('I switch to parent frame', async function () {
  * @example I switch to 2 frame
  */
 When('I switch to {int} frame', async function (this: QavajsPlaywrightWorld, index: number) {
-    await expect.poll(() => this.page.frames()?.length).toBeGreaterThan(index);
-    // @ts-ignore
-    this.po.driver = this.page.frames()[index];
+    await this.expect.poll(() => this.page.frames()?.length).toBeGreaterThan(index);
+    this.po.setDriver(this.page.frames()[index] as unknown as Page)
 });
 
 /**
@@ -112,12 +110,11 @@ When('I switch to {int} frame', async function (this: QavajsPlaywrightWorld, ind
  * @param {string} index - alias to switch
  * @example I switch to 'IFrame' frame
  */
-When('I switch to {string} frame', async function (frameAlias: string) {
+When('I switch to {string} frame', async function (this: QavajsPlaywrightWorld, frameAlias: string) {
     const frame = await this.element(frameAlias);
     const frameHandle = await frame.elementHandle();
     if (!frameHandle) throw new Error(`Frame '${frameHandle}' does not exist!`);
-    // @ts-ignore
-    this.po.driver = await frameHandle.contentFrame();
+    this.po.setDriver(await frameHandle.contentFrame() as unknown as Page)
 });
 
 /**
@@ -125,13 +122,12 @@ When('I switch to {string} frame', async function (frameAlias: string) {
  * @param {number} index - index to switch
  * @example I switch to 2 window
  */
-When('I switch to {int} window', async function (index: number) {
-    await expect.poll(
+When('I switch to {int} window', async function (this: QavajsPlaywrightWorld, index: number) {
+    await this.expect.poll(
         () => this.context.pages()?.length,
     ).toBeGreaterThan(index - 1);
     this.page = this.context.pages()[index - 1];
-    //@ts-ignore
-    this.po.driver = this.page;
+    this.po.setDriver(this.page)
     await this.page.bringToFront();
 });
 
@@ -150,7 +146,7 @@ When('I switch to {string} window', async function (matcher: string) {
             }
         }
     }
-    await expect.poll(
+    await this.expect.poll(
         poll,
         {
             message: `Page matching ${urlOrTitle} was not found`
@@ -158,8 +154,7 @@ When('I switch to {string} window', async function (matcher: string) {
     ).toBeDefined();
     const targetPage = await poll() as Page;
     this.page = targetPage;
-    // @ts-ignore
-    this.po.driver = targetPage;
+    this.po.setDriver(targetPage)
     await targetPage.bringToFront();
 });
 
@@ -286,7 +281,8 @@ When('I scroll by {string} in {string}', async function (offset: string, alias: 
  * When I scroll until 'Row 99' to be visible
  */
 When('I scroll until {string} to be visible', async function (targetAlias: string) {
-    const isVisible = async () => await (await this.element(targetAlias)).isVisible();
+    const locator = await this.element(targetAlias);
+    const isVisible = () => locator.isVisible();
     while (!await isVisible()) {
         await this.page.mouse.wheel(0, 100);
         await sleep(50);
@@ -303,7 +299,8 @@ When('I scroll until {string} to be visible', async function (targetAlias: strin
 When('I scroll in {string} until {string} to be visible', async function (scrollAlias: string, targetAlias: string) {
     const element = await this.element(scrollAlias);
     await element.hover();
-    const isVisible = async () => await (await this.element(targetAlias)).isVisible();
+    const locator = await this.element(targetAlias);
+    const isVisible = () => locator.isVisible();
     while (!await isVisible()) {
         await this.page.mouse.wheel(0, 100);
         await sleep(50);
@@ -396,12 +393,11 @@ When('I open new tab', async function () {
  * @example
  * Then I close current tab
  */
-When('I close current tab', async function () {
+When('I close current tab', async function (this: QavajsPlaywrightWorld) {
     await this.page.close()
     this.page = this.context.pages()[0]
     if (this.page) {
-        //@ts-ignore
-        this.po.driver = this.page;
+        this.po.setDriver(this.page)
         await this.page.bringToFront();
     }
 });

@@ -1,4 +1,5 @@
-import { Locator, expect } from '@playwright/test';
+import { expect } from './validationExpect';
+import { Locator } from '@playwright/test';
 
 export const conditionValidations = {
     PRESENT: 'present',
