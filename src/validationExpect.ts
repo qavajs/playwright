@@ -1,6 +1,6 @@
 import { expect as base } from '@playwright/test';
 
-const expect = base.extend({
+export const expect = base.extend({
     toSimpleEqual(actual: any, expected: any) {
         const pass = actual == expected;
         if (pass) {

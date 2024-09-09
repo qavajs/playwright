@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore
 :microscope: - experimental
 
+## [0.3.0]
+- :rocket: exposed _expect_ into world
+
 ## [0.2.0]
 - :rocket: added built-in page object
 - :beetle: added utils.ts to steps bundle
