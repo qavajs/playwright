@@ -1,5 +1,6 @@
 import { DataTable } from '@cucumber/cucumber';
-import {QavajsPlaywrightWorld} from '../QavajsPlaywrightWorld';
+import { QavajsPlaywrightWorld } from '../QavajsPlaywrightWorld';
+import {APIResponse, type Request} from '@playwright/test';
 
 function normalizeScenarioName(name: string): string {
     return name.replace(/\W/g, '-')
@@ -61,4 +62,19 @@ export async function dataTable2Object(ctx: QavajsPlaywrightWorld, dataTable: Da
  */
 export function dataTable2Array(ctx: QavajsPlaywrightWorld, dataTable: DataTable): Promise<any[]> {
     return Promise.all(dataTable.raw().map(([value]) => ctx.value(value)));
+}
+
+export async function sendHttpRequest(world: QavajsPlaywrightWorld, requestUrl: string, options: Record<string, string>): Promise<APIResponse> {
+    const response = await world.context.request.fetch(requestUrl, options);
+    Object.defineProperty(response, 'payload', {
+        get(): any {
+            if (this._isPayloadSet) return this._payload;
+            throw new Error(`'payload' property is not set.\nCall 'I parse {string} body as {bodyParsingType}' step`);
+        },
+        set(value: any) {
+            this._isPayloadSet = true;
+            this._payload = value;
+        }
+    });
+    return response;
 }

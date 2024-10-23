@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore
 :microscope: - experimental
 
+## [0.4.0]
+- :rocket: added http steps
+
 ## [0.3.0]
 - :rocket: exposed _expect_ into world
 

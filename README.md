@@ -1,5 +1,5 @@
 # @qavajs/playwright
-qavajs implementation on top of playwright runner
+qavajs implementation for playwright test runner
 
 ## Installation
 
