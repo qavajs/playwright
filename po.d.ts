@@ -1,1 +1,1 @@
-export * from '@qavajs/po-playwright';
+export * from 'src/pageObject';

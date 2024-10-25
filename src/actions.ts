@@ -1,16 +1,16 @@
 import { When } from '@cucumber/cucumber';
-import { Page } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { parseCoords, parseCoordsAsObject, sleep } from './utils/utils';
+import { MemoryValue } from './types';
 
 /**
  * Opens provided url
  * @param {string} url - url to navigate
  * @example I open 'https://google.com'
  */
-When('I open {string} url', async function (this: QavajsPlaywrightWorld, url: string) {
-    const urlValue = await this.value(url);
-    await this.page.goto(urlValue);
+When('I open {value} url', async function (this: QavajsPlaywrightWorld, url: MemoryValue) {
+    await this.page.goto(await url.value());
 });
 
 /**
@@ -19,10 +19,8 @@ When('I open {string} url', async function (this: QavajsPlaywrightWorld, url: st
  * @param {string} value - value to type
  * @example I type 'wikipedia' to 'Google Input'
  */
-When('I type {string} to {string}', async function (this: QavajsPlaywrightWorld, value: string, alias: string) {
-    const element = await this.element(alias);
-    const typeValue = await this.value(value);
-    await element.fill(typeValue);
+When('I type {value} to {locator}', async function (this: QavajsPlaywrightWorld, type: MemoryValue, locator: Locator) {
+    await locator.fill(await type.value());
 });
 
 /**
@@ -31,10 +29,8 @@ When('I type {string} to {string}', async function (this: QavajsPlaywrightWorld,
  * @param {string} value - value to type
  * @example I type 'wikipedia' chars to 'Google Input'
  */
-When('I type {string} chars to {string}', async function (this: QavajsPlaywrightWorld, value: string, alias: string) {
-    const element = await this.element(alias);
-    const typeValue = await this.value(value);
-    await element.pressSequentially(typeValue);
+When('I type {value} chars to {locator}', async function (this: QavajsPlaywrightWorld, type: MemoryValue, locator: Locator) {
+    await locator.pressSequentially(await type.value());
 });
 
 /**
@@ -42,9 +38,8 @@ When('I type {string} chars to {string}', async function (this: QavajsPlaywright
  * @param {string} alias - element to click
  * @example I click 'Google Button'
  */
-When('I click {string}', async function (this: QavajsPlaywrightWorld, alias: string) {
-    const element = await this.element(alias);
-    await element.click();
+When('I click {locator}', async function (this: QavajsPlaywrightWorld, locator: Locator) {
+    await locator.click();
 });
 
 /**
@@ -52,9 +47,8 @@ When('I click {string}', async function (this: QavajsPlaywrightWorld, alias: str
  * @param {string} alias - element to click
  * @example I force click 'Google Button'
  */
-When('I force click {string}', async function (this: QavajsPlaywrightWorld, alias: string) {
-    const element = await this.element(alias);
-    await element.evaluate((e: HTMLElement) => e.click());
+When('I force click {locator}', async function (this: QavajsPlaywrightWorld, locator: Locator) {
+    await locator.evaluate((e: HTMLElement) => e.click());
 });
 
 /**
@@ -62,9 +56,8 @@ When('I force click {string}', async function (this: QavajsPlaywrightWorld, alia
  * @param {string} alias - element to right click
  * @example I right click 'Google Button'
  */
-When('I right click {string}', async function (this: QavajsPlaywrightWorld, alias: string) {
-    const element = await this.element(alias);
-    await element.click({ button: 'right' });
+When('I right click {locator}', async function (this: QavajsPlaywrightWorld, locator: Locator) {
+    await locator.click({ button: 'right' });
 });
 
 /**
@@ -72,9 +65,8 @@ When('I right click {string}', async function (this: QavajsPlaywrightWorld, alia
  * @param {string} alias - double element to click
  * @example I double click 'Google Button'
  */
-When('I double click {string}', async function (alias: string) {
-    const element = await this.element(alias);
-    await element.dblclick();
+When('I double click {locator}', async function (locator: Locator) {
+    await locator.dblclick();
 });
 
 /**
@@ -82,39 +74,8 @@ When('I double click {string}', async function (alias: string) {
  * @param {string} alias - element to clear
  * @example I clear 'Google Input'
  */
-When('I clear {string}', async function (alias: string) {
-    const element = await this.element(alias);
-    await element.fill('');
-});
-
-/**
- * Switch to parent frame
- * @example I switch to parent frame
- */
-When('I switch to parent frame', async function (this: QavajsPlaywrightWorld) {
-    this.po.setDriver(this.page);
-});
-
-/**
- * Switch to frame by index
- * @param {number} index - index to switch
- * @example I switch to 2 frame
- */
-When('I switch to {int} frame', async function (this: QavajsPlaywrightWorld, index: number) {
-    await this.expect.poll(() => this.page.frames()?.length).toBeGreaterThan(index);
-    this.po.setDriver(this.page.frames()[index] as unknown as Page)
-});
-
-/**
- * Switch to frame by alias
- * @param {string} index - alias to switch
- * @example I switch to 'IFrame' frame
- */
-When('I switch to {string} frame', async function (this: QavajsPlaywrightWorld, frameAlias: string) {
-    const frame = await this.element(frameAlias);
-    const frameHandle = await frame.elementHandle();
-    if (!frameHandle) throw new Error(`Frame '${frameHandle}' does not exist!`);
-    this.po.setDriver(await frameHandle.contentFrame() as unknown as Page)
+When('I clear {locator}', async function (locator: Locator) {
+    await locator.fill('');
 });
 
 /**
@@ -127,7 +88,6 @@ When('I switch to {int} window', async function (this: QavajsPlaywrightWorld, in
         () => this.context.pages()?.length,
     ).toBeGreaterThan(index - 1);
     this.page = this.context.pages()[index - 1];
-    this.po.setDriver(this.page)
     await this.page.bringToFront();
 });
 
@@ -136,8 +96,8 @@ When('I switch to {int} window', async function (this: QavajsPlaywrightWorld, in
  * @param {string} matcher - url or title of window to switch
  * @example I switch to 'google' window
  */
-When('I switch to {string} window', async function (matcher: string) {
-    const urlOrTitle = await this.value(matcher);
+When('I switch to {value} window', async function (matcher: MemoryValue) {
+    const urlOrTitle = await this.value(await matcher.value());
     const poll = async () => {
         const pages = this.context.pages();
         for (const currentPage of pages) {
@@ -149,12 +109,11 @@ When('I switch to {string} window', async function (matcher: string) {
     await this.expect.poll(
         poll,
         {
-            message: `Page matching ${urlOrTitle} was not found`
+            message: `Page matching '${urlOrTitle}' was not found`
         }
     ).toBeDefined();
     const targetPage = await poll() as Page;
     this.page = targetPage;
-    this.po.setDriver(targetPage)
     await targetPage.bringToFront();
 });
 
@@ -194,9 +153,8 @@ When('I press {string} key(s) {int} time(s)', async function (key: string, num: 
  * @param {string} alias - element to hover over
  * @example I hover over 'Google Button'
  */
-When('I hover over {string}', async function (alias: string) {
-    const element = await this.element(alias);
-    await element.hover();
+When('I hover over {locator}', async function (locator: Locator) {
+    await locator.hover();
 });
 
 /**
@@ -206,10 +164,8 @@ When('I hover over {string}', async function (alias: string) {
  * @example I select '1900' option from 'Registration Form > Date Of Birth'
  * @example I select '$dateOfBirth' option from 'Registration Form > Date Of Birth' dropdown
  */
-When('I select {string} option from {string} dropdown', async function (option: string, alias: string) {
-    const optionValue = await this.value(option);
-    const select = await this.element(alias);
-    await select.selectOption({ label: optionValue });
+When('I select {value} option from {locator} dropdown', async function (option: MemoryValue, select: Locator) {
+    await select.selectOption({ label: await option.value()});
 });
 
 /**
@@ -218,8 +174,7 @@ When('I select {string} option from {string} dropdown', async function (option: 
  * @param {string} alias - alias of select
  * @example I select 1 option from 'Registration Form > Date Of Birth' dropdown
  */
-When('I select {int}(st|nd|rd|th) option from {string} dropdown', async function (optionIndex: number, alias: string) {
-    const select = await this.element(alias);
+When('I select {int}(st|nd|rd|th) option from {locator} dropdown', async function (optionIndex: number, select: Locator) {
     await select.selectOption({ index: optionIndex - 1 });
 });
 
@@ -231,11 +186,10 @@ When('I select {int}(st|nd|rd|th) option from {string} dropdown', async function
  * @example I click '$someVarWithText' text in 'Search Engines' collection
  */
 When(
-    'I click {string} text in {string} collection',
-    async function (value: string, alias: string) {
-        const resolvedValue = await this.value(value);
-        const collection = await this.element(alias);
-        await collection.getByText(resolvedValue).click();
+    'I click {value} text in {locator} collection',
+    async function (text: MemoryValue, collection: Locator) {
+        const hasText = await text.value();
+        await collection.filter({ hasText }).click();
     }
 );
 
@@ -245,8 +199,8 @@ When(
  * @example
  * When I scroll by '0, 100'
  */
-When('I scroll by {string}', async function (offset: string) {
-    const [x, y] = parseCoords(await this.value(offset));
+When('I scroll by {value}', async function (offset: MemoryValue) {
+    const [x, y] = parseCoords(await offset.value());
     await this.page.mouse.wheel(x, y);
 });
 
@@ -255,9 +209,8 @@ When('I scroll by {string}', async function (offset: string) {
  * @param {string} alias - alias of element
  * @example I scroll to 'Element'
  */
-When('I scroll to {string}', async function (alias) {
-    const element = await this.element(alias);
-    await element.scrollIntoViewIfNeeded();
+When('I scroll to {locator}', async function (locator: Locator) {
+    await locator.scrollIntoViewIfNeeded();
 });
 
 /**
@@ -267,10 +220,9 @@ When('I scroll to {string}', async function (alias) {
  * @example
  * When I scroll by '0, 100' in 'Overflow Container'
  */
-When('I scroll by {string} in {string}', async function (offset: string, alias: string) {
-    const [x, y] = parseCoords(await this.value(offset));
-    const element = await this.element(alias);
-    await element.hover();
+When('I scroll by {value} in {locator}', async function (offset: MemoryValue, locator: Locator) {
+    const [x, y] = parseCoords(await offset.value());
+    await locator.hover();
     await this.page.mouse.wheel(x, y);
 });
 
@@ -280,9 +232,8 @@ When('I scroll by {string} in {string}', async function (offset: string, alias: 
  * @example
  * When I scroll until 'Row 99' to be visible
  */
-When('I scroll until {string} to be visible', async function (targetAlias: string) {
-    const locator = await this.element(targetAlias);
-    const isVisible = () => locator.isVisible();
+When('I scroll until {locator} to be visible', async function (targetAlias: Locator) {
+    const isVisible = () => targetAlias.isVisible();
     while (!await isVisible()) {
         await this.page.mouse.wheel(0, 100);
         await sleep(50);
@@ -296,11 +247,9 @@ When('I scroll until {string} to be visible', async function (targetAlias: strin
  * @example
  * When I scroll in 'List' until 'Row 99' to be visible
  */
-When('I scroll in {string} until {string} to be visible', async function (scrollAlias: string, targetAlias: string) {
-    const element = await this.element(scrollAlias);
-    await element.hover();
-    const locator = await this.element(targetAlias);
-    const isVisible = () => locator.isVisible();
+When('I scroll in {locator} until {locator} to be visible', async function (scrollLocator: Locator, targetLocator: Locator) {
+    await scrollLocator.hover();
+    const isVisible = () => targetLocator.isVisible();
     while (!await isVisible()) {
         await this.page.mouse.wheel(0, 100);
         await sleep(50);
@@ -313,10 +262,8 @@ When('I scroll in {string} until {string} to be visible', async function (scroll
  * @param {string} value - file path
  * @example I upload '/folder/file.txt' to 'File Input'
  */
-When('I upload {string} file to {string}', async function (value: string, alias: string) {
-    const element = await this.element(alias);
-    const filePath = await this.value(value);
-    await element.setInputFiles(filePath);
+When('I upload {value} file to {locator}', async function (filePath: MemoryValue, locator: Locator) {
+    await locator.setInputFiles(await filePath.value());
 });
 
 /**
@@ -325,13 +272,11 @@ When('I upload {string} file to {string}', async function (value: string, alias:
  * @param {string} value - file path
  * @example I upload '/folder/file.txt' by clicking 'Upload Button'
  */
-When('I upload {string} file by clicking {string}', async function (value: string, alias: string) {
+When('I upload {value} file by clicking {locator}', async function (filePath: MemoryValue, locator: Locator) {
     const fileChooserPromise = this.page.waitForEvent('filechooser');
-    const button = await this.element(alias);
-    await button.click();
+    await locator.click();
     const fileChooser = await fileChooserPromise;
-    const filePath = await this.value(value);
-    await fileChooser.setFiles(filePath);
+    await fileChooser.setFiles(await filePath.value());
 });
 
 /**
@@ -361,9 +306,10 @@ When('I dismiss alert', async function (this: QavajsPlaywrightWorld) {
  * I type {string} to alert
  * @example I type 'coffee' to alert
  */
-When('I type {string} to alert', async function (this: QavajsPlaywrightWorld, value: string) {
+When('I type {value} to alert', async function (this: QavajsPlaywrightWorld, type: MemoryValue) {
+    const typeValue = await type.value();
     await new Promise<void>((resolve)=> this.page.once('dialog', async (dialog) => {
-        await dialog.accept(value);
+        await dialog.accept(typeValue);
         resolve();
     }))
 });
@@ -374,10 +320,8 @@ When('I type {string} to alert', async function (this: QavajsPlaywrightWorld, va
  * @param {string} targetAlias - target
  * @example I drag and drop 'Bishop' to 'E4'
  */
-When('I drag and drop {string} to {string}', async function (elementAlias, targetAlias) {
-    const element = await this.element(elementAlias);
-    const target = await this.element(targetAlias);
-    await element.dragTo(target);
+When('I drag and drop {locator} to {locator}', async function (locator: Locator, target: Locator) {
+    await locator.dragTo(target);
 });
 
 /**
@@ -397,7 +341,6 @@ When('I close current tab', async function (this: QavajsPlaywrightWorld) {
     await this.page.close()
     this.page = this.context.pages()[0]
     if (this.page) {
-        this.po.setDriver(this.page)
         await this.page.bringToFront();
     }
 });
@@ -408,11 +351,10 @@ When('I close current tab', async function (this: QavajsPlaywrightWorld) {
  * @param {string} alias - element to click
  * @example When I click '0, 20' coordinates in 'Element'
  */
-When('I click {string} coordinates in {string}', async function (coords: string, alias: string) {
-    const coordinates = await this.value(coords);
-    const element = await this.element(alias);
+When('I click {value} coordinates in {locator}', async function (coords: MemoryValue, locator: Locator) {
+    const coordinates = await coords.value();
     const coordsObject = typeof coordinates === 'string' ? parseCoordsAsObject(coordinates) : coordinates;
-    await element.click({position: coordsObject});
+    await locator.click({position: coordsObject});
 });
 
 /**
@@ -420,8 +362,8 @@ When('I click {string} coordinates in {string}', async function (coords: string,
  * @param {string} size - desired size
  * @example I set window size '1366,768'
  */
-When('I set window size {string}', async function (size: string) {
-    const viewPort = await this.value(size);
+When('I set window size {value}', async function (size: MemoryValue) {
+    const viewPort = await size.value();
     const {x, y} = parseCoordsAsObject(viewPort);
     await this.page.setViewportSize({width: x, height: y});
 });
@@ -442,7 +384,6 @@ When('I click {browserButton} button', async function (button: 'back' | 'forward
  * @param {string} alias - element to tap
  * @example I tap 'Google Button'
  */
-When('I tap {string}', async function (alias: string) {
-    const element = await this.element(alias);
-    await element.tap();
+When('I tap {locator}', async function (locator: Locator) {
+    await locator.tap();
 });
