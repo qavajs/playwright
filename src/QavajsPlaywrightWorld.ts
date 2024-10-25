@@ -3,6 +3,7 @@ import { PlaywrightWorld } from '@qavajs/playwright-runner-adapter';
 import { PageObject, $, $$ } from '@qavajs/po-playwright';
 import memory from '@qavajs/memory';
 import { expect } from './validationExpect';
+import { element } from './pageObject';
 
 export class QavajsPlaywrightWorld extends PlaywrightWorld {
     config: any;
@@ -11,7 +12,8 @@ export class QavajsPlaywrightWorld extends PlaywrightWorld {
     $!: typeof $;
     $$!: typeof $$;
     expect = expect;
-
+    element = element;
+    
     constructor(options: any) {
         super(options);
         const config = require(join(process.cwd(), process.env.CONFIG ?? 'config.js'));
@@ -19,11 +21,7 @@ export class QavajsPlaywrightWorld extends PlaywrightWorld {
         this.config = config[profile];
     }
 
-    async element(alias: string) {
-        return this.po.getElement(await this.memory.getValue(alias));
-    }
-
-    async value(expression: string) {
+    value(expression: string): any {
         return this.memory.getValue(expression);
     }
 

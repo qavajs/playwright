@@ -3,29 +3,6 @@ import { DataTable, When, defineParameterType } from '@cucumber/cucumber';
 import { dataTable2Object, sendHttpRequest } from './utils/utils';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
-/**
- * Used for parsing responses body
- *
- * @returns {string}
- */
-defineParameterType({
-    name: 'bodyParsingType',
-    regexp: /buffer|json|text/,
-    transformer: (p) => p === 'buffer' ? 'body' : p,
-    useForSnippets: false,
-});
-
-/**
- * Used to initialize one of two possible GraphQl body properties
- *
- * @returns {string}
- */
-defineParameterType({
-    name: 'gqlRequestProperty',
-    regexp: /query|variables/,
-    transformer: s => s
-});
-
 export default class GraphQl {
     method = 'POST';
     headers = {'Content-Type': 'application/json'}

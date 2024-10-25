@@ -8,5 +8,5 @@ export default {
         'test-e2e/step_definitions/*.ts'
     ],
     memory: new Memory(),
-    pageObject: new App()
+    pageObject: App
 }

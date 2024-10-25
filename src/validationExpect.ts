@@ -2,15 +2,22 @@ import { expect as base } from '@playwright/test';
 
 export const expect = base.extend({
     toSimpleEqual(actual: any, expected: any) {
+        const name = 'to equal';
         const pass = actual == expected;
         if (pass) {
             return {
-                message: () => `expected ${this.utils.printExpected(actual)} to equal ${this.utils.printReceived(expected)}`,
+                expected,
+                actual,
+                name,
+                message: () => `expected ${this.utils.printExpected(actual)} not to equal ${this.utils.printReceived(expected)}`,
                 pass: true,
             };
         } else {
             return {
-                message: () => `expected ${this.utils.printExpected(actual)} not to equal ${this.utils.printReceived(expected)}`,
+                expected,
+                actual,
+                name,
+                message: () => `expected ${this.utils.printExpected(actual)} to equal ${this.utils.printReceived(expected)}`,
                 pass: false,
             };
         }
@@ -78,7 +85,8 @@ function toRegexp(r: string | RegExp): RegExp {
 
 const expects = {
     [validations.EQUAL]:
-        (expected: any, actual: any, reverse: boolean, poll: boolean) => (expectValue(expected, reverse, poll) as any).toSimpleEqual(actual),
+        //@ts-ignore
+        (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll).toSimpleEqual(actual),
     [validations.STRICTLY_EQUAL]:
         (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll).toEqual(actual),
     [validations.DEEPLY_EQUAL]:
