@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore
 :microscope: - experimental
 
+## [0.4.1]
+- :beetle: added require for http
+
 ## [0.4.0]
 - :rocket: added http steps
 
