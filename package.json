@@ -8,7 +8,7 @@
     "start:server": "ts-node test-e2e/support/server.ts",
     "install:browsers": "playwright install",
     "debug:e2e": "playwright test --config test-e2e/playwright.config.ts --ui",
-    "test:e2e": "playwright test --config test-e2e/playwright.config.ts"
+    "test:e2e": "playwright test --config test-e2e/playwright.config.ts --project browser"
   },
   "repository": {
     "type": "git",
