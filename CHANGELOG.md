@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore
 :microscope: - experimental
 
+## [0.5.0]
+- :rocket: added `QavajsPlaywrightElectronWorld` to support electron applications
+
 ## [0.4.1]
 - :beetle: added require for http
 
