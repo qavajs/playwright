@@ -12,7 +12,8 @@ import { defineCucumber } from '@qavajs/playwright-runner-adapter';
  */
 export default defineConfig({
     testDir: defineCucumber({
-        config: 'test-e2e/config.ts'
+        config: 'test-e2e/config.ts',
+        profile: 'electron'
     }),
     /* Run tests in files in parallel */
     fullyParallel: true,
@@ -30,29 +31,17 @@ export default defineConfig({
     expect: {
         timeout: 15000
     },
-    webServer: {
-        command: 'npx ts-node support/server.ts',
-        url: 'http://localhost:3000/storage.html',
-        reuseExistingServer: !process.env.CI,
-        stdout: 'pipe',
-        stderr: 'pipe',
-    },
-    /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-    use: {
-        /* Base URL to use in actions like `await page.goto('/')`. */
-        // baseURL: 'http://127.0.0.1:3000',
 
-        /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-        // headless: false
-    },
+    use: {},
 
     /* Configure projects for major browsers */
     projects: [
         {
-            name: 'browser',
+            name: 'electron',
             use: {
-                ...devices['Desktop Chrome'],
-                hasTouch: true
+                launchOptions: {
+                    args: ['test-e2e/apps/electron/main.js'],
+                }
             },
         }
     ]
