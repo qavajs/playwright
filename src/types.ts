@@ -1,4 +1,5 @@
 import memory from '@qavajs/memory';
+import {Locator} from "@playwright/test";
 
 export class MemoryValue {
     constructor(public expression: string) {}
@@ -25,3 +26,5 @@ export interface Validation {
     type: string;
     poll: (AR: any, ER: any) => Promise<void>
 }
+
+export type StateValidation = (locator: Locator) => Promise<void>;

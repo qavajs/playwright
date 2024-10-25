@@ -1,6 +1,8 @@
 import { defineParameterType } from '@cucumber/cucumber';
 import { valueExpect } from './validationExpect';
 import { MemoryValue, type Validation } from './types';
+import {conditionExpect} from "./conditionExpect";
+import {Locator} from "@playwright/test";
 
 function transformString(fn: (value: string) => any) {
     return function (s1: string, s2: string) {
@@ -29,7 +31,6 @@ defineParameterType({
     name: 'locator',
     regexp: /"([^"\\]*(\\.[^"\\]*)*)"|'([^'\\]*(\\.[^'\\]*)*)'/,
     transformer: function (s1: string, s2: string) {
-        console.log(this)
         const world = this as any;
         return transformString(function (alias) {
             return world.element(alias);
@@ -46,7 +47,7 @@ defineParameterType({
 defineParameterType({
     name: 'state',
     regexp: /((not )?to (?:be )?(present|clickable|visible|invisible|enabled|disabled|in viewport))/,
-    transformer: p => p,
+    transformer: (state) => (locator: Locator) => conditionExpect(locator, state),
     useForSnippets: false
 });
 

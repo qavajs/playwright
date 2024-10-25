@@ -103,7 +103,7 @@ const expects = {
         (expected: any, actual: any, reverse: boolean, poll: boolean) => (expectValue(expected, reverse, poll) as any).toHaveType(actual),
 };
 
-export async function valueExpect(
+export function valueExpect(
     expected: any,
     actual: any,
     condition: string,
@@ -113,5 +113,5 @@ export async function valueExpect(
     if (!match) throw new Error(`${condition} expect is not implemented`);
     const [_, reverse, validation] = match;
     const expectFn = expects[validation];
-    await expectFn(expected, actual, Boolean(reverse), options.poll);
+    return expectFn(expected, actual, Boolean(reverse), options.poll);
 }

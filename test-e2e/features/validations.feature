@@ -56,7 +56,7 @@ Feature: validations
 
   Scenario: element css property
     Then I expect 'background-color' css property of 'Simple Text Input' to be equal 'rgb(95, 158, 160)'
-    Then I expect 'font-size' css property of '#1 of Simple Text List Items' to be equal '20px'
+    Then I expect 'font-size' css property of 'Simple Text List Item By Index (1)' to be equal '20px'
 
   Scenario Outline: collection condition
     Then I expect every element in '<collection>' collection <condition>
@@ -134,6 +134,7 @@ Feature: validations
     When I save '2' to memory as 'two'
     Then I expect '2' to equal at least one of:
       | 1    |
+      | $two |
       | $two |
 
   Scenario: all of validation

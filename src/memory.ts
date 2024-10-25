@@ -1,6 +1,8 @@
 import { DataTable, When } from '@cucumber/cucumber';
 import { dataTable2Object } from './utils/utils';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
+import { Locator } from '@playwright/test';
+import {MemoryValue} from "./types";
 
 /**
  * Save text of element to memory
@@ -8,10 +10,9 @@ import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
  * @param {string} key - key to store value
  * @example I save text of '#1 of Search Results' as 'firstSearchResult'
  */
-When('I save text of {string} as {string}', async function (alias, key) {
-    const element = await this.element(alias);
-    const value = await element.innerText();
-    this.setValue(key, value);
+When('I save text of {locator} as {value}', async function (locator: Locator, key: MemoryValue) {
+    const value = await locator.innerText();
+    key.set(value);
 });
 
 /**
@@ -22,11 +23,10 @@ When('I save text of {string} as {string}', async function (alias, key) {
  * @example I save 'checked' property of 'Checkbox' as 'checked'
  * @example I save '$prop' property of 'Checkbox' as 'checked'
  */
-When('I save {string} property of {string} as {string}', async function (property, alias, key) {
-    const element = await this.element(alias);
-    const propertyName = await this.value(property);
-    const value = await element.evaluate((node: any, propertyName: string) => node[propertyName], propertyName);
-    this.setValue(key, value);
+When('I save {value} property of {locator} as {value}', async function (property: MemoryValue, locator: Locator, key: MemoryValue) {
+    const propertyName = await property.value();
+    const value = await locator.evaluate((node: any, propertyName: string) => node[propertyName], propertyName);
+    key.set(value);
 });
 
 /**
@@ -37,11 +37,10 @@ When('I save {string} property of {string} as {string}', async function (propert
  * @example I save 'href' attribute of 'Link' as 'linkHref'
  * @example I save '$prop' attribute of 'Link' as 'linkHref'
  */
-When('I save {string} attribute of {string} as {string}', async function (attribute, alias, key) {
-    const element = await this.element(alias);
-    const attributeName = await this.value(attribute);
-    const value = await element.getAttribute(attributeName);
-    this.setValue(key, value);
+When('I save {value} attribute of {locator} as {value}', async function (attribute: MemoryValue, locator: Locator, key: MemoryValue) {
+    const attributeName = await attribute.value();
+    const value = await locator.getAttribute(attributeName);
+    key.set(value);
 });
 
 /**
@@ -50,10 +49,9 @@ When('I save {string} attribute of {string} as {string}', async function (attrib
  * @param {string} key - key to store value
  * @example I save number of elements in 'Search Results' as 'numberOfSearchResults'
  */
-When('I save number of elements in {string} collection as {string}', async function (alias, key) {
-    const collection = await this.element(alias);
+When('I save number of elements in {locator} collection as {value}', async function (collection: Locator, key: MemoryValue) {
     const value = await collection.count();
-    this.setValue(key, value);
+    key.set(value);
 });
 
 /**
@@ -63,13 +61,12 @@ When('I save number of elements in {string} collection as {string}', async funct
  * @example I save text of every element of 'Search Results' collection as 'searchResults'
  */
 When(
-    'I save text of every element of {string} collection as {string}',
-    async function (alias: string, key: string) {
-        const collection = await this.element(alias);
+    'I save text of every element of {locator} collection as {value}',
+    async function (collection: Locator, key: MemoryValue) {
         const values = await collection.evaluateAll(
             (collection: Array<any>) => collection.map(e => e.innerText)
         );
-        this.setValue(key, values);
+        key.set(values);
     }
 );
 
@@ -80,14 +77,13 @@ When(
  * @example I save 'checked' attribute of every element of 'Search > Checkboxes' collection as 'checkboxes'
  */
 When(
-    'I save {string} attribute of every element of {string} collection as {string}',
-    async function (attribute: string, alias: string, key: string) {
-        const collection = await this.element(alias);
+    'I save {value} attribute of every element of {locator} collection as {value}',
+    async function (attribute: MemoryValue, collection: Locator, key: MemoryValue) {
         const values = await collection.evaluateAll(
             (collection: Array<any>, attr: string) => collection.map(e => e.attributes[attr].value),
-            attribute
+            await attribute.value()
         );
-        this.setValue(key, values);
+        key.set(values);
     }
 );
 
@@ -98,14 +94,13 @@ When(
  * @example I save 'href' property of every element of 'Search > Links' collection as 'hrefs'
  */
 When(
-    'I save {string} property of every element of {string} collection as {string}',
-    async function (property: string, alias: string, key: string) {
-        const collection = await this.element(alias);
+    'I save {value} property of every element of {locator} collection as {value}',
+    async function (property: MemoryValue, collection: Locator, key: MemoryValue) {
         const values = await collection.evaluateAll(
             (collection: Array<any>, prop: string) => collection.map(e => e[prop]),
-            property
+            await property.value()
         );
-        this.setValue(key, values);
+        key.set(values);
     }
 );
 
@@ -114,8 +109,8 @@ When(
  * @param {string} key - key to store value
  * @example I save current url as 'currentUrl'
  */
-When('I save current url as {string}', async function (key: string) {
-    this.setValue(key, this.page.url());
+When('I save current url as {value}', async function (key: MemoryValue) {
+    key.set(this.page.url());
 });
 
 /**
@@ -123,9 +118,8 @@ When('I save current url as {string}', async function (key: string) {
  * @param {string} key - key to store value
  * @example I save page title as 'currentTitle'
  */
-When('I save page title as {string}', async function (key: string) {
-    const title = await this.page.title();
-    this.setValue(key, title);
+When('I save page title as {value}', async function (key: MemoryValue) {
+    key.set(this.page.title());
 });
 
 /**
@@ -133,9 +127,9 @@ When('I save page title as {string}', async function (key: string) {
  * @param {string} key - key to store value
  * @example I save screenshot as 'screenshot'
  */
-When('I save screenshot as {string}', async function(key: string) {
+When('I save screenshot as {value}', async function(key: MemoryValue) {
     const screenshot = await this.page.screenshot();
-    this.setValue(key, screenshot);
+    key.set(screenshot);
 });
 
 /**
@@ -143,9 +137,9 @@ When('I save screenshot as {string}', async function(key: string) {
  * @param {string} key - key to store value
  * @example I save full page screenshot as 'screenshot'
  */
-When('I save full page screenshot as {string}', async function(key: string) {
+When('I save full page screenshot as {value}', async function(key: MemoryValue) {
     const screenshot = await this.page.screenshot({ fullPage: true });
-    this.setValue(key, screenshot);
+    key.set(screenshot);
 });
 
 /**
@@ -154,10 +148,9 @@ When('I save full page screenshot as {string}', async function(key: string) {
  * @param {string} key - key to store value
  * @example I save screenshot of 'Header > Logo' as 'screenshot'
  */
-When('I save screenshot of {string} as {string}', async function(alias: string, key: string) {
-    const element = await this.element(alias);
-    const screenshot = await element.screenshot();
-    this.setValue(key, screenshot);
+When('I save screenshot of {locator} as {value}', async function(locator: Locator, key: MemoryValue) {
+    const screenshot = await locator.screenshot();
+    key.set(screenshot);
 });
 
 /**
@@ -168,14 +161,13 @@ When('I save screenshot of {string} as {string}', async function(alias: string, 
  * @example I save 'color' css property of 'Checkbox' as 'checkboxColor'
  * @example I save '$propertyName' property of 'Checkbox' as 'checkboxColor'
  */
-When('I save {string} css property of {string} as {string}', async function (property, alias, key) {
-    const element = await this.element(alias);
-    const propertyName = await this.value(property);
-    const value = await element.evaluate(
+When('I save {value} css property of {locator} as {value}', async function (property: MemoryValue, locator: Locator, key: MemoryValue) {
+    const propertyName = await property.value();
+    const value = await locator.evaluate(
         (node: Element, propertyName: string) => getComputedStyle(node).getPropertyValue(propertyName),
         propertyName
     );
-    this.setValue(key, value);
+    key.set(value);
 });
 
 /**
@@ -187,10 +179,9 @@ When('I save {string} css property of {string} as {string}', async function (pro
  * When I save bounding rect of 'Node' as 'boundingRect'
  * Then I expect '$boundingRect.width' to equal '42'
  */
-When('I save bounding rect of {string} as {string}', async function (this: QavajsPlaywrightWorld, alias: string, key: string) {
-    const element = await this.element(alias);
-    const value = await element.evaluate((node: Element) => node.getBoundingClientRect());
-    this.setValue(key, value);
+When('I save bounding rect of {locator} as {value}', async function (locator: Locator, key: MemoryValue) {
+    const value = await locator.evaluate((node: Element) => node.getBoundingClientRect());
+    key.set(value);
 });
 
 /**
@@ -201,18 +192,17 @@ When('I save bounding rect of {string} as {string}', async function (this: Qavaj
  * @example I save '$getRandomUser()' to memory as 'user'
  */
 When(
-    'I save {string} to memory as {string}',
-    async function (this: QavajsPlaywrightWorld, alias: string, key: string) {
-        const value: string = await this.value(alias);
-        this.setValue(key, value);
+    'I save {value} to memory as {value}',
+    async function (expression: MemoryValue, key: MemoryValue) {
+        key.set(await expression.value());
     }
 );
 
 When(
-    'I save multiline string to memory as {string}:',
-    async function (this: QavajsPlaywrightWorld, key: string, multilineString: string) {
+    'I save multiline string to memory as {value}:',
+    async function (this: QavajsPlaywrightWorld, key: MemoryValue, multilineString: string) {
         const value: string = await this.value(multilineString);
-        this.setValue(key, value);
+        key.set(value);
     }
 );
 
@@ -223,10 +213,9 @@ When(
  * @example I set 'key' = 'value'
  */
 When(
-    'I set {string} = {string}',
-    async function (this: QavajsPlaywrightWorld, key: string, value: string) {
-        const resolvedValue: string = await this.value(value);
-        this.setValue(key, resolvedValue);
+    'I set {value} = {value}',
+    async function (this: QavajsPlaywrightWorld, key: MemoryValue, expression: MemoryValue) {
+        key.set(await expression.value());
     }
 );
 
@@ -242,10 +231,10 @@ When(
  * """
  */
 When(
-    'I save json to memory as {string}:',
-    async function (this: QavajsPlaywrightWorld, key: string, json: string) {
+    'I save json to memory as {value}:',
+    async function (this: QavajsPlaywrightWorld, key: MemoryValue, json: string) {
         const value: string = await this.value(json);
-        this.setValue(key, JSON.parse(value));
+        key.set(JSON.parse(value));
     }
 );
 
@@ -258,9 +247,9 @@ When(
  * | someOtherKey | $valueFromMemory |
  */
 When(
-    'I save key-value pairs to memory as {string}:',
-    async function (this: QavajsPlaywrightWorld, key: string, kv: DataTable) {
+    'I save key-value pairs to memory as {value}:',
+    async function (this: QavajsPlaywrightWorld, key: MemoryValue, kv: DataTable) {
         const value = await dataTable2Object(this, kv);
-        this.setValue(key, value);
+        key.set(value);
     }
 );

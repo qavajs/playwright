@@ -247,7 +247,7 @@ When('I scroll until {locator} to be visible', async function (targetAlias: Loca
  * @example
  * When I scroll in 'List' until 'Row 99' to be visible
  */
-When('I scroll in {string} until {string} to be visible', async function (scrollLocator: Locator, targetLocator: Locator) {
+When('I scroll in {locator} until {locator} to be visible', async function (scrollLocator: Locator, targetLocator: Locator) {
     await scrollLocator.hover();
     const isVisible = () => targetLocator.isVisible();
     while (!await isVisible()) {

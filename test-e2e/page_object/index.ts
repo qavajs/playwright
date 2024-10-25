@@ -19,6 +19,7 @@ export default class App {
     Buttons = locator('.button');
     IFrame = locator('iframe#firstIframe');
     InnerIFrame = locator('iframe#innerIframe');
+    FrameElementInFrame = locator.native(({ page }) => page.frameLocator('iframe#innerIframe').locator('#frameElement'));
     FrameElement = locator('#frameElement');
     InnerFrameElement = locator('#innerFrameElement');
     NewTabLink = locator('#newTabLink');
@@ -30,13 +31,13 @@ export default class App {
     VisibleElement = locator('#visible');
     HiddenElement = locator('#hidden');
     InfiniteScroll = locator('#infiniteScroll');
-    InfiniteScrollItems = locator('#infiniteScroll li');
+    InfiniteScrollItem = locator.template(text => `#infiniteScroll li:has-text("${text}")`);
     Loading = locator('#loading');
     LoadingInput = locator('#loadingInput');
     WaitCollection = locator('#waitCollection > div');
     PressCounter = locator('#pressCounter');
 
-    Users = locator('#users > li');
+    User = locator.template(idx => `#users > li:nth-child(${idx})`);
     OverflowContainer = locator('#overflowContainer');
 
     KeyDump = locator('#keywordevent');

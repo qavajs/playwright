@@ -109,10 +109,10 @@ export function element(this: any, path: string): Locator {
             case 'simple': current = current.locator(item.selector); break;
             case 'template': current = current.locator(item.selector(item.argument)); break;
             case 'native': current = item.selector({
-                driver: this.playwright.driver,
-                browser: this.playwright.browser,
-                context: this.playwright.context,
-                page: this.playwright.page,
+                driver: this.driver,
+                browser: this.browser,
+                context: this.context,
+                page: this.page,
                 parent: current,
                 argument: item.argument
             }); break;
