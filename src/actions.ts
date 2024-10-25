@@ -149,7 +149,7 @@ When('I switch to {string} window', async function (matcher: string) {
     await this.expect.poll(
         poll,
         {
-            message: `Page matching ${urlOrTitle} was not found`
+            message: `Page matching '${urlOrTitle}' was not found`
         }
     ).toBeDefined();
     const targetPage = await poll() as Page;

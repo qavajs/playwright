@@ -53,7 +53,19 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Chrome'],
                 hasTouch: true
-            },
+            }
+        },
+        {
+            name: 'electron',
+            // testDir: defineCucumber({
+            //     config: 'test-e2e/config.ts',
+            //     profile: 'electron'
+            // }),
+            use: {
+                launchOptions: {
+                    args: ['test-e2e/apps/electron/main.js']
+                }
+            }
         }
     ]
 });
