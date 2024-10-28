@@ -10,7 +10,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore
 :microscope: - experimental
 
-## [0.5.0]
+## [1.0.1]
+- :beetle: fixed `QavajsPlaywrightElectronWorld` lib path
+
+## [1.0.0]
+- release
 - :rocket: added `QavajsPlaywrightElectronWorld` to support electron applications
 
 ## [0.4.1]
