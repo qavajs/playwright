@@ -1,6 +1,6 @@
 {
   "name": "@qavajs/playwright",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "steps to interact with playwright",
   "main": "./index.js",
   "scripts": {
