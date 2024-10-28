@@ -8,5 +8,16 @@ export default {
         'test-e2e/step_definitions/*.ts'
     ],
     memory: new Memory(),
-    pageObject: new App()
+    pageObject: App
+}
+
+export const electron = {
+    paths: ['test-e2e/features/electron/*.feature'],
+    require: [
+        'src/*.ts',
+        'test-e2e/step_definitions/electron/*.ts',
+        'test-e2e/step_definitions/*.ts'
+    ],
+    memory: new Memory(),
+    pageObject: App
 }

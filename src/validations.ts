@@ -1,9 +1,9 @@
 import { DataTable, Then } from '@cucumber/cucumber';
-import { Dialog } from '@playwright/test';
+import { Dialog, Locator } from '@playwright/test';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { valueExpect } from './validationExpect';
-import { conditionExpect } from './conditionExpect';
 import { dataTable2Array } from './utils/utils';
+import { MemoryValue, StateValidation, Validation } from './types';
 
 /**
  * Verify element condition
@@ -13,9 +13,8 @@ import { dataTable2Array } from './utils/utils';
  * @example I expect 'Loading' not to be present
  * @example I expect 'Search Bar > Submit Button' to be clickable
  */
-Then('I expect {string} {conditionWait}', async function (alias: string, condition: string) {
-    const element = await this.element(alias);
-    await conditionExpect(element, condition);
+Then('I expect {locator} {state}', async function (locator: Locator, expect: StateValidation) {
+    await expect(locator);
 });
 
 /**
@@ -27,12 +26,11 @@ Then('I expect {string} {conditionWait}', async function (alias: string, conditi
  * @example I expect text of '#2 of Search Results' does not contain 'yandex'
  */
 Then(
-    'I expect text of {string} {validation} {string}',
-    async function (this: QavajsPlaywrightWorld, alias: string, validationType: string, value: any) {
-        const expectedValue = await this.value(value);
-        const element = await this.element(alias);
-        const actualValue = () => element.innerText();
-        await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+    'I expect text of {locator} {validation} {value}',
+    async function (this: QavajsPlaywrightWorld, locator: Locator, valueExpect: Validation, expected: MemoryValue) {
+        const expectedValue = await expected.value();
+        const actualValue = () => locator.innerText();
+        await valueExpect.poll(actualValue, expectedValue);
     }
 );
 
@@ -44,14 +42,13 @@ Then(
  * @example I expect value of 'Search Input' to be equal 'text'
  */
 Then(
-    'I expect value of {string} {validation} {string}',
-    async function (alias: string, validationType: string, value: string) {
-        const expectedValue = await this.value(value);
-        const element = await this.element(alias);
-        const actualValue = () => element.evaluate(
+    'I expect value of {locator} {validation} {value}',
+    async function (locator: Locator, expect: Validation, expected: MemoryValue) {
+        const expectedValue = await expected.value();
+        const actualValue = () => locator.evaluate(
             (node: any) => node.value
         );
-        await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+        await expect.poll(actualValue, expectedValue);
     }
 );
 
@@ -65,13 +62,12 @@ Then(
  * @example I expect 'innerHTML' property of 'Label' to contain '<b>'
  */
 Then(
-    'I expect {string} property of {string} {validation} {string}',
-    async function (property: string, alias: string, validationType: string, value: string) {
-        const propertyName = await this.value(property);
-        const expectedValue = await this.value(value);
-        const element = await this.element(alias);
-        const actualValue = () => element.evaluate((node: any, propertyName: string) => node[propertyName], propertyName);
-        await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+    'I expect {value} property of {locator} {validation} {value}',
+    async function (property: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
+        const propertyName = await property.value();
+        const expectedValue = await expected.value();
+        const actualValue = () => locator.evaluate((node: any, propertyName: string) => node[propertyName], propertyName);
+        await expect.poll(actualValue, expectedValue);
     }
 );
 
@@ -84,13 +80,12 @@ Then(
  * @example I expect 'href' attribute of 'Home Link' to contain '/home'
  */
 Then(
-    'I expect {string} attribute of {string} {validation} {string}',
-    async function (attribute: string, alias: string, validationType: string, value: string) {
-        const attributeName = await this.value(attribute);
-        const expectedValue = await this.value(value);
-        const element = await this.element(alias);
-        const actualValue = () => element.getAttribute(attributeName);
-        await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+    'I expect {value} attribute of {locator} {validation} {value}',
+    async function (attribute: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
+        const attributeName = await attribute.value();
+        const expectedValue = await expected.value();
+        const actualValue = () => locator.getAttribute(attributeName);
+        await expect.poll(actualValue, expectedValue);
     }
 );
 
@@ -102,11 +97,11 @@ Then(
  * @example I expect current url equals 'https://wikipedia.org'
  */
 Then(
-    'I expect current url {validation} {string}',
-    async function (validationType: string, expected: string) {
-        const expectedValue = await this.value(expected);
+    'I expect current url {validation} {value}',
+    async function (expect: Validation, expected: MemoryValue) {
+        const expectedValue = await expected.value();
         const actualValue = () => this.page.url();
-        await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+        await expect.poll(actualValue, expectedValue);
     }
 );
 
@@ -120,12 +115,11 @@ Then(
  * @example I expect number of elements in 'Search Results' collection to be below '51'
  */
 Then(
-    'I expect number of elements in {string} collection {validation} {string}',
-    async function (alias: string, validationType: string, value: string) {
-        const expectedValue = await this.value(value);
-        const collection = await this.element(alias);
-        const actualValue = () => collection.count();
-        await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+    'I expect number of elements in {locator} collection {validation} {value}',
+    async function (locator: Locator, expect: Validation, expected: MemoryValue) {
+        const expectedValue = await expected.value();
+        const actualValue = () => locator.count();
+        await expect.poll(actualValue, expectedValue);
     }
 );
 
@@ -136,11 +130,11 @@ Then(
  * @example I expect page title equals 'Wikipedia'
  */
 Then(
-    'I expect page title {validation} {string}',
-    async function (validationType: string, expected: string) {
-        const expectedValue = await this.value(expected);
+    'I expect page title {validation} {value}',
+    async function (expect: Validation, expected: MemoryValue) {
+        const expectedValue = await expected.value();
         const actualValue = () => this.page.title();
-        await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+        await expect.poll(actualValue, expectedValue);
 
     }
 );
@@ -152,11 +146,10 @@ Then(
  * @example I expect every element in 'Header > Links' collection to be visible
  * @example I expect every element in 'Loading Bars' collection not to be present
  */
-Then('I expect every element in {string} collection {conditionWait}', async function (alias: string, condition: string) {
-    const collection = await this.element(alias);
+Then('I expect every element in {locator} collection {state}', async function (collection: Locator, expect: StateValidation) {
     for (let i = 0; i < await collection.count(); i++) {
         const element = collection.nth(i);
-        await conditionExpect(element, condition);
+        await expect(element);
     }
 });
 
@@ -169,13 +162,12 @@ Then('I expect every element in {string} collection {conditionWait}', async func
  * @example I expect text of every element in 'Search Results' collection does not contain 'google'
  */
 Then(
-    'I expect text of every element in {string} collection {validation} {string}',
-    async function (alias: string, validationType: string, value: string) {
-        const expectedValue = await this.value(value);
-        const collection = await this.element(alias);
+    'I expect text of every element in {locator} collection {validation} {value}',
+    async function (collection: Locator, expect: Validation, expected: MemoryValue) {
+        const expectedValue = await expected.value();
         for (let i = 0; i < await collection.count(); i++) {
             const actualValue = () => collection.nth(i).innerText();
-            await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+            await expect.poll(actualValue, expectedValue);
         }
     }
 );
@@ -188,13 +180,13 @@ Then(
  * @example I expect 'href' attribute of every element in 'Search Results' collection to contain 'google'
  */
 Then(
-    'I expect {string} attribute of every element in {string} collection {validation} {string}',
-    async function (attribute: string, alias: string, validationType: string, value: string) {
-        const expectedValue = await this.value(value);
-        const collection = await this.element(alias);
+    'I expect {value} attribute of every element in {locator} collection {validation} {value}',
+    async function (attribute: MemoryValue, collection: Locator, expect: Validation, expected: MemoryValue) {
+        const expectedValue = await expected.value();
+        const attributeName = await attribute.value();
         for (let i = 0; i < await collection.count(); i++) {
-            const actualValue = () => collection.nth(i).getAttribute(attribute);
-            await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+            const actualValue = () => collection.nth(i).getAttribute(attributeName);
+            await expect.poll(actualValue, expectedValue);
         }
     }
 );
@@ -207,15 +199,15 @@ Then(
  * @example I expect 'href' property of every element in 'Search Results' collection to contain 'google'
  */
 Then(
-    'I expect {string} property of every element in {string} collection {validation} {string}',
-    async function (property: string, alias: string, validationType: string, value: string) {
-        const expectedValue = await this.value(value);
-        const collection = await this.element(alias);
+    'I expect {value} property of every element in {locator} collection {validation} {value}',
+    async function (property: MemoryValue, collection: Locator, expect: Validation, expected: MemoryValue) {
+        const expectedValue = await expected.value();
+        const propertyName = await property.value();
         for (let i = 0; i < await collection.count(); i++) {
             const actualValue = () => collection.nth(i).evaluate(
-                (node: any, property: string) => node[property], property
+                (node: any, property: string) => node[property], propertyName
             );
-            await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+            await expect.poll(actualValue, expectedValue);
         }
     }
 );
@@ -230,16 +222,15 @@ Then(
  * @example I expect 'font-family' css property of 'Label' to contain 'Fira'
  */
 Then(
-    'I expect {string} css property of {string} {validation} {string}',
-    async function (property: string, alias: string, validationType: string, value: string) {
-        const propertyName = await this.value(property);
-        const expectedValue = await this.value(value);
-        const element = await this.element(alias);
-        const actualValue = () => element.evaluate(
+    'I expect {value} css property of {locator} {validation} {value}',
+    async function (property: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
+        const propertyName = await property.value();
+        const expectedValue = await expected.value();
+        const actualValue = () => locator.evaluate(
             (node: Element, propertyName: string) => getComputedStyle(node).getPropertyValue(propertyName),
             propertyName
         );
-        await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+        await expect.poll(actualValue, expectedValue);
     }
 );
 
@@ -250,13 +241,13 @@ Then(
  * @example I expect text of alert does not contain 'coffee'
  */
 Then(
-    'I expect text of alert {validation} {string}',
-    async function (validationType: string, expected: string) {
+    'I expect text of alert {validation} {value}',
+    async function (expect: Validation, expected: MemoryValue) {
         const actualValue = () => new Promise<string>(resolve => this.page.once('dialog', async (dialog: Dialog) => {
             resolve(dialog.message());
         }));
-        const expectedValue = await this.value(expected);
-        await valueExpect(actualValue, expectedValue, validationType, { poll: true });
+        const expectedValue = await expected.value();
+        await expect.poll(actualValue, expectedValue);
     }
 );
 
@@ -271,11 +262,9 @@ Then(
  * @example I expect '$value' does not contain '56'
  */
 Then(
-    'I expect {string} {validation} {string}',
-    async function (value1: string, validationType: string, value2: string) {
-        const val1: any = await this.value(value1);
-        const val2: any = await this.value(value2);
-        await valueExpect(val1, val2, validationType);
+    'I expect {value} {validation} {value}',
+    async function (value1: MemoryValue, expect: Validation, value2: MemoryValue) {
+        expect(await value1.value(), await value2.value());
     });
 
 /**
@@ -287,21 +276,22 @@ Then(
  * @example I expect at least 2 elements in '$arr' array to be above '50'
  */
 Then(
-    'I expect at least {int} element(s) in {string} array {validation} {string}',
-    async function (expectedNumber: number, arr: string, validationType: string, expectedValue: string) {
-        const array: Array<any> = await this.value(arr);
-        const val: any = await this.value(expectedValue);
+    'I expect at least {int} element(s) in {value} array {validation} {value}',
+    async function (expectedNumber: number, arr: MemoryValue, expect: Validation, expected: MemoryValue) {
+        const array: Array<any> = await arr.value();
+        const expectedValue: any = await expected.value();
         const failCounter = { fail: 0, pass: 0 };
         for (const value of array) {
             try {
-                await valueExpect(value, val, validationType);
+                console.log(value, expectedValue)
+                expect(value, expectedValue);
                 failCounter.pass++;
             } catch (err) {
                 failCounter.fail++;
             }
         }
         if (failCounter.pass < expectedNumber) {
-            throw new Error(`Less than ${expectedNumber} pass ${validationType} verification`);
+            throw new Error(`Less than ${expectedNumber} pass ${expect.type} verification`);
         }
     }
 );
@@ -315,12 +305,12 @@ Then(
  * @example I expect every element in '$arr' array to be above '50'
  */
 Then(
-    'I expect every element in {string} array {validation} {string}',
-    async function (arr: string, validationType: string, expectedValue: string) {
-        const array: Array<any> = await this.value(arr);
-        const val: any = await this.value(expectedValue);
+    'I expect every element in {value} array {validation} {value}',
+    async function (arr: MemoryValue, expect: Validation, expected: MemoryValue) {
+        const array: Array<any> = await arr.value();
+        const expectedValue: any = await expected.value();
         for (const value of array) {
-            await valueExpect(value, val, validationType);
+            expect(value, expectedValue);
         }
     }
 );
@@ -334,15 +324,15 @@ Then(
  * @example I expect '$arr' array to be sorted by '$ascending'
  */
 Then(
-    'I expect {string} array to be sorted by {string}',
-    async function (arr: string, comparator: string) {
-        const array: Array<any> = await this.value(arr);
-        if (!Array.isArray(array)) throw new Error(`'${arr}' is not an array`);
-        const comparatorFn: (a: any, b: any) => number = await this.value(comparator);
-        if (typeof comparatorFn !== 'function') throw new Error(`'${comparator}' is not implemented`);
+    'I expect {value} array to be sorted by {value}',
+    async function (this: QavajsPlaywrightWorld, arr: MemoryValue, comparator: MemoryValue) {
+        const array: Array<any> = await arr.value();
+        if (!Array.isArray(array)) throw new Error(`'${arr.expression}' is not an array`);
+        const comparatorFn: (a: any, b: any) => number = await comparator.value();
+        if (typeof comparatorFn !== 'function') throw new Error(`'${comparator.expression}' is not implemented`);
         const arrayCopy: Array<any> = [...array];
         arrayCopy.sort(comparatorFn);
-        await valueExpect(array, arrayCopy, 'to deeply equal');
+        this.expect(array).toEqual(arrayCopy);
     }
 );
 
@@ -358,21 +348,21 @@ Then(
  *  | tres |
  */
 Then(
-    'I expect {string} array {validation}:',
-    async function (arr: string, validationType: string, members: DataTable) {
-        const array = await this.value(arr);
+    'I expect {value} array {validation}:',
+    async function (arr: MemoryValue, expect: Validation, members: DataTable) {
+        const array = await arr.value();
         const membersArray = await Promise.all(
             members.raw().map(memberKey => this.value(memberKey.pop() as string))
         );
-        await valueExpect(array, membersArray, validationType);
+        expect(array, membersArray);
     }
 );
 
-async function validateAnyOf(AR: any, ERs: any[], validation: (AR: any, ER: any) => Promise<void>){
+function validateAnyOf(AR: any, ERs: any[], validation: (AR: any, ER: any) => void){
     const errorCollector: Error[] = [];
     for (const ER of ERs) {
         try {
-            await validation(AR, ER);
+            validation(AR, ER);
             return;
         } catch (err) {
             errorCollector.push(err as Error);
@@ -390,13 +380,12 @@ async function validateAnyOf(AR: any, ERs: any[], validation: (AR: any, ER: any)
  * When I expect '$text' to equal at least one of '$js(["free", "11.99"])'
  */
 Then(
-    'I expect {string} {validation} at least one of {string}',
-    async function (actual: string, validationType: string, expected: string) {
-        const actualValue = await this.value(actual);
-        const expectedValues = await this.value(expected);
-        if (!(expectedValues instanceof Array)) throw new Error(`'${expected}' parameter is not an array`);
-        const validation = (AR: any, ER: any) => valueExpect(AR, ER, validationType);
-        await validateAnyOf(actualValue, expectedValues, validation);
+    'I expect {value} {validation} at least one of {value}',
+    async function (actual: MemoryValue, expect: Validation, expected: MemoryValue) {
+        const actualValue = await actual.value();
+        const expectedValues = await expected.value();
+        if (!(expectedValues instanceof Array)) throw new Error(`'${expected.expression}' parameter is not an array`);
+        validateAnyOf(actualValue, expectedValues, expect);
     }
 );
 
@@ -411,20 +400,19 @@ Then(
  *     | 11.99 |
  */
 Then(
-    'I expect {string} {validation} at least one of:',
-    async function (this: QavajsPlaywrightWorld, actual: string, validationType: string, expected: DataTable) {
-        const actualValue = await this.value(actual);
+    'I expect {value} {validation} at least one of:',
+    async function (this: QavajsPlaywrightWorld, actual: MemoryValue, expect: Validation, expected: DataTable) {
+        const actualValue = await actual.value();
         const expectedValues = await dataTable2Array(this, expected);
-        const validation = (AR: any, ER: any) => valueExpect(AR, ER, validationType);
-        await validateAnyOf(actualValue, expectedValues, validation);
+        validateAnyOf(actualValue, expectedValues, expect);
     }
 );
 
-async function validateAllOf(AR: any, ERs: any[], validation: (AR: any, ER: any) => Promise<void>){
+function validateAllOf(AR: any, ERs: any[], validation: (AR: any, ER: any) => void){
     const errorCollector: Error[] = [];
     for (const ER of ERs) {
         try {
-            await validation(AR, ER);
+            validation(AR, ER);
             return;
         } catch (err) {
             errorCollector.push(err as Error);
@@ -444,13 +432,12 @@ async function validateAllOf(AR: any, ERs: any[], validation: (AR: any, ER: any)
  * When I expect '$text' not to equal all of '$js(["free", "10.00"])'
  */
 Then(
-    'I expect {string} {validation} all of {string}',
-    async function (actual: string, validationType: string, expected: string) {
-        const actualValue = await this.value(actual);
-        const expectedValues = await this.value(expected);
-        if (!(expectedValues instanceof Array)) throw new Error(`'${expected}' parameter is not an array`);
-        const validation = (AR: any, ER: any) => valueExpect(AR, ER, validationType);
-        await validateAllOf(actualValue, expectedValues, validation);
+    'I expect {value} {validation} all of {value}',
+    async function (actual: MemoryValue, expect: Validation, expected: MemoryValue) {
+        const actualValue = await actual.value();
+        const expectedValues = await expected.value();
+        if (!(expectedValues instanceof Array)) throw new Error(`'${expected.expression}' parameter is not an array`);
+        validateAllOf(actualValue, expectedValues, expect);
     }
 );
 
@@ -465,11 +452,10 @@ Then(
  *    | 10.00 |
  */
 Then(
-    'I expect {string} {validation} all of:',
-    async function (this: QavajsPlaywrightWorld, actual: string, validationType: string, expected: DataTable) {
-        const actualValue = await this.value(actual);
+    'I expect {value} {validation} all of:',
+    async function (this: QavajsPlaywrightWorld, actual: MemoryValue, expect: Validation, expected: DataTable) {
+        const actualValue = await actual.value();
         const expectedValues = await dataTable2Array(this, expected);
-        const validation = (AR: any, ER: any) => valueExpect(AR, ER, validationType);
-        await validateAllOf(actualValue, expectedValues, validation);
+        validateAllOf(actualValue, expectedValues, expect);
     }
 );

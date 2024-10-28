@@ -1,5 +1,6 @@
 import { When } from '@cucumber/cucumber';
 import { parseCoords } from './utils/utils';
+import { MemoryValue } from './types';
 
 /**
  * Press mouse key
@@ -24,8 +25,8 @@ When('I release {mouseButton} mouse button', async function (button) {
  * @param {string} coords - x, y coordinates to move
  * @example When I move mouse to '10, 15'
  */
-When('I move mouse to {string}', async function (coords){
-    const [x, y] = parseCoords(await this.value(coords));
+When('I move mouse to {value}', async function (coords: MemoryValue){
+    const [x, y] = parseCoords(await coords.value());
     await this.page.mouse.move(x, y);
 });
 
@@ -34,7 +35,7 @@ When('I move mouse to {string}', async function (coords){
  * @param {string} coords - x, y offset to scroll
  * @example When I scroll mouse wheel by '0, 15'
  */
-When('I scroll mouse wheel by {string}', async function (offset) {
-    const [x, y] = parseCoords(await this.value(offset));
+When('I scroll mouse wheel by {value}', async function (offset: MemoryValue) {
+    const [x, y] = parseCoords(await offset.value());
     await this.page.mouse.wheel(x, y);
 });

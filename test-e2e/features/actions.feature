@@ -49,57 +49,7 @@ Feature: actions
 
   Scenario: switch to frame
     When I expect 'Button' to be visible
-    When I expect 'Frame Element' not to be visible
-    When I switch to 1 frame
-    When I expect 'Button' not to be visible
-    When I expect 'Frame Element' to be visible
-    When I switch to parent frame
-    When I expect 'Button' to be visible
-    When I expect 'Frame Element' not to be visible
-
-  Scenario: switch to page object frame
-    When I expect 'Button' to be visible
-    When I expect 'Frame Element' not to be visible
-    When I switch to 'IFrame' frame
-    When I expect 'Button' not to be visible
-    When I expect 'Frame Element' to be visible
-    When I switch to parent frame
-    When I expect 'Button' to be visible
-    When I expect 'Frame Element' not to be visible
-
-  Scenario: switch to frame in frame
-    When I expect 'Button' to be visible
-    When I expect 'Frame Element' not to be visible
-    When I expect 'Inner Frame Element' not to be visible
-    When I switch to 1 frame
-    When I expect 'Button' not to be visible
-    When I expect 'Frame Element' to be visible
-    When I expect 'Inner Frame Element' not to be visible
-    When I switch to 2 frame
-    When I expect 'Button' not to be visible
-    When I expect 'Frame Element' not to be visible
-    When I expect 'Inner Frame Element' to be visible
-    When I switch to parent frame
-    When I expect 'Button' to be visible
-    When I expect 'Frame Element' not to be visible
-    When I expect 'Inner Frame Element' not to be visible
-
-  Scenario: switch to frame in frame using page object
-    When I expect 'Button' to be visible
-    When I expect 'Frame Element' not to be visible
-    When I expect 'Inner Frame Element' not to be visible
-    When I switch to 'IFrame' frame
-    When I expect 'Button' not to be visible
-    When I expect 'Frame Element' to be visible
-    When I expect 'Inner Frame Element' not to be visible
-    When I switch to 'Inner IFrame' frame
-    When I expect 'Button' not to be visible
-    When I expect 'Frame Element' not to be visible
-    When I expect 'Inner Frame Element' to be visible
-    When I switch to parent frame
-    When I expect 'Button' to be visible
-    When I expect 'Frame Element' not to be visible
-    When I expect 'Inner Frame Element' not to be visible
+    When I expect 'Frame Element In Frame' not to be visible
 
   Scenario Outline: switch to tab by <test>
     When I click 'New Tab Link'
@@ -166,14 +116,6 @@ Feature: actions
     Then I expect '$scrollX' to be equal '$js(0)'
     Then I expect '$scrollY' to be equal '$js(50)'
 
-  Scenario: type in ignore hierarchy component
-    When I type 'test value' to 'IgnoreHierarchyComponent > Input'
-    Then I expect text of 'Action' to be equal 'test value'
-
-  Scenario: type in component without selector
-    When I type 'test value' to 'Component Without Selector > Input'
-    Then I expect text of 'Action' to be equal 'test value'
-
   Scenario: upload file
     When I upload '$uploadFile' file to 'File Input'
     Then I expect text of 'Action' to be equal 'file:C:\fakepath\actions.html'
@@ -237,7 +179,7 @@ Feature: actions
 
   Scenario: scroll until visible
     When I hover over 'Infinite Scroll'
-    When I scroll until '#row 34 in Infinite Scroll Items' to be visible
+    When I scroll until 'Infinite Scroll Item (row 34)' to be visible
 
   Scenario: scroll until visible in element
-    When I scroll in 'Infinite Scroll' until '#row 34 in Infinite Scroll Items' to be visible
+    When I scroll in 'Infinite Scroll' until 'Infinite Scroll Item (row 34)' to be visible

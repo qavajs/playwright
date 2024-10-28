@@ -1,29 +1,26 @@
 import { join } from 'node:path';
 import { PlaywrightWorld } from '@qavajs/playwright-runner-adapter';
-import { PageObject, $, $$ } from '@qavajs/po-playwright';
 import memory from '@qavajs/memory';
 import { expect } from './validationExpect';
+import { element } from './pageObject';
 
 export class QavajsPlaywrightWorld extends PlaywrightWorld {
     config: any;
     memory!: typeof memory;
-    po!: PageObject;
-    $!: typeof $;
-    $$!: typeof $$;
     expect = expect;
-
+    element = element;
+    
     constructor(options: any) {
         super(options);
         const config = require(join(process.cwd(), process.env.CONFIG ?? 'config.js'));
         const profile = process.env.PROFILE ?? 'default';
         this.config = config[profile];
+        memory.register(this.config.memory);
+        memory.setLogger(this);
+        this.memory = memory;
     }
 
-    async element(alias: string) {
-        return this.po.getElement(await this.memory.getValue(alias));
-    }
-
-    async value(expression: string) {
+    value(expression: string): any {
         return this.memory.getValue(expression);
     }
 

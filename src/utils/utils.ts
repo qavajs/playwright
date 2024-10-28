@@ -1,6 +1,6 @@
-import { DataTable } from '@cucumber/cucumber';
-import { QavajsPlaywrightWorld } from '../QavajsPlaywrightWorld';
-import {APIResponse, type Request} from '@playwright/test';
+import { type DataTable } from '@cucumber/cucumber';
+import { type QavajsPlaywrightWorld } from '../QavajsPlaywrightWorld';
+import { type APIResponse, type Request } from '@playwright/test';
 
 function normalizeScenarioName(name: string): string {
     return name.replace(/\W/g, '-')
