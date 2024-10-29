@@ -1,4 +1,4 @@
-require('./lib/types.js');
+require('./lib/parameterTypes.js');
 require('./lib/setup.js');
 require('./lib/actions.js');
 require('./lib/validations.js');

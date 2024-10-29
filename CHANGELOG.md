@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore
 :microscope: - experimental
 
+## [2.1.1]
+- :beetle: fixed library exports
+
 ## [2.1.0]
 - :rocket: added readable page object errors
 - :rocket: added page object logs
