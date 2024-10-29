@@ -1,1 +1,1 @@
-module.exports = require('lib/pageObject');
+module.exports = require('./lib/pageObject');

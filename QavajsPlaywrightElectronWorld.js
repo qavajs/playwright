@@ -1,1 +1,1 @@
-module.exports = require('lib/QavajsPlaywrightElectronWorld.js');
+module.exports = require('./lib/QavajsPlaywrightElectronWorld.js');

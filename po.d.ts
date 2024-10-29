@@ -1,1 +1,1 @@
-export * from 'src/pageObject';
+export * from './src/pageObject';
