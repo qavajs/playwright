@@ -84,6 +84,9 @@ export function query(root: any, path: string) {
     for (const element of elements) {
         const groups = element.match(/^(?<alias>.+?)(?:\((?<argument>.+)\))?$/)?.groups as { alias: string, argument: string };
         const alias = groups.alias.replace(/\s/g, '');
+        if (!currentComponent) {
+            throw new Error(`Alias '${currentAlias}' is not a component`);
+        }
         const currentElement = currentComponent[alias];
         if (!currentElement) throw new Error(`Alias '${alias}' has not been found in '${currentAlias}'`);
         currentAlias = groups.alias;
@@ -118,5 +121,6 @@ export function element(this: any, path: string): Locator {
             }); break;
         }
     }
+    this.log(`${path} -> ${current}`);
     return current
 }

@@ -2,6 +2,8 @@ import { locator } from '../../src/pageObject';
 
 export default class App {
     SimpleTextElement = locator('#textValue');
+    SimpleTextElementTemplate = locator.template(selector => selector)
+    SimpleTextElementNative = locator.native(({ page }) => page.locator('#textValue'))
     SimpleTextListItemByIndex = locator.template(idx => `#textValueList li:nth-child(${idx})`);
     SimpleTextListItemByText = locator.template(text => `#textValueList li:has-text("${text}")`);
     SimpleTextListItems = locator('#textValueList li');
@@ -62,4 +64,11 @@ export default class App {
     //JS Selector
     SimpleTextElementByJS = locator('js=document.querySelectorAll("#textValue")');
     SimpleTextListItemsByJS = locator('js=document.querySelectorAll("#textValueList li")');
+    BodyComponent = locator('body').as(BodyComponent);
+    BodyComponentTemplate = locator.template((selector: string) => selector).as(BodyComponent);
+    BodyComponentNative = locator.native(({ page }) => page.locator('body')).as(BodyComponent);
+}
+
+class BodyComponent {
+    TextElement = locator('#textValue');
 }
