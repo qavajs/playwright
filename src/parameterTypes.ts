@@ -1,8 +1,8 @@
 import { defineParameterType } from '@cucumber/cucumber';
 import { valueExpect } from './validationExpect';
 import { MemoryValue, type Validation } from './types';
-import {conditionExpect} from "./conditionExpect";
-import {Locator} from "@playwright/test";
+import { conditionExpect } from './conditionExpect';
+import { Locator } from '@playwright/test';
 
 function transformString(fn: (value: string) => any) {
     return function (s1: string, s2: string) {
@@ -33,7 +33,7 @@ defineParameterType({
     transformer: function (s1: string, s2: string) {
         const world = this as any;
         return transformString(function (alias) {
-            return world.element(alias);
+            return world.element(world.value(alias));
         })(s1, s2);
     }
 });
@@ -41,7 +41,12 @@ defineParameterType({
 defineParameterType({
     name: 'value',
     regexp: /"([^"\\]*(\\.[^"\\]*)*)"|'([^'\\]*(\\.[^'\\]*)*)'/,
-    transformer: transformString(expression => new MemoryValue(expression)),
+    transformer: function (s1: string, s2: string) {
+        const world = this as any;
+        return transformString(function (expression) {
+            return new MemoryValue(world, expression);
+        })(s1, s2);
+    }
 });
 
 defineParameterType({
@@ -73,7 +78,7 @@ defineParameterType({
 defineParameterType({
     name: 'bodyParsingType',
     regexp: /buffer|json|text/,
-    transformer: (p) => p === 'buffer' ? 'body' : p,
+    transformer: p => p === 'buffer' ? 'body' : p,
     useForSnippets: false,
 });
 

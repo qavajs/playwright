@@ -1,8 +1,8 @@
-import memory from '@qavajs/memory';
-import {Locator} from "@playwright/test";
+import { Locator } from '@playwright/test';
+import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
 export class MemoryValue {
-    constructor(public expression: string) {}
+    constructor(public world: QavajsPlaywrightWorld, public expression: string) {}
 
     /**
      * Return resolved value
@@ -10,7 +10,7 @@ export class MemoryValue {
      * url.value()
      * @return Promise<any>
      */
-    value() { return memory.getValue(this.expression) }
+    value() { return this.world.value(this.expression) }
 
     /**
      * Set value to memory with provided key
@@ -18,7 +18,7 @@ export class MemoryValue {
      * @example
      * url.set('https://qavajs.github.io/')
      */
-    set(value: any): void { memory.setValue(this.expression, value); }
+    set(value: any): void { this.world.setValue(this.expression, value); }
 }
 
 export interface Validation {
