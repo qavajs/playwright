@@ -1,14 +1,17 @@
 # Change Log
 
-All notable changes to the "@qavajs/steps-playwright" will be documented in this file.
+All notable changes to the "@qavajs/playwright" will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-:rocket: - new feature
-:beetle: - bugfix
-:x: - deprecation/removal
-:pencil: - chore
+:rocket: - new feature  
+:beetle: - bugfix  
+:x: - deprecation/removal  
+:pencil: - chore  
 :microscope: - experimental
+
+## [unreleased]
+- :beetle: fixed publishing workflow
 
 ## [2.2.0]
 - :rocket: added memory processor to locator parameter type
