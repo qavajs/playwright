@@ -67,6 +67,8 @@ export default class App {
     BodyComponent = locator('body').as(BodyComponent);
     BodyComponentTemplate = locator.template((selector: string) => selector).as(BodyComponent);
     BodyComponentNative = locator.native(({ page }) => page.locator('body')).as(BodyComponent);
+
+    TopLevelComponent = locator.as(BodyComponent);
 }
 
 class BodyComponent {

@@ -10,8 +10,19 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
-## [unreleased]
+## [2.3.0]
 - :beetle: fixed publishing workflow
+- :rocket: added `locator.as` method to define top level components (like pages)
+```typescript
+export class App {
+  LoginPage = locator.as(LoginPage);
+}
+
+class LoginPage {
+  username = locator('#username');
+  password = locator('#password');
+}
+```
 
 ## [2.2.0]
 - :rocket: added memory processor to locator parameter type
