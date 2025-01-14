@@ -2,7 +2,7 @@ import { DataTable, When } from '@cucumber/cucumber';
 import { dataTable2Object } from './utils/utils';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { Locator } from '@playwright/test';
-import {MemoryValue} from "./types";
+import { MemoryValue } from './types';
 
 /**
  * Save text of element to memory

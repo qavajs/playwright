@@ -10,6 +10,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [2.3.1]
+- :rocket: added capability to pass `pageObject` property as object
+- :beetle: fixed simple equal title
+
 ## [2.3.0]
 - :beetle: fixed publishing workflow
 - :rocket: added `locator.as` method to define top level components (like pages)

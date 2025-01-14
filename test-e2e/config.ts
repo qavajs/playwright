@@ -8,7 +8,7 @@ export default {
         'test-e2e/step_definitions/*.ts'
     ],
     memory: new Memory(),
-    pageObject: App
+    pageObject: new App()
 }
 
 export const electron = {
@@ -19,5 +19,5 @@ export const electron = {
         'test-e2e/step_definitions/*.ts'
     ],
     memory: new Memory(),
-    pageObject: App
+    pageObject: new App()
 }

@@ -4,36 +4,19 @@ export const expect = base.extend({
     toSimpleEqual(actual: any, expected: any) {
         const name = 'to equal';
         const pass = actual == expected;
-        if (pass) {
-            return {
-                expected,
-                actual,
-                name,
-                message: () => `expected ${this.utils.printExpected(actual)} not to equal ${this.utils.printReceived(expected)}`,
-                pass: true,
-            };
-        } else {
-            return {
-                expected,
-                actual,
-                name,
-                message: () => `expected ${this.utils.printExpected(actual)} to equal ${this.utils.printReceived(expected)}`,
-                pass: false,
-            };
-        }
+        return {
+            expected,
+            actual,
+            name,
+            message: () => `expected ${this.utils.printExpected(actual)} ${pass ? 'not ': ''}to equal ${this.utils.printReceived(expected)}`,
+            pass,
+        };
     },
     toHaveType(actual: any, expected: string) {
         const pass = typeof actual == expected;
-        if (pass) {
-            return {
-                message: () => `expected ${actual} to have type ${this.utils.printExpected(expected)}`,
-                pass: true,
-            };
-        } else {
-            return {
-                message: () => `expected ${actual} not to have type ${this.utils.printReceived(expected)}`,
-                pass: false,
-            };
+        return {
+            message: () => `expected ${actual} ${pass ? 'not ': ''}to have type ${this.utils.printReceived(expected)}`,
+            pass
         }
     },
 });
@@ -66,8 +49,8 @@ const aboveFn = (expectClause: any, ER: any) =>
 const belowFn = (expectClause: any, ER: any) =>
     (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll).toBeLessThan(toNumber(actual));
 
-function expectValue(expected: any, reverse: boolean, poll: boolean) {
-    const expectClause = poll ? expect.poll(expected) : expect(expected);
+function expectValue(expected: any, reverse: boolean, poll: boolean, message?: string) {
+    const expectClause = poll ? expect.poll(expected, message) : expect(expected, message);
     return reverse ? expectClause.not : expectClause;
 }
 
@@ -86,7 +69,7 @@ function toRegexp(r: string | RegExp): RegExp {
 const expects = {
     [validations.EQUAL]:
         //@ts-ignore
-        (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll).toSimpleEqual(actual),
+        (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll, 'expect.toEqual').toSimpleEqual(actual),
     [validations.STRICTLY_EQUAL]:
         (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll).toEqual(actual),
     [validations.DEEPLY_EQUAL]:

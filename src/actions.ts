@@ -165,7 +165,7 @@ When('I hover over {locator}', async function (locator: Locator) {
  * @example I select '$dateOfBirth' option from 'Registration Form > Date Of Birth' dropdown
  */
 When('I select {value} option from {locator} dropdown', async function (option: MemoryValue, select: Locator) {
-    await select.selectOption({ label: await option.value()});
+    await select.selectOption({ label: await option.value() });
 });
 
 /**
