@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [Unreleased]
+- :rocket: added js maps
+
 ## [2.3.1]
 - :rocket: added capability to pass `pageObject` property as object
 - :beetle: fixed simple equal title
