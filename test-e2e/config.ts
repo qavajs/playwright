@@ -21,3 +21,13 @@ export const electron = {
     memory: new Memory(),
     pageObject: new App()
 }
+
+export const e2e = {
+    paths: ['test-e2e/features/*.feature'],
+    require: [
+        'index.js',
+        'test-e2e/step_definitions/*.ts'
+    ],
+    memory: new Memory(),
+    pageObject: new App()
+}
