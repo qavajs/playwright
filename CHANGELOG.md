@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore
 :microscope: - experimental
 
+## [1.1.0]
+- :rocket: added source maps
+
 ## [1.0.1]
 - :beetle: fixed `QavajsPlaywrightElectronWorld` lib path
 
