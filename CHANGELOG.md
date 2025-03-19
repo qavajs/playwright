@@ -10,7 +10,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
-## [Unreleased]
+## [2.4.0]
+- :rocket: added capability to pass timeout to function returned by `state` parameter type
 - :rocket: added js maps
 
 ## [2.3.1]

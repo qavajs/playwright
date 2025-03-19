@@ -1,7 +1,6 @@
 import { DataTable, Then } from '@cucumber/cucumber';
 import { Dialog, Locator } from '@playwright/test';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
-import { valueExpect } from './validationExpect';
 import { dataTable2Array } from './utils/utils';
 import { MemoryValue, StateValidation, Validation } from './types';
 

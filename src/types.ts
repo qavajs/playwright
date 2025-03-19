@@ -27,4 +27,4 @@ export interface Validation {
     poll: (AR: any, ER: any) => Promise<void>
 }
 
-export type StateValidation = (locator: Locator) => Promise<void>;
+export type StateValidation = (locator: Locator, options?: { timeout: number }) => Promise<void>;
