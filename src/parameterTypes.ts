@@ -52,7 +52,7 @@ defineParameterType({
 defineParameterType({
     name: 'state',
     regexp: /((not )?to (?:be )?(present|clickable|visible|invisible|enabled|disabled|in viewport))/,
-    transformer: (state) => (locator: Locator) => conditionExpect(locator, state),
+    transformer: (state) => (locator: Locator, options?: { timeout: number }) => conditionExpect(locator, state, options),
     useForSnippets: false
 });
 

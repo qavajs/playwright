@@ -12,3 +12,4 @@ require('./lib/mouse.js');
 require('./lib/keyboard.js');
 require('./lib/utils.js');
 require('./lib/http.js');
+require('./lib/files.js');
