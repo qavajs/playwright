@@ -10,6 +10,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [2.5.0]
+- :rocket: added steps to work with file system
+- :beetle: fixed passing timeout to function returned by `state` parameter type
+
 ## [2.4.0]
 - :rocket: added capability to pass timeout to function returned by `state` parameter type
 - :rocket: added js maps
