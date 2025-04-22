@@ -10,6 +10,21 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [3.0.0]
+- :rocket: [Breaking Change] added `@cucumber/cucumber` and `@qavajs/playwright-runner-adapter` as dependencies with re-exports
+- :rocket: [Breaking Change] moved steps from `index.js` to `steps.js`
+```typescript
+export default {
+    paths: ['features/*.feature'],
+    require: [
+        'node_modules/@qavajs/playwright/steps.js', // package steps
+        'step_definitions/*.ts' // custom step definitions
+    ],
+    memory: new Memory(),
+    pageObject: new App()
+}
+```
+
 ## [2.5.0]
 - :rocket: added steps to work with file system
 - :beetle: fixed passing timeout to function returned by `state` parameter type

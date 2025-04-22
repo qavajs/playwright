@@ -1,5 +1,5 @@
-import { defineConfig, devices } from '@playwright/test';
-import { defineCucumber } from '@qavajs/playwright-runner-adapter';
+import { defineConfig } from '@playwright/test';
+import { defineCucumber } from '../index';
 
 /**
  * Read environment variables from file.

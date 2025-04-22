@@ -1,4 +1,4 @@
-import { type DataTable } from '@cucumber/cucumber';
+import { type DataTable } from '@qavajs/playwright-runner-adapter';
 import { type QavajsPlaywrightWorld } from '../QavajsPlaywrightWorld';
 import { type APIResponse, type Request } from '@playwright/test';
 

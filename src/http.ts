@@ -1,4 +1,4 @@
-import { DataTable, When } from '@cucumber/cucumber';
+import { DataTable, When } from '@qavajs/playwright-runner-adapter';
 import { dataTable2Object, sendHttpRequest } from './utils/utils';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { MemoryValue } from './types';

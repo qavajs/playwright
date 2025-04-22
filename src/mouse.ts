@@ -1,4 +1,4 @@
-import { When } from '@cucumber/cucumber';
+import { When } from '@qavajs/playwright-runner-adapter';
 import { parseCoords } from './utils/utils';
 import { MemoryValue } from './types';
 

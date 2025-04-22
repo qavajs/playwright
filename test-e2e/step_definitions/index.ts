@@ -1,4 +1,4 @@
-import { After, Then, When } from '@cucumber/cucumber';
+import { After, Then, When } from '../../index';
 import { expect } from '@playwright/test';
 import {
     existsSync,

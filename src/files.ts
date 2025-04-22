@@ -1,5 +1,5 @@
 import { accessSync, constants, readdirSync, readFileSync } from 'node:fs';
-import { When } from '@cucumber/cucumber';
+import { When } from '@qavajs/playwright-runner-adapter';
 import { MemoryValue } from './types';
 
 /**

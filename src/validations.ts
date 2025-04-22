@@ -1,4 +1,4 @@
-import { DataTable, Then } from '@cucumber/cucumber';
+import { DataTable, Then } from '@qavajs/playwright-runner-adapter';
 import { Dialog, Locator } from '@playwright/test';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { dataTable2Array } from './utils/utils';
