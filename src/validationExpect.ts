@@ -40,17 +40,23 @@ export const validations = {
 const isClause = '(?:is |do |does |to )?';
 const notClause = '(?<reverse>not |to not )?';
 const toBeClause = '(?:to )?(?:be )?';
+const softClause = '(softly )?';
 const validationClause = `(?:(?<validation>${Object.values(validations).join('|')})(?:s|es)?)`;
 
-export const validationExtractRegexp = new RegExp(`^${isClause}${notClause}${toBeClause}${validationClause}$`);
+export const validationExtractRegexp = new RegExp(`^${isClause}${notClause}${toBeClause}${softClause}${validationClause}$`);
 
-const aboveFn = (expectClause: any, ER: any) =>
-    (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll).toBeGreaterThan(toNumber(actual));
-const belowFn = (expectClause: any, ER: any) =>
-    (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll).toBeLessThan(toNumber(actual));
+type ExpectOptions = {
+    expected: any,
+    actual?: any,
+    reverse: boolean,
+    poll?: boolean,
+    soft?: boolean,
+    message?: string
+};
 
-function expectValue(expected: any, reverse: boolean, poll: boolean, message?: string) {
-    const expectClause = poll ? expect.poll(expected, message) : expect(expected, message);
+function expectValue({ expected, reverse, poll, soft, message }: ExpectOptions) {
+    const softClause = expect.configure({ soft });
+    const expectClause = poll ? softClause.poll(expected, message) : softClause(expected, message);
     return reverse ? expectClause.not : expectClause;
 }
 
@@ -66,35 +72,49 @@ function toRegexp(r: string | RegExp): RegExp {
     return r instanceof RegExp ? r : new RegExp(r)
 }
 
+const aboveFn = ({ expected, actual, reverse, poll, soft }: ExpectOptions) => expectValue({ expected, reverse, poll, soft }).toBeGreaterThan(toNumber(actual));
+const belowFn = ({ expected, actual, reverse, poll, soft }: ExpectOptions) => expectValue({ expected, reverse, poll, soft }).toBeLessThan(toNumber(actual));
+
 const expects = {
     [validations.EQUAL]:
-        //@ts-ignore
-        (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll, 'expect.toEqual').toSimpleEqual(actual),
+        // @ts-ignore
+        ({ expected, actual, reverse, poll, soft }: ExpectOptions) => expectValue({ expected, reverse, poll, message: 'expect.toEqual', soft }).toSimpleEqual(actual),
     [validations.STRICTLY_EQUAL]:
-        (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll).toEqual(actual),
+        ({ expected, actual, reverse, poll, soft }: ExpectOptions) => expectValue({ expected, reverse, poll, soft }).toEqual(actual),
     [validations.DEEPLY_EQUAL]:
-        (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll).toEqual(actual),
+        ({ expected, actual, reverse, poll, soft }: ExpectOptions) => expectValue({ expected, reverse, poll, soft }).toEqual(actual),
     [validations.MATCH]:
-        (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll).toMatch(toRegexp(actual)),
+        ({ expected, actual, reverse, poll, soft }: ExpectOptions) => expectValue({ expected, reverse, poll, soft }).toMatch(toRegexp(actual)),
     [validations.CONTAIN]:
-        (expected: any, actual: any, reverse: boolean, poll: boolean) => expectValue(expected, reverse, poll).toContain(actual),
+        ({ expected, actual, reverse, poll, soft }: ExpectOptions) => expectValue({ expected, reverse, poll, soft }).toContain(actual),
     [validations.ABOVE]: aboveFn,
     [validations.BELOW]: belowFn,
     [validations.GREATER]: aboveFn,
     [validations.LESS]: belowFn,
     [validations.HAVE_TYPE]:
-        (expected: any, actual: any, reverse: boolean, poll: boolean) => (expectValue(expected, reverse, poll) as any).toHaveType(actual),
+        // @ts-ignore
+        ({ expected, actual, reverse, poll, soft }: ExpectOptions) => expectValue({ expected, reverse, poll, soft }).toHaveType(actual),
 };
 
 export function valueExpect(
     expected: any,
     actual: any,
     condition: string,
-    options: { poll: boolean } = { poll: false }
+    options: {
+        poll: boolean
+    } = {
+        poll: false
+    }
 ) {
     const match = condition.match(validationExtractRegexp) as RegExpMatchArray;
     if (!match) throw new Error(`${condition} expect is not implemented`);
-    const [_, reverse, validation] = match;
+    const [_, reverse, soft, validation] = match;
     const expectFn = expects[validation];
-    return expectFn(expected, actual, Boolean(reverse), options.poll);
+    return expectFn({
+        expected,
+        actual,
+        reverse: Boolean(reverse),
+        poll: options.poll,
+        soft: Boolean(soft)
+    });
 }

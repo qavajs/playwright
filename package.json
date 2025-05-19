@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@playwright/test": "^1.52.0",
-    "@qavajs/playwright-runner-adapter": "^1.4.0",
+    "@qavajs/playwright-runner-adapter": "^1.4.1",
     "@qavajs/memory": "^1.10.2"
   }
 }

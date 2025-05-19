@@ -24,6 +24,10 @@ export default {
     pageObject: new App()
 }
 ```
+- :rocket: added capability to provide `softly` suffix to perform soft validations
+```gherkin
+When I expect 'question' to softly equal '42'
+```
 
 ## [2.5.0]
 - :rocket: added steps to work with file system
