@@ -12,46 +12,53 @@ export const conditionValidations = {
 
 const notClause = '(not )?';
 const toBeClause = 'to (?:be )?';
+const softClause = '(softly )?';
 const validationClause = `(${Object.values(conditionValidations).join('|')})`;
 
-export const conditionWaitExtractRegexp = new RegExp(`^${notClause}${toBeClause}${validationClause}$`);
-export const conditionWaitRegexp = new RegExp(`(${notClause}${toBeClause}${validationClause})`);
+export const conditionWaitExtractRegexp = new RegExp(`^${notClause}${toBeClause}${softClause}${validationClause}$`);
 
-function expectLocator(locator: Locator, reverse: boolean) {
-    return reverse ? expect(locator).not : expect(locator);
+function expectLocator(locator: Locator, reverse: boolean, soft: boolean) {
+    const expectClause = expect.configure({ soft });
+    return reverse ? expectClause(locator).not : expectClause(locator);
 }
 
 const expects = {
     [conditionValidations.PRESENT]: async (
         locator: Locator,
         reverse: boolean,
+        soft: boolean,
         options?: { timeout: number },
-    ) => expectLocator(locator, reverse).toBeAttached(options),
+    ) => expectLocator(locator, reverse, soft).toBeAttached(options),
     [conditionValidations.VISIBLE]: (
         locator: Locator,
         reverse: boolean,
+        soft: boolean,
         options?: { timeout: number }
-    ) => expectLocator(locator, reverse).toBeVisible(options),
+    ) => expectLocator(locator, reverse, soft).toBeVisible(options),
     [conditionValidations.INVISIBLE]: (
         locator: Locator,
         reverse: boolean,
+        soft: boolean,
         options?: { timeout: number }
-    ) => expectLocator(locator, reverse).toBeHidden(options),
+    ) => expectLocator(locator, reverse, soft).toBeHidden(options),
     [conditionValidations.IN_VIEWPORT]: (
         locator: Locator,
         reverse: boolean,
+        soft: boolean,
         options?: { timeout: number }
-    ) => expectLocator(locator, reverse).toBeInViewport(options),
+    ) => expectLocator(locator, reverse, soft).toBeInViewport(options),
     [conditionValidations.ENABLED]: (
         locator: Locator,
         reverse: boolean,
+        soft: boolean,
         options?: { timeout: number }
-    ) => expectLocator(locator, reverse).toBeEnabled(options),
+    ) => expectLocator(locator, reverse, soft).toBeEnabled(options),
     [conditionValidations.DISABLED]: (
         locator: Locator,
         reverse: boolean,
+        soft: boolean,
         options?: { timeout: number }
-    ) => expectLocator(locator, reverse).toBeDisabled(options)
+    ) => expectLocator(locator, reverse, soft).toBeDisabled(options)
 }
 
 /**
@@ -68,7 +75,7 @@ export async function conditionExpect(
 ): Promise<void> {
     const match = condition.match(conditionWaitExtractRegexp) as RegExpMatchArray;
     if (!match) throw new Error(`${condition} expect is not implemented`);
-    const [_, reverse, validation] = match;
+    const [_, reverse, soft, validation] = match;
     const expectFn = expects[validation];
-    await expectFn(locator, Boolean(reverse), options);
+    await expectFn(locator, Boolean(reverse), Boolean(soft), options);
 }

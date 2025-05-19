@@ -27,8 +27,9 @@ export default defineConfig({
         ['html', { open: 'never', outputFolder: 'report' }],
         ['junit', { outputFile: 'report/report.xml' }]
     ],
+    timeout: 15000,
     expect: {
-        timeout: 15000
+        timeout: 5000
     },
     webServer: {
         command: 'npx ts-node support/server.ts',
