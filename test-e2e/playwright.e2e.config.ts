@@ -12,7 +12,8 @@ import { defineCucumber } from '../index';
  */
 export default defineConfig({
     testDir: defineCucumber({
-        config: 'test-e2e/config.ts'
+        config: 'test-e2e/config.ts',
+        profile: 'e2e'
     }),
     /* Run tests in files in parallel */
     fullyParallel: true,

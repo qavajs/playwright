@@ -1,4 +1,4 @@
-import { defineParameterType } from '@cucumber/cucumber';
+import { defineParameterType } from '@qavajs/playwright-runner-adapter';
 import { valueExpect } from './validationExpect';
 import { MemoryValue, type Validation } from './types';
 import { conditionExpect } from './conditionExpect';

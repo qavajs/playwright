@@ -1,4 +1,4 @@
-import { When } from '@cucumber/cucumber';
+import { When } from '@qavajs/playwright-runner-adapter';
 import { Locator, Page } from '@playwright/test';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { parseCoords, parseCoordsAsObject, sleep } from './utils/utils';

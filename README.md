@@ -3,7 +3,9 @@ qavajs implementation for playwright test runner
 
 ## Installation
 
-`npm install @qavajs/playwright @qavajs/playwright-runner-adapter @qavajs/memory`
+```
+npm install @qavajs/playwright`
+```
 
 ## Configuration
 cucumber.ts
@@ -14,16 +16,16 @@ import App from './page_object';
 export default {
     paths: ['features/*.feature'],
     require: [
-        'node_modules/@qavajs/playwright/index.js', // package steps
+        'node_modules/@qavajs/playwright/steps.js', // package steps
         'step_definitions/*.ts' // custom step definitions
     ],
     memory: new Memory(),
-    pageObject: App
+    pageObject: new App()
 }
 ```
 playwright.config.ts
 ```typescript
-import { defineCucumber } from '@qavajs/playwright-runner-adapter';
+import { defineCucumber } from '@qavajs/playwright';
 
 export default defineConfig({
     testDir: defineCucumber({

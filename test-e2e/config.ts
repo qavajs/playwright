@@ -25,7 +25,7 @@ export const electron = {
 export const e2e = {
     paths: ['test-e2e/features/*.feature'],
     require: [
-        'index.js',
+        'steps.js',
         'test-e2e/step_definitions/*.ts'
     ],
     memory: new Memory(),

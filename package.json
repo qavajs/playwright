@@ -1,6 +1,6 @@
 {
   "name": "@qavajs/playwright",
-  "version": "2.5.0",
+  "version": "3.0.0",
   "description": "steps to interact with playwright",
   "main": "./index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "install:browsers": "playwright install",
     "debug:e2e": "playwright test --config test-e2e/playwright.config.ts --ui",
     "debug:e2e:electron": "playwright test --config test-e2e/playwright.electron.config.ts --ui",
-    "test:e2e": "playwright test --config test-e2e/playwright.config.ts",
+    "test:e2e": "playwright test --config test-e2e/playwright.e2e.config.ts",
     "test:e2e:electron": "playwright test --config test-e2e/playwright.electron.config.ts"
   },
   "repository": {
@@ -25,17 +25,16 @@
   },
   "homepage": "https://github.com/qavajs/playwright#readme",
   "devDependencies": {
-    "@cucumber/cucumber": "^11.2.0",
-    "@qavajs/memory": "^1.10.2",
-    "@qavajs/playwright-runner-adapter": "^1.3.0",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.13.10",
-    "electron": "^35.0.2",
-    "express": "^4.21.2",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.14.1",
+    "electron": "^35.2.0",
+    "express": "^5.1.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@playwright/test": "^1.51.1"
+    "@playwright/test": "^1.52.0",
+    "@qavajs/playwright-runner-adapter": "^1.4.0",
+    "@qavajs/memory": "^1.10.2"
   }
 }

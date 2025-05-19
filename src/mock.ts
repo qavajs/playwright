@@ -1,4 +1,4 @@
-import { When } from '@cucumber/cucumber';
+import { When } from '@qavajs/playwright-runner-adapter';
 import { Route } from '@playwright/test';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { MemoryValue } from './types';

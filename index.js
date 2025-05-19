@@ -1,15 +1,11 @@
-require('./lib/parameterTypes.js');
-require('./lib/setup.js');
-require('./lib/actions.js');
-require('./lib/validations.js');
-require('./lib/memory.js');
-require('./lib/execute.js');
-require('./lib/intercept.js');
-require('./lib/storage.js');
-require('./lib/mock.js');
-require('./lib/poDefine.js');
-require('./lib/mouse.js');
-require('./lib/keyboard.js');
-require('./lib/utils.js');
-require('./lib/http.js');
-require('./lib/files.js');
+const adapter= require('@qavajs/playwright-runner-adapter');
+const { QavajsPlaywrightWorld } = require('./lib/QavajsPlaywrightWorld');
+const { QavajsPlaywrightElectronWorld } = require('./lib/QavajsPlaywrightElectronWorld.js');
+const { locator } = require('./lib/pageObject');
+
+module.exports = {
+    ...adapter,
+    QavajsPlaywrightWorld,
+    QavajsPlaywrightElectronWorld,
+    locator
+}
