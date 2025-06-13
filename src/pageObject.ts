@@ -136,5 +136,5 @@ export function element(this: any, path: string): Locator {
         }
     }
     this.log(`${path} -> ${current}`);
-    return current
+    return current.describe(`${path} -> ${current}`)
 }

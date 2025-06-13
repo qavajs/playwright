@@ -1,6 +1,6 @@
 {
   "name": "@qavajs/playwright",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "steps to interact with playwright",
   "main": "./index.js",
   "scripts": {
@@ -25,16 +25,16 @@
   },
   "homepage": "https://github.com/qavajs/playwright#readme",
   "devDependencies": {
-    "@types/express": "^5.0.1",
-    "@types/node": "^22.14.1",
-    "electron": "^35.2.0",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.1",
+    "electron": "^36.4.0",
     "express": "^5.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@playwright/test": "^1.52.0",
-    "@qavajs/playwright-runner-adapter": "^1.4.1",
+    "@playwright/test": "^1.53.0",
+    "@qavajs/playwright-runner-adapter": "^1.4.3",
     "@qavajs/memory": "^1.10.2"
   }
 }
