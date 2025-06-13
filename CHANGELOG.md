@@ -10,6 +10,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [3.1.0]
+- :rocket: updated playwright to 1.53.0
+- :rocket: added support of `locator.describe()` to log alias and corresponding locator
+
 ## [3.0.0]
 - :rocket: [Breaking Change] added `@cucumber/cucumber` and `@qavajs/playwright-runner-adapter` as dependencies with re-exports
 - :rocket: [Breaking Change] moved steps from `index.js` to `steps.js`
