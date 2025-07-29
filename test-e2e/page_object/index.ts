@@ -1,4 +1,5 @@
 import { locator } from '../../src/pageObject';
+import { Locator } from '@playwright/test';
 
 export default class App {
     SimpleTextElement = locator('#textValue');
@@ -69,6 +70,10 @@ export default class App {
     BodyComponentNative = locator.native(({ page }) => page.locator('body')).as(BodyComponent);
 
     TopLevelComponent = locator.as(BodyComponent);
+
+    defaultResolver({ alias }: { alias: string }) {
+        return ({ parent }: { parent: Locator }) => parent.getByText(alias);
+    }
 }
 
 class BodyComponent {

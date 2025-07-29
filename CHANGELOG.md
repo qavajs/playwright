@@ -10,6 +10,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [3.2.0]
+- :rocket: Added capability to provide _defaultResolver_ to define default logic to identify element
+```typescript
+class App {
+    defaultResolver({ alias }: { alias: string }) {
+      return ({ parent }: { parent: Locator }) => parent.getByText(alias);
+    }
+}
+```
+
 ## [3.1.0]
 - :rocket: updated playwright to 1.53.0
 - :rocket: added support of `locator.describe()` to log alias and corresponding locator

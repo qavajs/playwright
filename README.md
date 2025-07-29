@@ -3,8 +3,8 @@ qavajs implementation for playwright test runner
 
 ## Installation
 
-```
-npm install @qavajs/playwright`
+```bash
+npm install @qavajs/playwright
 ```
 
 ## Configuration
@@ -38,13 +38,21 @@ export default defineConfig({
 
 ## Development and testing
 Install dependencies
-`npm install`
+```bash
+npm install
+```
 
 Install playwright browsers
-`install:browsers`
+```bash
+install:browsers
+```
 
 Build lib
-`npm run build`
+```bash
+npm run build
+```
 
 Execute e2e browser tests
-`npm run test:e2e`
+```bash
+npm run test:e2e
+```
