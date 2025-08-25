@@ -19,6 +19,13 @@ export const expect = base.extend({
             pass
         }
     },
+    toSatisfy(actual: any, predicate: any) {
+        const pass = predicate(actual);
+        return {
+            message: () => `expected ${actual} ${pass ? 'not ': ''}to satisfy ${this.utils.printReceived(predicate)}`,
+            pass
+        }
+    }
 });
 
 export const validations = {
@@ -35,6 +42,8 @@ export const validations = {
     HAVE_TYPE: 'have type',
     INCLUDE_MEMBERS: 'include member',
     MATCH_SCHEMA: 'match schema',
+    SATISFY: 'satisfy',
+    CASE_INSENSITIVE_EQUAL: 'case insensitive equal',
 };
 
 const isClause = '(?:is |do |does |to )?';
@@ -94,6 +103,11 @@ const expects = {
     [validations.HAVE_TYPE]:
         // @ts-ignore
         ({ expected, actual, reverse, poll, soft }: ExpectOptions) => expectValue({ expected, reverse, poll, soft }).toHaveType(actual),
+    [validations.CASE_INSENSITIVE_EQUAL]:
+        ({ expected, actual, reverse, poll, soft }: ExpectOptions) => expectValue({ expected: expected.toLowerCase(), reverse, poll, soft }).toEqual(actual.toLowerCase()),
+    [validations.SATISFY]:
+        // @ts-ignore
+        ({ expected, actual, reverse, poll, soft }: ExpectOptions) => expectValue({ expected, reverse, poll, soft }).toSatisfy(actual),
 };
 
 export function valueExpect(

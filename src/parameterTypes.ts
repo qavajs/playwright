@@ -13,7 +13,7 @@ function transformString(fn: (value: string) => any) {
 
 defineParameterType({
     name: 'validation',
-    regexp: /((?:is |do |does |to )?(not |to not )?(?:to )?(?:be )?(softly )?(equal|strictly equal|deeply equal|have member|match|contain|above|below|greater than|less than|have type)(?:s|es)?)/,
+    regexp: /((?:is |do |does |to )?(not |to not )?(?:to )?(?:be )?(softly )?(equal|strictly equal|deeply equal|have member|match|contain|above|below|greater than|less than|have type|satisfy|case insensitive equal)(?:s|es)?)/,
     transformer: condition => {
         const validation: Validation = function (AR: any, ER: any) {
             return valueExpect(AR, ER, condition);
