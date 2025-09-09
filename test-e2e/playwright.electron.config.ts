@@ -40,7 +40,12 @@ export default defineConfig({
             name: 'electron',
             use: {
                 launchOptions: {
-                    args: ['test-e2e/apps/electron/main.js'],
+                    args: [
+                        'test-e2e/apps/electron/main.js',
+                        '--no-sandbox',
+                        '--disable-dev-shm-usage',
+                        '--disable-gpu'
+                    ],
                 }
             },
         }
