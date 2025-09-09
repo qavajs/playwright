@@ -109,7 +109,7 @@ When('I switch to {value} window', async function (matcher: MemoryValue) {
     await this.expect.poll(
         poll,
         {
-            message: `Page matching '${urlOrTitle}' was not found`
+            message: `expect '${urlOrTitle}' window to be present`
         }
     ).toBeDefined();
     const targetPage = await poll() as Page;
