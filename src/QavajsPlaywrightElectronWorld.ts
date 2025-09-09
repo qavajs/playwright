@@ -1,5 +1,5 @@
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
-import { _electron, ElectronApplication, test, WorkerInfo } from '@playwright/test';
+import { _electron, Browser, BrowserContext, ElectronApplication, Page, test, WorkerInfo } from '@playwright/test';
 
 type ElectronFixture = {
     browser: ElectronApplication
@@ -22,7 +22,17 @@ const electron = test.extend<ElectronFixture>({
 
 export class QavajsPlaywrightElectronWorld extends QavajsPlaywrightWorld {
     test = electron;
+    electron!: ElectronApplication;
+    context!: BrowserContext;
+    page!: Page;
     constructor(options: any) {
         super(options);
+    }
+
+    init = ({ browser, context, page }: { browser: ElectronApplication, context: BrowserContext, page: Page } ) => {
+        this.browser = browser as unknown as Browser;
+        this.electron = browser;
+        this.context = context;
+        this.page = page;
     }
 }

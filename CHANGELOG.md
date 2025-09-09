@@ -10,6 +10,23 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [3.4.0]
+- :rocket: added `electron` world property to interact with main electron process
+- :rocket: added step to interact with electron app menu
+```gherkin
+When I click 'Test > Open Page' electron menu
+```
+
+- :rocket: added capability to execute script on electron main process
+```gherkin
+Scenario: evaluate script on main process
+  When I execute '$js(async ({ app }) => app.showAboutPanel())' script on electron app
+
+Scenario: evaluate script on main process and save result to memory
+  When I execute '$js(async ({ app }) => app.getAppPath())' script on electron app and save result as 'appPath'
+  Then I expect '$appPath' memory value to contain 'test-e2e/apps/electron'
+```
+
 ## [3.3.0]
 - :rocket: added `to satisfy` validation to verify user-defined expectation provided as predicate
 ```Gherkin

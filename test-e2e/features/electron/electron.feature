@@ -5,3 +5,15 @@ Feature: electron
     * I switch to 'qavajs electron app new window' window
     * I click 'Close Current Window Electron Button'
     * I expect current url to contain 'newWindow.html'
+
+  Scenario: evaluate script on main process
+    * I execute '$js(async ({ app }) => app.showAboutPanel())' script on electron app
+
+  Scenario: evaluate script on main process and save result to memory
+    * I execute '$js(async ({ app }) => app.getAppPath())' script on electron app and save result as 'appPath'
+    * I expect '$appPath' to contain 'test-e2e/apps/electron'
+
+  Scenario: open menu
+    * I click 'Test > Open Page' electron menu
+    * I switch to 'qavajs electron app new window' window
+    * I click 'Close Current Window Electron Button'
