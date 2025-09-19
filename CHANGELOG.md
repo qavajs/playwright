@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [Unreleased]
+- :rocket: added `into` preposition to type and type chars steps
+
 ## [3.4.0]
 - :rocket: added `electron` world property to interact with main electron process
 - :rocket: added step to interact with electron app menu
