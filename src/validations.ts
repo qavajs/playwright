@@ -21,8 +21,8 @@ Then('I expect {locator} {state}', async function (locator: Locator, expect: Sta
  * @param {string} alias - element to get text
  * @param {string} validationType - validation
  * @param {string} value - expected result
- * @example I expect text of '#1 of Search Results' equals to 'google'
- * @example I expect text of '#2 of Search Results' does not contain 'yahoo'
+ * @example I expect text of 'Search Results (1)' equals to 'google'
+ * @example I expect text of 'Search Results (2)' does not contain 'yahoo'
  */
 Then(
     'I expect text of {locator} {validation} {value}',

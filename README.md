@@ -8,7 +8,7 @@ npm install @qavajs/playwright
 ```
 
 ## Configuration
-cucumber.ts
+create `config.ts`
 ```typescript
 import Memory from './memory';
 import App from './page_object';
@@ -29,7 +29,7 @@ import { defineCucumber } from '@qavajs/playwright';
 
 export default defineConfig({
     testDir: defineCucumber({
-        config: 'test-e2e/config.ts',
+        config: 'config.ts',
         profile: 'smoke'
     }),
     ...

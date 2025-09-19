@@ -19,7 +19,7 @@ When('I open {value} url', async function (this: QavajsPlaywrightWorld, url: Mem
  * @param {string} value - value to type
  * @example I type 'wikipedia' to 'Google Input'
  */
-When('I type {value} to {locator}', async function (this: QavajsPlaywrightWorld, type: MemoryValue, locator: Locator) {
+When('I type {value} (in)to {locator}', async function (this: QavajsPlaywrightWorld, type: MemoryValue, locator: Locator) {
     await locator.fill(await type.value());
 });
 
@@ -29,7 +29,7 @@ When('I type {value} to {locator}', async function (this: QavajsPlaywrightWorld,
  * @param {string} value - value to type
  * @example I type 'wikipedia' chars to 'Google Input'
  */
-When('I type {value} chars to {locator}', async function (this: QavajsPlaywrightWorld, type: MemoryValue, locator: Locator) {
+When('I type {value} chars (in)to {locator}', async function (this: QavajsPlaywrightWorld, type: MemoryValue, locator: Locator) {
     await locator.pressSequentially(await type.value());
 });
 
