@@ -10,8 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
-## [Unreleased]
+## [3.5.0]
 - :rocket: added `into` preposition to type and type chars steps
+- :rocket: added `MemoryValue` and `Validation` types export
 
 ## [3.4.0]
 - :rocket: added `electron` world property to interact with main electron process
