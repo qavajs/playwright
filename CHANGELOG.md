@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [Unreleased]
+- :rocket: moved main declarations to package json
+
 ## [3.5.0]
 - :rocket: added `into` preposition to type and type chars steps
 - :rocket: added `MemoryValue` and `Validation` types export

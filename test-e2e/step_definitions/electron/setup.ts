@@ -1,4 +1,3 @@
-import { setWorldConstructor } from '../../../index';
-import { QavajsPlaywrightElectronWorld } from '../../../src/QavajsPlaywrightElectronWorld';
+import { setWorldConstructor, QavajsPlaywrightElectronWorld } from '../../../lib';
 
 setWorldConstructor(QavajsPlaywrightElectronWorld);

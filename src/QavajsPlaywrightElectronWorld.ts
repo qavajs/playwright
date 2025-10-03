@@ -23,8 +23,6 @@ const electron = test.extend<ElectronFixture>({
 export class QavajsPlaywrightElectronWorld extends QavajsPlaywrightWorld {
     test = electron;
     electron!: ElectronApplication;
-    context!: BrowserContext;
-    page!: Page;
     constructor(options: any) {
         super(options);
     }
