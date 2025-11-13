@@ -44,7 +44,7 @@ Then(
     'I expect value of {locator} {validation} {value}',
     async function (locator: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
-        const actualValue = locator.inputValue();
+        const actualValue = () => locator.inputValue();
         await expect.poll(actualValue, expectedValue);
     }
 );
