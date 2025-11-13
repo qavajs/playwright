@@ -1,7 +1,7 @@
 import { When } from '@qavajs/playwright-runner-adapter';
 import { Locator, Page } from '@playwright/test';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
-import { parseCoords, parseCoordsAsObject, sleep } from './utils/utils';
+import { parseCoords, parseCoordsAsObject, sleep } from './utils';
 import { MemoryValue } from './types';
 
 /**
@@ -75,7 +75,7 @@ When('I double click {locator}', async function (locator: Locator) {
  * @example I clear 'Google Input'
  */
 When('I clear {locator}', async function (locator: Locator) {
-    await locator.fill('');
+    await locator.clear();
 });
 
 /**
@@ -97,7 +97,7 @@ When('I switch to {int} window', async function (this: QavajsPlaywrightWorld, in
  * @example I switch to 'google' window
  */
 When('I switch to {value} window', async function (matcher: MemoryValue) {
-    const urlOrTitle = await this.value(await matcher.value());
+    const urlOrTitle = await matcher.value();
     const poll = async () => {
         const pages = this.context.pages();
         for (const currentPage of pages) {
@@ -233,8 +233,7 @@ When('I scroll by {value} in {locator}', async function (offset: MemoryValue, lo
  * When I scroll until 'Row 99' to be visible
  */
 When('I scroll until {locator} to be visible', async function (targetAlias: Locator) {
-    const isVisible = () => targetAlias.isVisible();
-    while (!await isVisible()) {
+    while (!await targetAlias.isVisible()) {
         await this.page.mouse.wheel(0, 100);
         await sleep(50);
     }
@@ -249,8 +248,7 @@ When('I scroll until {locator} to be visible', async function (targetAlias: Loca
  */
 When('I scroll in {locator} until {locator} to be visible', async function (scrollLocator: Locator, targetLocator: Locator) {
     await scrollLocator.hover();
-    const isVisible = () => targetLocator.isVisible();
-    while (!await isVisible()) {
+    while (!await targetLocator.isVisible()) {
         await this.page.mouse.wheel(0, 100);
         await sleep(50);
     }
@@ -296,7 +294,7 @@ When('I accept alert', async function (this: QavajsPlaywrightWorld) {
  * @example I dismiss alert
  */
 When('I dismiss alert', async function (this: QavajsPlaywrightWorld) {
-    await new Promise<void>((resolve)=> this.page.once('dialog', async (dialog) => {
+    await new Promise<void>(resolve => this.page.once('dialog', async (dialog) => {
         await dialog.dismiss();
         resolve();
     }));
@@ -308,7 +306,7 @@ When('I dismiss alert', async function (this: QavajsPlaywrightWorld) {
  */
 When('I type {value} to alert', async function (this: QavajsPlaywrightWorld, type: MemoryValue) {
     const typeValue = await type.value();
-    await new Promise<void>((resolve)=> this.page.once('dialog', async (dialog) => {
+    await new Promise<void>(resolve => this.page.once('dialog', async (dialog) => {
         await dialog.accept(typeValue);
         resolve();
     }))

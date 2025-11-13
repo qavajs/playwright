@@ -1,7 +1,7 @@
 import { DataTable, Then } from '@qavajs/playwright-runner-adapter';
 import { Dialog, Locator } from '@playwright/test';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
-import { dataTable2Array } from './utils/utils';
+import { dataTable2Array } from './utils';
 import { MemoryValue, StateValidation, Validation } from './types';
 
 /**
@@ -44,9 +44,7 @@ Then(
     'I expect value of {locator} {validation} {value}',
     async function (locator: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
-        const actualValue = () => locator.evaluate(
-            (node: any) => node.value
-        );
+        const actualValue = locator.inputValue();
         await expect.poll(actualValue, expectedValue);
     }
 );
