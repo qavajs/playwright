@@ -70,7 +70,7 @@ function expectValue({ expected, reverse, poll, soft, message }: ExpectOptions) 
 }
 
 function toNumber(n: any): number {
-    const parsedNumber = parseFloat(n);
+    const parsedNumber = Number.parseFloat(n);
     if (Number.isNaN(parsedNumber)) {
         throw new Error(`${n} is not a number`);
     }

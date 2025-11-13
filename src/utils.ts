@@ -2,17 +2,13 @@ import { type DataTable } from '@qavajs/playwright-runner-adapter';
 import { type QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { type APIResponse } from '@playwright/test';
 
-function normalizeScenarioName(name: string): string {
-    return name.replace(/\W/g, '-')
-}
-
 /**
  * Parse 'x, y' string to coordinates array
  * @param {string} coords - 'x, y' string
  * @return {number[]} - coords array
  */
 export function parseCoords(coords: string): number[] {
-    return coords.split(/\s?,\s?/).map((c: string) => parseFloat(c ?? 0))
+    return coords.split(/\s?,\s?/).map((c: string) => Number.parseFloat(c ?? 0))
 }
 
 export async function throwTimeoutError(fn: Function, message: string) {
@@ -32,7 +28,7 @@ export async function throwTimeoutError(fn: Function, message: string) {
  * @return {{x: number, y: number}} - coords object
  */
 export function parseCoordsAsObject(coords: string): { x: number, y: number } {
-    const [x, y] = coords.split(/\s?,\s?/).map((c: string) => parseFloat(c ?? 0));
+    const [x, y] = coords.split(/\s?,\s?/).map((c: string) => Number.parseFloat(c ?? 0));
     return {x, y}
 }
 
