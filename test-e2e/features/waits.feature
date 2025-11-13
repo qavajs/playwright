@@ -66,3 +66,38 @@ Feature: waits
 
   Scenario: wait for title
     Then I expect page title to be equal 'title changed'
+
+  Scenario Outline: refresh wait for condition
+    Then I refresh page until '<element>' <condition>
+
+    Examples:
+      | element         | condition     |
+      | Present Element | to be present |
+
+  Scenario Outline: refresh wait for text (<condition>)
+    Then I refresh page until text of 'Loading' <condition> '<expectation>'
+
+    Examples:
+      | condition      | expectation |
+      | to equal       | 100%        |
+
+  Scenario Outline: click wait for condition
+    Then I click '<element>' until '<element>' <condition>
+
+    Examples:
+      | element         | condition     |
+      | Present Element | to be present |
+
+  Scenario Outline: click wait for text (<condition>)
+    Then I click 'Loading' until text of 'Loading' <condition> '<expectation>'
+
+    Examples:
+      | condition      | expectation |
+      | to equal       | 100%        |
+
+  Scenario Outline: click wait for value (<condition>)
+    Then I click 'Loading Input' until value of 'Loading Input' <condition> '<expectation>'
+
+    Examples:
+      | condition      | expectation |
+      | to equal       | 100%        |

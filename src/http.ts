@@ -1,5 +1,5 @@
 import { DataTable, When } from '@qavajs/playwright-runner-adapter';
-import { dataTable2Object, sendHttpRequest } from './utils/utils';
+import { dataTable2Object, sendHttpRequest } from './utils';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { MemoryValue } from './types';
 

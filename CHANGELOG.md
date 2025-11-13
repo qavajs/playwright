@@ -10,8 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
-## [Unreleased]
+## [3.6.0]
 - :rocket: moved main declarations to package json
+- :rocket: added `I refress page until...` and `I click until...` steps
 
 ## [3.5.0]
 - :rocket: added `into` preposition to type and type chars steps

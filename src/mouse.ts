@@ -1,5 +1,5 @@
 import { When } from '@qavajs/playwright-runner-adapter';
-import { parseCoords } from './utils/utils';
+import { parseCoords } from './utils';
 import { MemoryValue } from './types';
 
 /**
