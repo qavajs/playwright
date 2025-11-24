@@ -10,8 +10,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [3.7.1]
+- :beetle: fixed parameter type for `I save file to {value} by clicking {locator}` step
+
 ## [3.7.0]
-- :rocket: added `I save file to {value} by clicking {playwrightLocator}` step
+- :rocket: added `I save file to {value} by clicking {locator}` step
 
 ## [3.6.0]
 - :rocket: moved main declarations to package json

@@ -260,7 +260,7 @@ When('I scroll in {locator} until {locator} to be visible', async function (this
  * @param {string} initiatorAlias - alias of an element triggering downloading process
  * @example I save file to './folder/file.pdf' by clicking 'Download Button'
  */
-When('I save file to {value} by clicking {playwrightLocator}', async function (this: QavajsPlaywrightWorld, path: MemoryValue, locator: Locator) {
+When('I save file to {value} by clicking {locator}', async function (this: QavajsPlaywrightWorld, path: MemoryValue, locator: Locator) {
     const downloadPromise = this.page.waitForEvent('download');
     await locator.click();
     const download = await downloadPromise;
