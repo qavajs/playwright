@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [3.7.0]
+- :rocket: added `I save file to {value} by clicking {playwrightLocator}` step
+
 ## [3.6.0]
 - :rocket: moved main declarations to package json
 - :rocket: added `I refress page until...` and `I click until...` steps

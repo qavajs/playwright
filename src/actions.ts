@@ -246,12 +246,25 @@ When('I scroll until {locator} to be visible', async function (targetAlias: Loca
  * @example
  * When I scroll in 'List' until 'Row 99' to be visible
  */
-When('I scroll in {locator} until {locator} to be visible', async function (scrollLocator: Locator, targetLocator: Locator) {
+When('I scroll in {locator} until {locator} to be visible', async function (this: QavajsPlaywrightWorld, scrollLocator: Locator, targetLocator: Locator) {
     await scrollLocator.hover();
     while (!await targetLocator.isVisible()) {
         await this.page.mouse.wheel(0, 100);
         await sleep(50);
     }
+});
+
+/**
+ * Save a file to relative path
+ * @param {string} pathAlias - file path
+ * @param {string} initiatorAlias - alias of an element triggering downloading process
+ * @example I save file to './folder/file.pdf' by clicking 'Download Button'
+ */
+When('I save file to {value} by clicking {playwrightLocator}', async function (this: QavajsPlaywrightWorld, path: MemoryValue, locator: Locator) {
+    const downloadPromise = this.page.waitForEvent('download');
+    await locator.click();
+    const download = await downloadPromise;
+    await download.saveAs(await path.value());
 });
 
 /**
