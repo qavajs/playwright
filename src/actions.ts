@@ -1,7 +1,7 @@
-import { When } from '@qavajs/playwright-runner-adapter';
+import { DataTable, When } from '@qavajs/playwright-runner-adapter';
 import { Locator, Page } from '@playwright/test';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
-import { parseCoords, parseCoordsAsObject, sleep } from './utils';
+import { dataTable2Array, parseCoords, parseCoordsAsObject, sleep } from './utils';
 import { MemoryValue } from './types';
 
 /**
@@ -281,13 +281,29 @@ When('I upload {value} file to {locator}', async function (filePath: MemoryValue
  * Provide file url to file chooser
  * @param {string} alias - element that invokes upload file chooser
  * @param {string} value - file path
- * @example I upload '/folder/file.txt' by clicking 'Upload Button'
+ * @example I upload '/folder/file.txt' file by clicking 'Upload Button'
  */
 When('I upload {value} file by clicking {locator}', async function (filePath: MemoryValue, locator: Locator) {
     const fileChooserPromise = this.page.waitForEvent('filechooser');
     await locator.click();
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles(await filePath.value());
+});
+
+/**
+ * Provide file url to file chooser
+ * @param {string} alias - element that invokes upload file chooser
+ * @param {string} value - file path
+ * @example I upload files by clicking 'Upload Button':
+ * | path1 |
+ * | path2 | 
+ */
+When('I upload files by clicking {locator}:', async function (this: QavajsPlaywrightWorld, locator: Locator, dataTable: DataTable) {
+    const fileChooserPromise = this.page.waitForEvent('filechooser');
+    await locator.click();
+    const fileChooser = await fileChooserPromise;
+    const filesArray = await dataTable2Array(this, dataTable)
+    await fileChooser.setFiles(filesArray);
 });
 
 /**

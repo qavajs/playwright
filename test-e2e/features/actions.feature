@@ -70,7 +70,7 @@ Feature: actions
 
     Examples:
       | test  | param        |
-      | index | 2            |
+      | index |            2 |
       | title | 'Frame'      |
       | url   | 'frame.html' |
 
@@ -95,8 +95,8 @@ Feature: actions
 
     Examples:
       | Key   | Times | Postfix | Result                |
-      | Enter | 1     |         | pressed Enter 1 times |
-      | Space | 5     | s       | pressed Space 5 times |
+      | Enter |     1 |         | pressed Enter 1 times |
+      | Space |     5 | s       | pressed Space 5 times |
 
   Scenario: hover
     When I hover over 'Button Hover'
@@ -128,11 +128,17 @@ Feature: actions
 
   Scenario: upload file
     When I upload '$uploadFile' file to 'File Input'
-    Then I expect text of 'Action' to be equal 'file:C:\fakepath\actions.html'
+    Then I expect text of 'Action' to be equal 'file:actions.html'
 
   Scenario: upload file via file chooser
     When I upload '$uploadFile' file by clicking 'File Input'
-    Then I expect text of 'Action' to be equal 'file:C:\fakepath\actions.html'
+    Then I expect text of 'Action' to be equal 'file:actions.html'
+
+  Scenario: upload multiple files via file chooser
+    When I upload files by clicking 'File Input':
+      | $uploadFile |
+      | $uploadFile |
+    Then I expect text of 'Action' to be equal 'file:actions.html;actions.html'
 
   Scenario: accept alert
     When I click "Alert Button"
