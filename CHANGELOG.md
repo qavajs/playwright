@@ -10,7 +10,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
-## [3.7.2]
+## [3.8.0]
 - :beetle: added step for uploading multiple files `I upload '{value}' file by clicking '{locator}'`
 
 ## [3.7.1]
