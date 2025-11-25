@@ -15,7 +15,7 @@ const electron = test.extend<ElectronFixture>({
     context: async ({ browser }, use) => {
         await use(browser.context());
     },
-    page: async ({ browser}, use)=> {
+    page: async ({ browser }, use)=> {
         await use(await browser.firstWindow());
     }
 });
