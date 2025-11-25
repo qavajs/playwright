@@ -34,8 +34,8 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@playwright/test": "^1.56.1",
-    "@qavajs/playwright-runner-adapter": "^1.8.1",
+    "@playwright/test": "^1.57.0",
+    "@qavajs/playwright-runner-adapter": "^1.9.0",
     "@qavajs/memory": "^1.10.3"
   }
 }
