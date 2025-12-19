@@ -19,6 +19,10 @@ Feature: memory
     When I save 'name' attribute of 'Simple Text Input' as 'memory'
     Then I expect '$memory' to be equal 'textInputName'
 
+  Scenario: element custom property
+    When I save '$js(e => e.value)' custom property of 'Simple Text Input' as 'memory'
+    Then I expect '$memory' to be equal '123'
+
   Scenario: current url
     When I save current url as 'memory'
     Then I expect '$memory' to contain 'values.html'
@@ -37,6 +41,10 @@ Feature: memory
 
   Scenario: collection property of elements
     Then I save 'nodeName' property of every element of 'Simple Text List Items' collection as 'memory'
+    Then I expect '$memory' to deeply equal '$array("LI", "LI", "LI")'
+
+  Scenario: collection custom property of elements
+    Then I save '$js(e => e.nodeName)' custom property of every element of 'Simple Text List Items' collection as 'memory'
     Then I expect '$memory' to deeply equal '$array("LI", "LI", "LI")'
 
   Scenario: element css property

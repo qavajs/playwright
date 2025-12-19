@@ -10,6 +10,15 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [3.9.0]
+- :rocket: added steps to work with custom properties (script results) in memory and validations
+```gherkin
+When I save '$js(element => element.value)' custom property of 'Element' as 'value'
+Then I expect '$js(element => element.value)' custom property of 'Element' to be equal '123'
+When I save '$js(element => element.nodeName)' custom property of every element of 'Collection' collection as 'nodeNames'
+Then I expect '$js(element => element.nodeName)' custom property of every element in 'Collection' collection to equal 'LI'
+```
+
 ## [3.8.0]
 - :beetle: added step for uploading multiple files `I upload '{value}' file by clicking '{locator}'`
 
