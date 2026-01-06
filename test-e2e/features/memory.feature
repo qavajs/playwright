@@ -7,6 +7,10 @@ Feature: memory
     When I save text of 'Simple Text Element' as 'memory'
     Then I expect '$memory' to be equal 'text value'
 
+  Scenario: element value
+    When I save value of 'Simple Text Input' as 'memory'
+    Then I expect '$memory' to be equal '123'
+
   Scenario: collection number of elements
     When I save number of elements in 'Simple Text List Items' collection as 'memory'
     Then I expect '$memory' to be equal '$js(3)'
