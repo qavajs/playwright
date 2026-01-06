@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [3.10.0]
+- :rocket: added `I save value of...` step
+
 ## [3.9.0]
 - :rocket: added steps to work with custom properties (script results) in memory and validations
 ```gherkin

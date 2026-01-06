@@ -6,7 +6,7 @@ import type { MemoryValue } from './types';
 
 /**
  * Save text of element to memory
- * @param {string} alias - element to get value
+ * @param {string} alias - element to get text
  * @param {string} key - key to store value
  * @example I save text of 'Search Results (1)' as 'firstSearchResult'
  */
@@ -14,6 +14,18 @@ When('I save text of {locator} as {value}', async function (locator: Locator, ke
     const value = await locator.innerText();
     key.set(value);
 });
+
+/**
+ * Save value of element to memory
+ * @param {string} alias - element to get value
+ * @param {string} key - key to store value
+ * @example I save text of 'Search Input' as 'searchInput'
+ */
+When('I save value of {locator} as {value}', async function (locator: Locator, key: MemoryValue) {
+    const value = await locator.inputValue();
+    key.set(value);
+});
+
 
 /**
  * Save property of element to memory
