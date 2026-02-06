@@ -1,5 +1,4 @@
 import { defineConfig, devices } from '@playwright/test';
-import { defineCucumber } from '../lib';
 
 /**
  * Read environment variables from file.
@@ -11,9 +10,7 @@ import { defineCucumber } from '../lib';
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-    testDir: defineCucumber({
-        config: 'test-e2e/config.ts'
-    }),
+    testMatch: 'default.spec.ts',
     /* Run tests in files in parallel */
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */

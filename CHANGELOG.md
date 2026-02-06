@@ -10,6 +10,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [4.0.0]
+Breaking Change:
+- :rocket: moved to `@qavajs/playwright-runner-adapter` to 2.0.0
+
 ## [3.10.0]
 - :rocket: added `I save value of...` step
 
