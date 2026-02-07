@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [4.0.1]
+:beetle: fixed issue with source maps in ui mode
+
 ## [4.0.0]
 Breaking Change:
 - :rocket: moved to `@qavajs/playwright-runner-adapter` to 2.0.0 to use updated connection mechanism

@@ -1,6 +1,6 @@
 {
   "name": "@qavajs/playwright",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "steps to interact with playwright",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -36,6 +36,6 @@
   "dependencies": {
     "@playwright/test": "^1.58.2",
     "@qavajs/memory": "^1.10.3",
-    "@qavajs/playwright-runner-adapter": "^2.0.0"
+    "@qavajs/playwright-runner-adapter": "^2.0.1"
   }
 }
