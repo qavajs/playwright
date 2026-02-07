@@ -12,7 +12,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [4.0.0]
 Breaking Change:
-- :rocket: moved to `@qavajs/playwright-runner-adapter` to 2.0.0
+- :rocket: moved to `@qavajs/playwright-runner-adapter` to 2.0.0 to use updated connection mechanism
 
 ## [3.10.0]
 - :rocket: added `I save value of...` step
