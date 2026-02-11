@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [4.1.0]
+- :rocket: updated adapter to make declaration of beforeAll/afterAll hooks optional to enable pure parallelism
+
 ## [4.0.1]
 :beetle: fixed issue with source maps in ui mode
 
