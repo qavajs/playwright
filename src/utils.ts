@@ -61,7 +61,7 @@ export function dataTable2Array(ctx: QavajsPlaywrightWorld, dataTable: DataTable
 }
 
 export async function sendHttpRequest(world: QavajsPlaywrightWorld, requestUrl: string, options: Record<string, string>): Promise<APIResponse> {
-    const response = await world.context.request.fetch(requestUrl, options);
+    const response = await world.request.fetch(requestUrl, options);
     Object.defineProperty(response, 'payload', {
         get(): any {
             if (this._isPayloadSet) return this._payload;
