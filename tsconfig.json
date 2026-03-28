@@ -6,6 +6,7 @@
     "test/**/*.spec.ts"
   ],
   "compilerOptions": {
+    "rootDir": "./src",
     "target": "es2023",
     "module": "node16",
     "moduleResolution": "node16",
