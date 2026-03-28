@@ -8,3 +8,4 @@ traces/
 video/
 test-results/
 playwright-report/
+test-e2e/report/
