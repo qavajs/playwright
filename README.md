@@ -1,4 +1,6 @@
 # @qavajs/playwright
+[![npm](https://img.shields.io/npm/v/@qavajs/playwright)](https://www.npmjs.com/package/@qavajs/playwright)
+[![license](https://img.shields.io/npm/l/@qavajs/playwright)](LICENSE)
 
 Cucumber BDD step definitions for the Playwright test runner. Part of the [qavajs](https://github.com/qavajs) framework.
 
