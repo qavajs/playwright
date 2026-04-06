@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [4.2.0]
+- :rocket: update @playwright/test to 1.59.1
+
 ## [4.1.1]
 - :beetle: fixed issue importing `request` fixture
 
