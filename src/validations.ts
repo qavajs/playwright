@@ -115,7 +115,7 @@ Then(
  */
 Then(
     'I expect current url {validation} {value}',
-    async function (expect: Validation, expected: MemoryValue) {
+    async function (this: QavajsPlaywrightWorld, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const actualValue = () => this.page.url();
         await expect.poll(actualValue, expectedValue);
@@ -148,7 +148,7 @@ Then(
  */
 Then(
     'I expect page title {validation} {value}',
-    async function (expect: Validation, expected: MemoryValue) {
+    async function (this: QavajsPlaywrightWorld, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const actualValue = () => this.page.title();
         await expect.poll(actualValue, expectedValue);
@@ -322,7 +322,6 @@ Then(
         const failCounter = { fail: 0, pass: 0 };
         for (const value of array) {
             try {
-                console.log(value, expectedValue)
                 expect(value, expectedValue);
                 failCounter.pass++;
             } catch (err) {

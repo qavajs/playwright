@@ -156,7 +156,7 @@ When(
  * @param {string} key - key to store value
  * @example I save current url as 'currentUrl'
  */
-When('I save current url as {value}', async function (key: MemoryValue) {
+When('I save current url as {value}', async function (this: QavajsPlaywrightWorld, key: MemoryValue) {
     key.set(this.page.url());
 });
 
@@ -165,7 +165,7 @@ When('I save current url as {value}', async function (key: MemoryValue) {
  * @param {string} key - key to store value
  * @example I save page title as 'currentTitle'
  */
-When('I save page title as {value}', async function (key: MemoryValue) {
+When('I save page title as {value}', async function (this: QavajsPlaywrightWorld, key: MemoryValue) {
     key.set(this.page.title());
 });
 
@@ -174,7 +174,7 @@ When('I save page title as {value}', async function (key: MemoryValue) {
  * @param {string} key - key to store value
  * @example I save screenshot as 'screenshot'
  */
-When('I save screenshot as {value}', async function(key: MemoryValue) {
+When('I save screenshot as {value}', async function(this: QavajsPlaywrightWorld, key: MemoryValue) {
     const screenshot = await this.page.screenshot();
     key.set(screenshot);
 });
@@ -184,7 +184,7 @@ When('I save screenshot as {value}', async function(key: MemoryValue) {
  * @param {string} key - key to store value
  * @example I save full page screenshot as 'screenshot'
  */
-When('I save full page screenshot as {value}', async function(key: MemoryValue) {
+When('I save full page screenshot as {value}', async function(this: QavajsPlaywrightWorld, key: MemoryValue) {
     const screenshot = await this.page.screenshot({ fullPage: true });
     key.set(screenshot);
 });

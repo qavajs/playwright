@@ -1,6 +1,7 @@
 import { accessSync, constants, readdirSync, readFileSync } from 'node:fs';
 import { When } from '@qavajs/playwright-runner-adapter';
 import { MemoryValue } from './types';
+import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
 /**
  * Save file content to memory as buffer
@@ -54,7 +55,7 @@ When('I expect {value} text file content {validation} {value}', async function (
  * When I expect file matching 'f.+\.txt' regexp exists in './test-e2e/folder'
  * When I expect file matching '$fileRegexp' regexp exists in '$folder'
  */
-When('I expect file matching {value} regexp exists in {value}', async function (file: MemoryValue, dir: MemoryValue) {
+When('I expect file matching {value} regexp exists in {value}', async function (this: QavajsPlaywrightWorld, file: MemoryValue, dir: MemoryValue) {
     const fileNameRegexp = new RegExp(await file.value());
     const dirName = await dir.value();
     await this.expect.poll(() => {
@@ -73,7 +74,7 @@ When('I expect file matching {value} regexp exists in {value}', async function (
  * When I expect './test-e2e/folder/file.txt' file exists
  * When I expect '$filePath' file exists
  */
-When('I expect {value} file exists', async function (file: MemoryValue) {
+When('I expect {value} file exists', async function (this: QavajsPlaywrightWorld, file: MemoryValue) {
     const fileName = await file.value();
     await this.expect.poll(() => {
         try {
