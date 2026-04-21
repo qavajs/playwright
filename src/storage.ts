@@ -40,9 +40,9 @@ When('I save value of {value} cookie as {value}', async function (this: QavajsPl
  * @example I set 'username' local storage value as 'user1'
  * @example I set '$sessionStorageKey' session storage value as '$sessionStorageValue'
  */
-When('I set {value} {word} storage value as {value}', async function (storageKey: MemoryValue, storageType: string, value: MemoryValue) {
+When('I set {value} {word} storage value as {value}', async function (this: QavajsPlaywrightWorld, storageKey: MemoryValue, storageType: string, value: MemoryValue) {
     const storage = storageType + 'Storage';
-    await this.page.evaluate(function([storageKey, storage, value]: [string, 'localStorage' | 'sessionStorage', string]) {
+    await this.page.evaluate<any, any>(function([storageKey, storage, value]: [string, 'localStorage' | 'sessionStorage', string]) {
         window[storage].setItem(storageKey, value);
     }, [await storageKey.value(), storage, await value.value()]);
 });
@@ -55,9 +55,9 @@ When('I set {value} {word} storage value as {value}', async function (storageKey
  * @example I save value of 'username' local storage as 'localStorageValue'
  * @example I save value of '$sessionStorageKey' session storage value as 'sessionStorageValue'
  */
-When('I save value of {value} {word} storage as {value}', async function (storageKey: MemoryValue, storageType, key: MemoryValue) {
+When('I save value of {value} {word} storage as {value}', async function (this: QavajsPlaywrightWorld, storageKey: MemoryValue, storageType, key: MemoryValue) {
     const storage = storageType + 'Storage';
-    const value = await this.page.evaluate(function ([storageKey, storage]: [string, 'localStorage' | 'sessionStorage']) {
+    const value = await this.page.evaluate<any, any>(function ([storageKey, storage]: [string, 'localStorage' | 'sessionStorage']) {
         return window[storage].getItem(storageKey);
     }, [await storageKey.value(), storage]);
     key.set(value);

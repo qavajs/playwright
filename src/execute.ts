@@ -1,7 +1,7 @@
 import { When } from '@qavajs/playwright-runner-adapter';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
-import {MemoryValue} from "./types";
-import {Locator} from "@playwright/test";
+import { MemoryValue } from './types';
+import { Locator } from '@playwright/test';
 
 /**
  * Execute client function

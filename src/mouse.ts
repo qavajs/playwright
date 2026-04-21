@@ -1,13 +1,14 @@
 import { When } from '@qavajs/playwright-runner-adapter';
 import { parseCoords } from './utils';
 import { MemoryValue } from './types';
+import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
 /**
  * Press mouse key
  * @param {string} button - button to press (left, right, middle)
  * @example When I press left mouse button
  */
-When('I press {mouseButton} mouse button', async function (button) {
+When('I press {mouseButton} mouse button', async function (this: QavajsPlaywrightWorld, button) {
     await this.page.mouse.down({ button });
 });
 
@@ -16,7 +17,7 @@ When('I press {mouseButton} mouse button', async function (button) {
  * @param {string} button - button to release (left, right, middle)
  * @example When I release left mouse button
  */
-When('I release {mouseButton} mouse button', async function (button) {
+When('I release {mouseButton} mouse button', async function (this: QavajsPlaywrightWorld, button) {
     await this.page.mouse.up({ button });
 });
 
@@ -25,7 +26,7 @@ When('I release {mouseButton} mouse button', async function (button) {
  * @param {string} coords - x, y coordinates to move
  * @example When I move mouse to '10, 15'
  */
-When('I move mouse to {value}', async function (coords: MemoryValue){
+When('I move mouse to {value}', async function (this: QavajsPlaywrightWorld, coords: MemoryValue){
     const [x, y] = parseCoords(await coords.value());
     await this.page.mouse.move(x, y);
 });
@@ -35,7 +36,7 @@ When('I move mouse to {value}', async function (coords: MemoryValue){
  * @param {string} coords - x, y offset to scroll
  * @example When I scroll mouse wheel by '0, 15'
  */
-When('I scroll mouse wheel by {value}', async function (offset: MemoryValue) {
+When('I scroll mouse wheel by {value}', async function (this: QavajsPlaywrightWorld, offset: MemoryValue) {
     const [x, y] = parseCoords(await offset.value());
     await this.page.mouse.wheel(x, y);
 });

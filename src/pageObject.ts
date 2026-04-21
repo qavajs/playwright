@@ -1,4 +1,4 @@
-import { type Browser, type BrowserContext, type Page, Locator } from '@playwright/test';
+import type { Browser, BrowserContext, Page, Locator } from '@playwright/test';
 
 type SelectorDefinition = string | ((argument: string) => string) | ((argument: any) => any) | null;
 

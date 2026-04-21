@@ -1,7 +1,8 @@
 node_modules/
 lib/
 coverage/
-test-e2e/report.*
+test-e2e/report/
+test-e2e/folder/
 .idea/
 traces/
 video/

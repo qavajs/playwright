@@ -1,7 +1,4 @@
 {
-  "include": [
-    "src/**/*.ts"
-  ],
   "exclude": [
     "test/**/*.spec.ts"
   ],
@@ -9,6 +6,7 @@
     "target": "es2023",
     "module": "node16",
     "moduleResolution": "node16",
+    "sourceRoot": "./src",
     "outDir": "./lib",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,

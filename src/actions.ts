@@ -96,7 +96,7 @@ When('I switch to {int} window', async function (this: QavajsPlaywrightWorld, in
  * @param {string} matcher - url or title of window to switch
  * @example I switch to 'google' window
  */
-When('I switch to {value} window', async function (matcher: MemoryValue) {
+When('I switch to {value} window', async function (this: QavajsPlaywrightWorld, matcher: MemoryValue) {
     const urlOrTitle = await matcher.value();
     const poll = async () => {
         const pages = this.context.pages();
@@ -112,16 +112,15 @@ When('I switch to {value} window', async function (matcher: MemoryValue) {
             message: `expect '${urlOrTitle}' window to be present`
         }
     ).toBeDefined();
-    const targetPage = await poll() as Page;
-    this.page = targetPage;
-    await targetPage.bringToFront();
+    this.page = await poll() as Page;
+    await this.page.bringToFront();
 });
 
 /**
  * Refresh current this.page
  * @example I refresh this.page
  */
-When('I refresh page', async function () {
+When('I refresh page', async function (this: QavajsPlaywrightWorld) {
     await this.page.reload();
 });
 
@@ -131,7 +130,7 @@ When('I refresh page', async function () {
  * @example I press 'Enter' key
  * @example I press 'Control+C' keys
  */
-When('I press {string} key(s)', async function (key: string) {
+When('I press {string} key(s)', async function (this: QavajsPlaywrightWorld, key: string) {
     await this.page.press('body', key);
 });
 
@@ -142,7 +141,7 @@ When('I press {string} key(s)', async function (key: string) {
  * @example I press 'Enter' key 5 times
  * @example I press 'Control+V' keys 5 times
  */
-When('I press {string} key(s) {int} time(s)', async function (key: string, num: number) {
+When('I press {string} key(s) {int} time(s)', async function (this: QavajsPlaywrightWorld, key: string, num: number) {
     for (let i: number = 0; i < num; i++) {
         await this.page.keyboard.press(key);
     }
@@ -199,7 +198,7 @@ When(
  * @example
  * When I scroll by '0, 100'
  */
-When('I scroll by {value}', async function (offset: MemoryValue) {
+When('I scroll by {value}', async function (this: QavajsPlaywrightWorld, offset: MemoryValue) {
     const [x, y] = parseCoords(await offset.value());
     await this.page.mouse.wheel(x, y);
 });
@@ -220,7 +219,7 @@ When('I scroll to {locator}', async function (locator: Locator) {
  * @example
  * When I scroll by '0, 100' in 'Overflow Container'
  */
-When('I scroll by {value} in {locator}', async function (offset: MemoryValue, locator: Locator) {
+When('I scroll by {value} in {locator}', async function (this: QavajsPlaywrightWorld, offset: MemoryValue, locator: Locator) {
     const [x, y] = parseCoords(await offset.value());
     await locator.hover();
     await this.page.mouse.wheel(x, y);
@@ -232,7 +231,7 @@ When('I scroll by {value} in {locator}', async function (offset: MemoryValue, lo
  * @example
  * When I scroll until 'Row 99' to be visible
  */
-When('I scroll until {locator} to be visible', async function (targetAlias: Locator) {
+When('I scroll until {locator} to be visible', async function (this: QavajsPlaywrightWorld, targetAlias: Locator) {
     while (!await targetAlias.isVisible()) {
         await this.page.mouse.wheel(0, 100);
         await sleep(50);
@@ -283,7 +282,7 @@ When('I upload {value} file to {locator}', async function (filePath: MemoryValue
  * @param {string} value - file path
  * @example I upload '/folder/file.txt' file by clicking 'Upload Button'
  */
-When('I upload {value} file by clicking {locator}', async function (filePath: MemoryValue, locator: Locator) {
+When('I upload {value} file by clicking {locator}', async function (this: QavajsPlaywrightWorld, filePath: MemoryValue, locator: Locator) {
     const fileChooserPromise = this.page.waitForEvent('filechooser');
     await locator.click();
     const fileChooser = await fileChooserPromise;
@@ -355,7 +354,7 @@ When('I drag and drop {locator} to {locator}', async function (locator: Locator,
  * Open new browser tab
  * @example I open new tab
  */
-When('I open new tab', async function () {
+When('I open new tab', async function (this: QavajsPlaywrightWorld) {
     await this.page.evaluate(() => { window.open('about:blank', '_blank') });
 });
 
@@ -381,7 +380,7 @@ When('I close current tab', async function (this: QavajsPlaywrightWorld) {
 When('I click {value} coordinates in {locator}', async function (coords: MemoryValue, locator: Locator) {
     const coordinates = await coords.value();
     const coordsObject = typeof coordinates === 'string' ? parseCoordsAsObject(coordinates) : coordinates;
-    await locator.click({position: coordsObject});
+    await locator.click({ position: coordsObject });
 });
 
 /**
@@ -389,10 +388,10 @@ When('I click {value} coordinates in {locator}', async function (coords: MemoryV
  * @param {string} size - desired size
  * @example I set window size '1366,768'
  */
-When('I set window size {value}', async function (size: MemoryValue) {
+When('I set window size {value}', async function (this: QavajsPlaywrightWorld, size: MemoryValue) {
     const viewPort = await size.value();
     const {x, y} = parseCoordsAsObject(viewPort);
-    await this.page.setViewportSize({width: x, height: y});
+    await this.page.setViewportSize({ width: x, height: y });
 });
 
 /**
@@ -401,7 +400,7 @@ When('I set window size {value}', async function (size: MemoryValue) {
  * @example I click back button
  * @example I click forward button
  */
-When('I click {browserButton} button', async function (button: 'back' | 'forward') {
+When('I click {browserButton} button', async function (this: QavajsPlaywrightWorld, button: 'back' | 'forward') {
     if (button === 'back') return this.page.goBack();
     if (button === 'forward') return this.page.goForward();
 });

@@ -1,5 +1,6 @@
 import { When } from '@qavajs/playwright-runner-adapter';
-import {MemoryValue} from "./types";
+import { MemoryValue } from './types';
+import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
 /**
  * Create interception for url or predicate function
@@ -8,7 +9,7 @@ import {MemoryValue} from "./types";
  * @example I create interception for '**\/api/qavajs' as 'intercept'
  * @example I create interception for '$interceptHandler' as 'intercept' // if you need to pass function as interception handler
  */
-When('I create interception for {value} as {value}', async function (predicate: MemoryValue, key: MemoryValue) {
+When('I create interception for {value} as {value}', async function (this: QavajsPlaywrightWorld, predicate: MemoryValue, key: MemoryValue) {
     const predicateValue = await predicate.value();
     key.set(this.page.waitForResponse(predicateValue));
 });
