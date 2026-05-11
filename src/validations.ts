@@ -281,7 +281,7 @@ Then(
  */
 Then(
     'I expect text of alert {validation} {value}',
-    async function (expect: Validation, expected: MemoryValue) {
+    async function (this: QavajsPlaywrightWorld, expect: Validation, expected: MemoryValue) {
         const actualValue = () => new Promise<string>(resolve => this.page.once('dialog', async (dialog: Dialog) => {
             resolve(dialog.message());
         }));
@@ -451,7 +451,6 @@ function validateAllOf(AR: any, ERs: any[], validation: (AR: any, ER: any) => vo
     for (const ER of ERs) {
         try {
             validation(AR, ER);
-            return;
         } catch (err) {
             errorCollector.push(err as Error);
         }

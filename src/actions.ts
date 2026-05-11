@@ -98,21 +98,23 @@ When('I switch to {int} window', async function (this: QavajsPlaywrightWorld, in
  */
 When('I switch to {value} window', async function (this: QavajsPlaywrightWorld, matcher: MemoryValue) {
     const urlOrTitle = await matcher.value();
+    let foundPage: Page | undefined;
     const poll = async () => {
         const pages = this.context.pages();
         for (const currentPage of pages) {
             if (currentPage.url().includes(urlOrTitle) || (await currentPage.title()).includes(urlOrTitle)) {
-                return currentPage
+                foundPage = currentPage;
+                return currentPage;
             }
         }
-    }
+    };
     await this.expect.poll(
         poll,
         {
             message: `expect '${urlOrTitle}' window to be present`
         }
     ).toBeDefined();
-    this.page = await poll() as Page;
+    this.page = foundPage as Page;
     await this.page.bringToFront();
 });
 

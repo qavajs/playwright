@@ -27,8 +27,8 @@
   "homepage": "https://github.com/qavajs/playwright#readme",
   "devDependencies": {
     "@types/express": "^5.0.6",
-    "@types/node": "^25.6.0",
-    "electron": "^41.2.1",
+    "@types/node": "^25.6.2",
+    "electron": "^42.0.1",
     "express": "^5.2.1",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3"
