@@ -22,7 +22,8 @@ export default defineConfig({
     /* Reporter to use. See https://playwright.dev/docs/test-reporters */
     reporter: [
         ['html', { open: 'never', outputFolder: 'report' }],
-        ['junit', { outputFile: 'report/report.xml' }]
+        ['junit', { outputFile: 'report/report.xml' }],
+        ['@qavajs/playwright-console-reporter']
     ],
     expect: {
         timeout: 15000
