@@ -10,6 +10,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [4.2.1]
+- :beetle: fixed race condition in `I switch to {value} window` step where re-polling after match could switch to a different page
+- :beetle: fixed missing `this` context in `I expect text of alert {validation} {value}` step
+- :beetle: fixed `I expect {value} {validation} all of` step to validate against all expected values instead of returning after first match
+
 ## [4.2.0]
 - :rocket: update @playwright/test to 1.59.1
 
