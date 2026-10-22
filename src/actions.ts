@@ -1,13 +1,13 @@
 import { DataTable, When } from '@qavajs/playwright-runner-adapter';
 import { Locator, Page } from '@playwright/test';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
-import { dataTable2Array, parseCoords, parseCoordsAsObject, sleep } from './utils';
+import { dataTable2Array, parseCoords, parseCoordsAsObject } from './utils';
 import { MemoryValue } from './types';
 
 /**
  * Opens provided url
  * @param {string} url - url to navigate
- * @example I open 'https://google.com'
+ * @example I open 'https://google.com' url
  */
 When('I open {value} url', async function (this: QavajsPlaywrightWorld, url: MemoryValue) {
     await this.page.goto(await url.value());
@@ -85,8 +85,9 @@ When('I clear {locator}', async function (locator: Locator) {
  */
 When('I switch to {int} window', async function (this: QavajsPlaywrightWorld, index: number) {
     await this.expect.poll(
-        () => this.context.pages()?.length,
-    ).toBeGreaterThan(index - 1);
+        () => this.context.pages().length,
+        { message: `expect window ${index} to be present` }
+    ).toBeGreaterThanOrEqual(index);
     this.page = this.context.pages()[index - 1];
     await this.page.bringToFront();
 });
@@ -119,8 +120,8 @@ When('I switch to {value} window', async function (this: QavajsPlaywrightWorld, 
 });
 
 /**
- * Refresh current this.page
- * @example I refresh this.page
+ * Refresh current page
+ * @example I refresh page
  */
 When('I refresh page', async function (this: QavajsPlaywrightWorld) {
     await this.page.reload();
@@ -132,8 +133,8 @@ When('I refresh page', async function (this: QavajsPlaywrightWorld) {
  * @example I press 'Enter' key
  * @example I press 'Control+C' keys
  */
-When('I press {string} key(s)', async function (this: QavajsPlaywrightWorld, key: string) {
-    await this.page.press('body', key);
+When('I press {value} key(s)', async function (this: QavajsPlaywrightWorld, key: MemoryValue) {
+    await this.page.keyboard.press(await key.value());
 });
 
 /**
@@ -143,9 +144,10 @@ When('I press {string} key(s)', async function (this: QavajsPlaywrightWorld, key
  * @example I press 'Enter' key 5 times
  * @example I press 'Control+V' keys 5 times
  */
-When('I press {string} key(s) {int} time(s)', async function (this: QavajsPlaywrightWorld, key: string, num: number) {
+When('I press {value} key(s) {int} time(s)', async function (this: QavajsPlaywrightWorld, key: MemoryValue, num: number) {
+    const keyValue = await key.value();
     for (let i: number = 0; i < num; i++) {
-        await this.page.keyboard.press(key);
+        await this.page.keyboard.press(keyValue);
     }
 });
 
@@ -162,7 +164,7 @@ When('I hover over {locator}', async function (locator: Locator) {
  * Select option with certain text from select element
  * @param {string} option - option to select
  * @param {string} alias - alias of select
- * @example I select '1900' option from 'Registration Form > Date Of Birth'
+ * @example I select '1900' option from 'Registration Form > Date Of Birth' dropdown
  * @example I select '$dateOfBirth' option from 'Registration Form > Date Of Birth' dropdown
  */
 When('I select {value} option from {locator} dropdown', async function (option: MemoryValue, select: Locator) {
@@ -228,16 +230,27 @@ When('I scroll by {value} in {locator}', async function (this: QavajsPlaywrightW
 });
 
 /**
+ * Scroll by mouse wheel until target element becomes visible (limited by expect timeout)
+ */
+async function scrollUntilVisible(world: QavajsPlaywrightWorld, targetLocator: Locator) {
+    await world.expect.poll(async () => {
+        const isVisible = await targetLocator.isVisible();
+        if (!isVisible) await world.page.mouse.wheel(0, 100);
+        return isVisible;
+    }, {
+        message: `${targetLocator} is not visible after scrolling`,
+        intervals: [ 50 ]
+    }).toBe(true);
+}
+
+/**
  * Scroll until specified element to be visible
  * @param {string} - target element
  * @example
  * When I scroll until 'Row 99' to be visible
  */
-When('I scroll until {locator} to be visible', async function (this: QavajsPlaywrightWorld, targetAlias: Locator) {
-    while (!await targetAlias.isVisible()) {
-        await this.page.mouse.wheel(0, 100);
-        await sleep(50);
-    }
+When('I scroll until {locator} to be visible', async function (this: QavajsPlaywrightWorld, targetLocator: Locator) {
+    await scrollUntilVisible(this, targetLocator);
 });
 
 /**
@@ -249,10 +262,7 @@ When('I scroll until {locator} to be visible', async function (this: QavajsPlayw
  */
 When('I scroll in {locator} until {locator} to be visible', async function (this: QavajsPlaywrightWorld, scrollLocator: Locator, targetLocator: Locator) {
     await scrollLocator.hover();
-    while (!await targetLocator.isVisible()) {
-        await this.page.mouse.wheel(0, 100);
-        await sleep(50);
-    }
+    await scrollUntilVisible(this, targetLocator);
 });
 
 /**
@@ -272,7 +282,7 @@ When('I save file to {value} by clicking {locator}', async function (this: Qavaj
  * Provide file url to upload input
  * @param {string} alias - element to upload file
  * @param {string} value - file path
- * @example I upload '/folder/file.txt' to 'File Input'
+ * @example I upload '/folder/file.txt' file to 'File Input'
  */
 When('I upload {value} file to {locator}', async function (filePath: MemoryValue, locator: Locator) {
     await locator.setInputFiles(await filePath.value());
@@ -308,26 +318,22 @@ When('I upload files by clicking {locator}:', async function (this: QavajsPlaywr
 });
 
 /**
- * Accept alert
+ * Accept alert (already opened one checked by `I expect text of alert` step or next opened)
  * @example I accept alert
  */
 When('I accept alert', async function (this: QavajsPlaywrightWorld) {
-    await new Promise<void>((resolve)=> this.page.once('dialog', async (dialog) => {
-        await dialog.accept();
-        resolve();
-    }));
+    const dialog = await this.waitForDialog();
+    await dialog.accept();
 });
 
 /**
- * Dismiss alert
- * Playwright automatically dismisses all dialogs. This step is just to make it implicitly.
+ * Dismiss alert (already opened one checked by `I expect text of alert` step or next opened)
+ * Playwright automatically dismisses dialogs that open while no step is waiting for them.
  * @example I dismiss alert
  */
 When('I dismiss alert', async function (this: QavajsPlaywrightWorld) {
-    await new Promise<void>(resolve => this.page.once('dialog', async (dialog) => {
-        await dialog.dismiss();
-        resolve();
-    }));
+    const dialog = await this.waitForDialog();
+    await dialog.dismiss();
 });
 
 /**
@@ -336,10 +342,8 @@ When('I dismiss alert', async function (this: QavajsPlaywrightWorld) {
  */
 When('I type {value} to alert', async function (this: QavajsPlaywrightWorld, type: MemoryValue) {
     const typeValue = await type.value();
-    await new Promise<void>(resolve => this.page.once('dialog', async (dialog) => {
-        await dialog.accept(typeValue);
-        resolve();
-    }))
+    const dialog = await this.waitForDialog();
+    await dialog.accept(typeValue);
 });
 
 /**

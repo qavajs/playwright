@@ -3,6 +3,7 @@ import { Locator } from '@playwright/test';
 
 export const conditionValidations = {
     PRESENT: 'present',
+    CLICKABLE: 'clickable',
     VISIBLE: 'visible',
     INVISIBLE: 'invisible',
     IN_VIEWPORT: 'in viewport',
@@ -15,6 +16,12 @@ const toBeClause = 'to (?:be )?';
 const softClause = '(softly )?';
 const validationClause = `(${Object.values(conditionValidations).join('|')})`;
 
+/**
+ * Source of state regexp without capturing groups (except the outer one added by consumer).
+ * Used to define {state} parameter type, so it is always in sync with implemented conditions
+ */
+export const conditionRegexpSource = `(?:not )?${toBeClause}(?:softly )?(?:${Object.values(conditionValidations).join('|')})`;
+
 export const conditionWaitExtractRegexp = new RegExp(`^${notClause}${toBeClause}${softClause}${validationClause}$`);
 
 function expectLocator(locator: Locator, reverse: boolean, soft: boolean) {
@@ -22,13 +29,25 @@ function expectLocator(locator: Locator, reverse: boolean, soft: boolean) {
     return reverse ? expectClause(locator).not : expectClause(locator);
 }
 
-const expects = {
-    [conditionValidations.PRESENT]: async (
+const expects: Record<string, (locator: Locator, reverse: boolean, soft: boolean, options?: { timeout: number }) => Promise<void>> = {
+    [conditionValidations.PRESENT]: (
         locator: Locator,
         reverse: boolean,
         soft: boolean,
-        options?: { timeout: number },
+        options?: { timeout: number }
     ) => expectLocator(locator, reverse, soft).toBeAttached(options),
+    [conditionValidations.CLICKABLE]: (
+        locator: Locator,
+        reverse: boolean,
+        soft: boolean,
+        options?: { timeout: number }
+    ) => {
+        const pollClause = expect.configure({ soft }).poll(
+            async () => await locator.isVisible() && await locator.isEnabled(),
+            { message: `${locator} to be clickable`, ...options }
+        );
+        return reverse ? pollClause.not.toBe(true) : pollClause.toBe(true);
+    },
     [conditionValidations.VISIBLE]: (
         locator: Locator,
         reverse: boolean,
@@ -73,9 +92,10 @@ export async function conditionExpect(
     condition: string,
     options?: { timeout: number },
 ): Promise<void> {
-    const match = condition.match(conditionWaitExtractRegexp) as RegExpMatchArray;
+    const match = condition.match(conditionWaitExtractRegexp);
     if (!match) throw new Error(`${condition} expect is not implemented`);
     const [_, reverse, soft, validation] = match;
     const expectFn = expects[validation];
+    if (!expectFn) throw new Error(`${validation} expect is not implemented`);
     await expectFn(locator, Boolean(reverse), Boolean(soft), options);
 }

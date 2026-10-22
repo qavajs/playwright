@@ -1,23 +1,12 @@
 import { When } from '@qavajs/playwright-runner-adapter';
-import { sleep } from './utils';
+import { sleep, tryThen } from './utils';
 import type { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import type { Locator } from '@playwright/test';
 import type { StateValidation, MemoryValue, Validation } from './types';
 
-const timeout = 5000;
+/** timeout of single condition check */
+const timeout = 5_000;
 
-async function tryThen(ctx: QavajsPlaywrightWorld, tryFn: () => Promise<unknown>, thenFn: () => Promise<unknown>) {
-    await ctx.expect(async () => {
-        try {
-            await tryFn();
-        } catch (error) {
-            await thenFn();
-            throw error;
-        }
-    }).toPass({
-        intervals: [ timeout ]
-    });
-}
 /**
  * Explicit wait
  * @param {number} ms - milliseconds
@@ -39,7 +28,7 @@ When(
     'I click {locator} until {locator} {state}',
     async function (this: QavajsPlaywrightWorld, clickLocator: Locator, targetLocator: Locator, validation: StateValidation) {
         await tryThen(
-            this,
+            this.expect,
             () => validation(targetLocator, { timeout }),
             () => clickLocator.click()
         );
@@ -58,7 +47,7 @@ When(
     'I click {locator} until text of {locator} {validation} {value}',
     async function (this: QavajsPlaywrightWorld, clickLocator: Locator, targetLocator: Locator, validation: Validation, expected: MemoryValue) {
         await tryThen(
-            this,
+            this.expect,
             async () => validation(await targetLocator.innerText({ timeout }), await expected.value()),
             () => clickLocator.click()
         );
@@ -77,7 +66,7 @@ When(
     'I click {locator} until value of {locator} {validation} {value}',
     async function (this: QavajsPlaywrightWorld, clickLocator: Locator, targetLocator: Locator, validation: Validation, expected: MemoryValue) {
         await tryThen(
-            this,
+            this.expect,
             async () => validation(await targetLocator.inputValue({ timeout }), await expected.value()),
             () => clickLocator.click()
         );
@@ -94,8 +83,8 @@ When(
     'I refresh page until {locator} {state}',
     async function (this: QavajsPlaywrightWorld, targetLocator: Locator, validation: StateValidation) {
         await tryThen(
-            this,
-            () => validation(targetLocator, { timeout: 5000 }),
+            this.expect,
+            () => validation(targetLocator, { timeout }),
             () => this.page.reload()
         );
     }
@@ -112,7 +101,7 @@ When(
     'I refresh page until text of {locator} {validation} {value}',
     async function (this: QavajsPlaywrightWorld, targetLocator: Locator, validation: Validation, expected: MemoryValue) {
         await tryThen(
-            this,
+            this.expect,
             async () => validation(await targetLocator.innerText({ timeout }), await expected.value()),
             () => this.page.reload()
         );
@@ -130,7 +119,7 @@ When(
     'I refresh page until value of {locator} {validation} {value}',
     async function (this: QavajsPlaywrightWorld, targetLocator: Locator, validation: Validation, expected: MemoryValue) {
         await tryThen(
-            this,
+            this.expect,
             async () => validation(await targetLocator.inputValue({ timeout }), await expected.value()),
             () => this.page.reload()
         );

@@ -71,6 +71,22 @@ When I click 'LoginPage > SubmitButton'
 When I click 'Table > RowByText(some text) > EditButton'
 ```
 
+### Defining Locators in Feature Files
+
+Elements can also be added to the root of the page object directly from a feature file,
+e.g. for one-off elements that are not worth a page object entry:
+
+| Step | Description |
+|------|-------------|
+| `I define {value} as {value} locator` | Register selector as page object element with given alias |
+
+```gherkin
+When I define '#button' as 'Custom Button' locator
+And I click 'Custom Button'
+```
+
+The alias is added to the shared page object, so it stays available to scenarios that run later in the same worker.
+
 ## Built-in Steps
 
 ### Navigation & Actions
@@ -119,8 +135,8 @@ When I click 'Table > RowByText(some text) > EditButton'
 
 | Step | Description |
 |------|-------------|
-| `I press {string} key(s)` | Press key(s), e.g. `'Enter'`, `'Control+C'` |
-| `I press {string} key(s) {int} time(s)` | Press key N times |
+| `I press {value} key(s)` | Press key(s), e.g. `'Enter'`, `'Control+C'` |
+| `I press {value} key(s) {int} time(s)` | Press key N times |
 | `I hold down {value} key` | Hold keyboard key down |
 | `I release {value} key` | Release keyboard key |
 | `I press {mouseButton} mouse button` | Press mouse button (`left`, `right`, `middle`) |
@@ -169,7 +185,7 @@ When I click 'Table > RowByText(some text) > EditButton'
 | `I expect {value} custom property of every element in {locator} collection {validation} {value}` | Validate custom property of all elements |
 | `I expect current url {validation} {value}` | Validate current page URL |
 | `I expect page title {validation} {value}` | Validate page title |
-| `I expect text of alert {validation} {value}` | Validate alert message text |
+| `I expect text of alert {validation} {value}` | Validate alert message text (alert stays open for accept/dismiss/type steps) |
 | `I expect {value} {validation} {value}` | Validate a memory value against another |
 | `I expect every element in {value} array {validation} {value}` | Validate every item in an array |
 | `I expect at least {int} element(s) in {value} array {validation} {value}` | Validate minimum number of passing items |
@@ -179,6 +195,27 @@ When I click 'Table > RowByText(some text) > EditButton'
 | `I expect {value} {validation} at least one of:` | Validate value matches at least one (data table) |
 | `I expect {value} {validation} all of {value}` | Validate value satisfies all in array |
 | `I expect {value} {validation} all of:` | Validate value satisfies all (data table) |
+
+Supported `{state}` values (prefix with `not` to negate, add `softly` for soft assertion, e.g. `not to be softly visible`):
+`present`, `clickable`, `visible`, `invisible`, `enabled`, `disabled`, `in viewport`.
+
+Supported `{validation}` values (prefix with `not` to negate, add `softly` for soft assertion, e.g. `not to softly equal`):
+
+| Validation | Description |
+|------------|-------------|
+| `equal` | Loose equality (`==`) |
+| `strictly equal` | Strict equality, types must match (`toStrictEqual`) |
+| `deeply equal` | Recursive equality of objects/arrays (`toEqual`) |
+| `case insensitive equal` | String equality ignoring case |
+| `have members` | Array contains exactly the same members in any order |
+| `include members` | Array contains all expected members |
+| `have property` | Object has expected property path |
+| `contain` | String/array contains value |
+| `match` | String matches regexp |
+| `above` / `greater than` | Number is greater than expected |
+| `below` / `less than` | Number is less than expected |
+| `have type` | `typeof` equals expected type |
+| `satisfy` | Value satisfies predicate function |
 
 ### Memory
 
@@ -218,6 +255,8 @@ When I click 'Table > RowByText(some text) > EditButton'
 | `I refresh page until {locator} {state}` | Refresh until element reaches state |
 | `I refresh page until text of {locator} {validation} {value}` | Refresh until element text matches |
 | `I refresh page until value of {locator} {validation} {value}` | Refresh until input value matches |
+
+`until` steps repeat the action every 5 seconds until the condition is met, up to 60 seconds.
 
 ### Storage (Cookies & Web Storage)
 
@@ -276,7 +315,7 @@ When I restore '$usersMock' mock
 |------|-------------|
 | `I create mock for {value} as {value}` | Create route mock for URL pattern |
 | `I set {value} mock to respond {value} with:` | Mock response with status and body (multiline) |
-| `I set {value} mock to respond {value} with {string}` | Mock response with status and body (inline) |
+| `I set {value} mock to respond {value} with {string}` | Mock response with status and body (inline; objects are sent as json) |
 | `I set {value} mock to abort with {value} reason` | Abort request with error code |
 | `I restore {value} mock` | Remove mock for URL pattern |
 | `I restore all mocks` | Remove all active mocks |
@@ -306,13 +345,140 @@ And I save '$productsIntercept' response as 'productsResponse'
 
 ### Electron
 
-Additional steps available when using `QavajsPlaywrightElectronWorld`:
+Additional steps available when using `QavajsPlaywrightElectronWorld` (see [Electron Setup](#electron-setup)):
 
 | Step | Description |
 |------|-------------|
 | `I execute {value} function/script on electron app` | Execute function in Electron main process |
 | `I execute {value} function/script on electron app and save result as {value}` | Execute and save result from main process |
 | `I click {value} electron menu` | Click application menu item by path (e.g. `'File > Save'`) |
+
+## Electron Setup
+
+Electron apps are tested with the same steps as web pages, plus [Electron steps](#electron).
+The app is launched by `QavajsPlaywrightElectronWorld` using `launchOptions` of the Playwright project,
+and `this.page` is the first window of the app.
+
+**`qavajs.config.ts`**
+```typescript
+import { defineConfig } from '@qavajs/playwright';
+import Memory from './memory';
+import App from './page_object';
+
+export default defineConfig({
+    paths: ['features/*.feature'],
+    require: [
+        'node_modules/@qavajs/playwright/steps.js',        // built-in step definitions
+        'node_modules/@qavajs/playwright/lib/electron.js', // electron step definitions
+        'step_definitions/*.ts'                            // custom step definitions incl. world setup (must go after steps.js)
+    ],
+    memory: new Memory(),
+    pageObject: new App()
+});
+```
+
+**`step_definitions/setup.ts`**
+```typescript
+import { setWorldConstructor, QavajsPlaywrightElectronWorld } from '@qavajs/playwright';
+
+setWorldConstructor(QavajsPlaywrightElectronWorld);
+```
+
+**`playwright.config.ts`**
+```typescript
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+    testMatch: 'qavajs.config.ts',
+    projects: [
+        {
+            name: 'electron',
+            use: {
+                // passed to Playwright's _electron.launch()
+                launchOptions: {
+                    args: ['path/to/main.js'],
+                    // executablePath: 'path/to/packaged/app', // to test packaged app
+                }
+            },
+        }
+    ]
+});
+```
+
+In custom steps, the Electron main process is available as `this.electron`
+([ElectronApplication](https://playwright.dev/docs/api/class-electronapplication)):
+
+```typescript
+import { When, type QavajsPlaywrightElectronWorld, type MemoryValue } from '@qavajs/playwright';
+
+When('I save app version as {value}', async function (this: QavajsPlaywrightElectronWorld, key: MemoryValue) {
+    key.set(await this.electron.evaluate(({ app }) => app.getVersion()));
+});
+```
+
+On Linux CI, run tests under a virtual display, e.g. `xvfb-run npx playwright test`.
+
+## Custom Steps
+
+Custom steps are defined with `Given`/`When`/`Then` exported from this package and can reuse
+built-in parameter types and world helpers:
+
+| Parameter type | Passed to step as | Example in feature |
+|----------------|-------------------|--------------------|
+| `{locator}` | Playwright `Locator` resolved from page object (memory values are resolved in alias) | `'LoginPage > SubmitButton'` |
+| `{value}` | `MemoryValue`: `await value.value()` resolves, `value.set(x)` saves to memory | `'$user'`, `'plain text'` |
+| `{validation}` | `Validation`: `validation(actual, expected)`, `await validation.poll(() => actual, expected)` | `to equal`, `not to contain` |
+| `{state}` | `StateValidation`: `await state(locator)` | `to be visible`, `not to be clickable` |
+
+| World member | Description |
+|--------------|-------------|
+| `this.page`, `this.context`, `this.browser`, `this.request` | Playwright objects of current scenario |
+| `this.element(path)` | Resolve page object path to `Locator` |
+| `this.value(expression)` | Resolve memory expression (`'$user'`, `'$js(1 + 1)'`) |
+| `this.setValue(key, value)` | Save value to memory |
+| `this.expect` | Playwright `expect` extended with qavajs matchers |
+| `this.waitForDialog()` | Get open dialog or wait for next one |
+| `this.log(data)`, `this.attach(data, details)` | Add log or attachment to report |
+
+```typescript
+import { When, Then, type QavajsPlaywrightWorld, type MemoryValue, type Validation } from '@qavajs/playwright';
+import type { Locator } from '@playwright/test';
+
+When('I log in as {value}', async function (this: QavajsPlaywrightWorld, user: MemoryValue) {
+    const { username, password } = await user.value();
+    await this.element('LoginPage > UsernameInput').fill(username);
+    await this.element('LoginPage > PasswordInput').fill(password);
+    await this.element('LoginPage > SubmitButton').click();
+});
+
+Then('I expect placeholder of {locator} {validation} {value}', async function (
+    this: QavajsPlaywrightWorld,
+    locator: Locator,
+    validation: Validation,
+    expected: MemoryValue
+) {
+    const expectedValue = await expected.value();
+    // poll retries until validation passes or expect timeout is reached
+    await validation.poll(() => locator.getAttribute('placeholder'), expectedValue);
+});
+```
+
+To add own helpers to the world, extend it and register the new constructor (after `steps.js` in `require`):
+
+```typescript
+import { setWorldConstructor, QavajsPlaywrightWorld } from '@qavajs/playwright';
+
+class CustomWorld extends QavajsPlaywrightWorld {
+    async login(username: string, password: string) {
+        await this.page.goto('/login');
+        await this.element('LoginPage > UsernameInput').fill(username);
+        await this.element('LoginPage > PasswordInput').fill(password);
+        await this.element('LoginPage > SubmitButton').click();
+    }
+}
+
+setWorldConstructor(CustomWorld);
+```
 
 ## Memory Syntax
 
@@ -334,6 +500,12 @@ npm run install:browsers
 
 # Build the library
 npm run build
+
+# Lint sources (type-aware)
+npm run lint
+
+# Run unit tests
+npm run test:unit
 
 # Run e2e tests
 npm run test:e2e

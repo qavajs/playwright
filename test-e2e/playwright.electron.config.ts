@@ -1,37 +1,14 @@
 import { defineConfig } from '@playwright/test';
+import { baseConfig } from './playwright.base.config';
 
 /**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
+ * Config for electron e2e tests
  */
-// require('dotenv').config();
-
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
-export default defineConfig({
+export default defineConfig(baseConfig, {
     testMatch: 'electron.config.ts',
-    /* Run tests in files in parallel */
-    fullyParallel: true,
-    /* Fail the build on CI if you accidentally left test.only in the source code. */
-    forbidOnly: !!process.env.CI,
-    /* Retry on CI only */
-    retries: process.env.CI ? 2 : 2,
-    /* Opt out of parallel tests on CI. */
-    workers: process.env.CI ? 1 : undefined,
-    /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-    reporter: [
-        ['html', { open: 'never', outputFolder: 'report' }],
-        ['junit', { outputFile: 'report/report.xml' }],
-        ['@qavajs/playwright-console-reporter']
-    ],
     expect: {
-        timeout: 15000
+        timeout: 15_000
     },
-
-    use: {},
-
-    /* Configure projects for major browsers */
     projects: [
         {
             name: 'electron',

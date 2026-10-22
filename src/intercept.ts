@@ -11,7 +11,10 @@ import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
  */
 When('I create interception for {value} as {value}', async function (this: QavajsPlaywrightWorld, predicate: MemoryValue, key: MemoryValue) {
     const predicateValue = await predicate.value();
-    key.set(this.page.waitForResponse(predicateValue));
+    const interception = this.page.waitForResponse(predicateValue);
+    // prevent unhandled rejection if interception is never awaited; awaiting it later still rejects
+    interception.catch(() => {});
+    key.set(interception);
 });
 
 /**

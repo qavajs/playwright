@@ -1,5 +1,5 @@
 import { type DataTable, Then } from '@qavajs/playwright-runner-adapter';
-import type { Dialog, Locator } from '@playwright/test';
+import type { Locator } from '@playwright/test';
 import type { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { dataTable2Array } from './utils';
 import type { MemoryValue, StateValidation, Validation } from './types';
@@ -21,7 +21,7 @@ Then('I expect {locator} {state}', async function (locator: Locator, expect: Sta
  * @param {string} alias - element to get text
  * @param {string} validationType - validation
  * @param {string} value - expected result
- * @example I expect text of 'Search Results (1)' equals to 'google'
+ * @example I expect text of 'Search Results (1)' to equal 'google'
  * @example I expect text of 'Search Results (2)' does not contain 'yahoo'
  */
 Then(
@@ -175,7 +175,7 @@ Then('I expect every element in {locator} collection {state}', async function (c
  * @param {string} alias - collection to get texts
  * @param {string} validationType - validation
  * @param {string} value - expected result
- * @example I expect text of every element in 'Search Results' collection equals to 'google'
+ * @example I expect text of every element in 'Search Results' collection to equal 'google'
  * @example I expect text of every element in 'Search Results' collection does not contain 'google'
  */
 Then(
@@ -275,6 +275,7 @@ Then(
 
 /**
  * Verify that text of an alert meets expectation
+ * Alert stays open, so it can be handled by `I accept alert`, `I dismiss alert` or `I type {value} to alert` steps
  * @param {string} validationType - validation
  * @param {string} value - expected text value
  * @example I expect text of alert does not contain 'coffee'
@@ -282,11 +283,9 @@ Then(
 Then(
     'I expect text of alert {validation} {value}',
     async function (this: QavajsPlaywrightWorld, expect: Validation, expected: MemoryValue) {
-        const actualValue = () => new Promise<string>(resolve => this.page.once('dialog', async (dialog: Dialog) => {
-            resolve(dialog.message());
-        }));
+        const dialog = await this.waitForDialog({ keepOpen: true });
         const expectedValue = await expected.value();
-        await expect.poll(actualValue, expectedValue);
+        expect(dialog.message(), expectedValue);
     }
 );
 
@@ -297,7 +296,7 @@ Then(
  * @param {string} value1 - first value
  * @param {string} validation - validation
  * @param {string} value2 - second value
- * @example I expect '$value' equals to '$anotherValue'
+ * @example I expect '$value' to equal '$anotherValue'
  * @example I expect '$value' does not contain '56'
  */
 Then(
@@ -324,7 +323,7 @@ Then(
             try {
                 expect(value, expectedValue);
                 failCounter.pass++;
-            } catch (err) {
+            } catch {
                 failCounter.fail++;
             }
         }
@@ -387,7 +386,7 @@ Then(
  */
 Then(
     'I expect {value} array {validation}:',
-    async function (arr: MemoryValue, expect: Validation, members: DataTable) {
+    async function (this: QavajsPlaywrightWorld, arr: MemoryValue, expect: Validation, members: DataTable) {
         const array = await arr.value();
         const membersArray = await Promise.all(
             members.raw().map(memberKey => this.value(memberKey.pop() as string))

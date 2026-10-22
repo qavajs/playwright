@@ -163,16 +163,17 @@ Feature: validations
       | argument1      | argument2                                                      | validation                 |
       | 1              | 1                                                              | to equal                   |
       | 1              | 2                                                              | to not equal               |
+      | 1              | 1                                                              | to softly equal            |
+      | 1              | 2                                                              | not to softly equal        |
       | test           | tes                                                            | to contain                 |
       | 1              | 1                                                              | to strictly equal          |
       | $js({ a: 1 })  | $js({ a: 1 })                                                  | to deeply equal            |
       | Test           | test                                                           | to case insensitive equal  |
-#      | $js([1, 2, 3]) | $js([3])                                                       | to include members         |
-#      | $js([3, 2, 1]) | $js([1, 2, 3])                                                 | to have members            |
-#      | $js({ a: 1 })  | a                                                              | to have property           |
+      | $js([1, 2, 3]) | $js([3])                                                       | to include members         |
+      | $js([3, 2, 1]) | $js([1, 2, 3])                                                 | to have members            |
+      | $js({ a: 1 })  | a                                                              | to have property           |
       | $js(2)         | $js(1)                                                         | to be greater than         |
       | $js(1)         | $js(2)                                                         | to be less than            |
       | test           | tes.                                                           | to match                   |
       | $js("Test")    | string                                                         | to have type               |
-#      | $js({ a: 1 })  | $js({ type: "object", properties: { a: { type: "number" } } }) | to match schema            |
       | 1              | $js(arg => ["1","2"].includes(arg))                            | to satisfy                 |

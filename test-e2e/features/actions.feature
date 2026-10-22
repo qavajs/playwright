@@ -167,6 +167,17 @@ Feature: actions
     When I click "Prompt Button"
     Then I expect text of alert to be equal 'Are you robot?'
 
+  Scenario: expect text of alert and handle it
+    When I click "Prompt Button"
+    Then I expect text of alert to be equal 'Are you robot?'
+    When I type 'I am not a robot' to alert
+    Then I expect text of 'Action' to be equal 'I am not a robot'
+
+  Scenario: press key from memory
+    When I set 'keyToPress' = 'w'
+    And I press '$keyToPress' key
+    Then I expect text of 'Action' to be equal 'keypress'
+
   Scenario: open new tab
     When I open new tab
     And I switch to 2 window

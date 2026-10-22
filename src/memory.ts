@@ -59,7 +59,7 @@ When('I save {value} attribute of {locator} as {value}', async function (attribu
  * Save number of elements in collection to memory
  * @param {string} alias - collection to get value
  * @param {string} key - key to store value
- * @example I save number of elements in 'Search Results' as 'numberOfSearchResults'
+ * @example I save number of elements in 'Search Results' collection as 'numberOfSearchResults'
  */
 When('I save number of elements in {locator} collection as {value}', async function (collection: Locator, key: MemoryValue) {
     const value = await collection.count();
@@ -142,7 +142,7 @@ When('I save {value} custom property of {locator} as {value}',
 When(
     'I save {value} custom property of every element of {locator} collection as {value}',
     async function (this: QavajsPlaywrightWorld, propertyGetter: MemoryValue, collection: Locator, key: MemoryValue) {
-        const script: () => any = propertyGetter.value();
+        const script: () => any = await propertyGetter.value();
         const values = [];
         for (const locator of await collection.all()) {
             values.push(await locator.evaluate(script));
@@ -166,7 +166,7 @@ When('I save current url as {value}', async function (this: QavajsPlaywrightWorl
  * @example I save page title as 'currentTitle'
  */
 When('I save page title as {value}', async function (this: QavajsPlaywrightWorld, key: MemoryValue) {
-    key.set(this.page.title());
+    key.set(await this.page.title());
 });
 
 /**

@@ -1,4 +1,5 @@
 import type { Browser, BrowserContext, Page, Locator } from '@playwright/test';
+import type { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
 type SelectorDefinition = string | ((argument: string) => string) | ((argument: any) => any) | null;
 
@@ -46,7 +47,7 @@ export interface LocatorDefinition {
     template: (selector: (argument: string) => string) => Selector;
 
     /**
-     * Define selector using native wdio API
+     * Define selector using native Playwright API
      * @param {(argument: string) => string} selector - selector function
      */
     native: (selector: (params: NativeSelectorParams) => Locator) => Selector;
@@ -121,21 +122,20 @@ export function query(root: any, path: string) {
     return tokens;
 }
 
-export function element(this: any, path: string): Locator {
+export function element(this: QavajsPlaywrightWorld, path: string): Locator {
     const chain = query(this.config.pageObject, path);
-    const page = this.page as Page;
-    let current = page as unknown as Locator;
+    let current = this.page as unknown as Locator;
     for (const item of chain) {
         switch (item.type) {
             case 'simple': current = item.selector ? current.locator(item.selector) : current; break;
             case 'template': current = current.locator(item.selector(item.argument)); break;
             case 'native': current = item.selector({
-                driver: this.driver,
+                driver: this.browser,
                 browser: this.browser,
                 context: this.context,
                 page: this.page,
                 parent: current,
-                argument: item.argument
+                argument: item.argument as string
             }); break;
         }
     }

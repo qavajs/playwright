@@ -4,9 +4,28 @@
   "description": "steps to interact with playwright",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./steps.js": "./steps.js",
+    "./lib/electron.js": "./lib/electron.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "src",
+    "steps.js",
+    "CHANGELOG.md"
+  ],
   "scripts": {
-    "build": "tsc",
-    "start:server": "ts-node test-e2e/support/server.ts",
+    "clean": "node -e \"require('node:fs').rmSync('lib', { recursive: true, force: true })\"",
+    "build": "npm run clean && tsc",
+    "prepublishOnly": "npm run build",
+    "lint": "oxlint --type-aware src test",
+    "test:unit": "node --import tsx --test \"test/unit/**/*.test.ts\"",
+    "start:server": "tsx test-e2e/support/server.ts",
     "install:browsers": "playwright install",
     "debug:e2e": "playwright test --config test-e2e/playwright.config.ts --ui",
     "debug:e2e:electron": "playwright test --config test-e2e/playwright.electron.config.ts --ui",
@@ -26,16 +45,19 @@
   },
   "homepage": "https://github.com/qavajs/playwright#readme",
   "devDependencies": {
+    "@cucumber/cucumber-expressions": "^19.0.1",
     "@qavajs/playwright-console-reporter": "^0.1.0",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.6.2",
-    "electron": "^42.0.1",
-    "express": "^5.2.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^6.0.3"
+    "@types/node": "^26.6.5",
+    "electron": "^45.0.0",
+    "express": "^5.3.0",
+    "oxlint": "^1.89.0",
+    "oxlint-tsgolint": "^7.0.2004",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
   },
   "dependencies": {
-    "@playwright/test": "^1.60.0",
+    "@playwright/test": "^1.64.1",
     "@qavajs/memory": "^1.11.0",
     "@qavajs/playwright-runner-adapter": "^2.3.3"
   }

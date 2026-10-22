@@ -1,4 +1,4 @@
-import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
+import { QavajsPlaywrightWorld, type QavajsWorldOptions } from './QavajsPlaywrightWorld';
 import { _electron, Browser, BrowserContext, ElectronApplication, Page, test, WorkerInfo } from '@playwright/test';
 
 type ElectronFixture = {
@@ -6,6 +6,7 @@ type ElectronFixture = {
 }
 
 const electron = test.extend<ElectronFixture>({
+    // oxlint-disable-next-line no-empty-pattern -- Playwright fixtures require object destructuring
     browser: async ({ }, use: (used: any) => Promise<void>, workerInfo: WorkerInfo) => {
         const options = workerInfo.project.use.launchOptions;
         const electron = await _electron.launch(options as any)
@@ -23,7 +24,7 @@ const electron = test.extend<ElectronFixture>({
 export class QavajsPlaywrightElectronWorld extends QavajsPlaywrightWorld {
     test = electron;
     electron!: ElectronApplication;
-    constructor(options: any) {
+    constructor(options: QavajsWorldOptions) {
         super(options);
     }
 

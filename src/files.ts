@@ -80,7 +80,7 @@ When('I expect {value} file exists', async function (this: QavajsPlaywrightWorld
         try {
             accessSync(fileName, constants.F_OK);
             return true
-        } catch (err) {
+        } catch {
             return false
         }
     }, {

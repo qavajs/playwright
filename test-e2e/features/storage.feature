@@ -28,3 +28,13 @@ Feature: storage
       | storage | name       | element        |
       | local   | setLocal   | LocalStorage   |
       | session | setSession | SessionStorage |
+
+  Scenario Outline: set object to <storage> storage
+    When I set 'objectValue' <storage> storage value as '$js({ a: 1 })'
+    And I save value of 'objectValue' <storage> storage as 'storageValue'
+    Then I expect '$storageValue' to be equal '{"a":1}'
+
+    Examples:
+      | storage |
+      | local   |
+      | session |
