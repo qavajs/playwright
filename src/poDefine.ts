@@ -14,6 +14,7 @@ import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 When('I define {value} as {value} locator', async function (this: QavajsPlaywrightWorld, selectorKey: MemoryValue, aliasKey: MemoryValue) {
     const selector = await selectorKey.value();
     const alias = (await aliasKey.value()).replace(/\s/g, '');
+    if (!this.config.pageObject) throw new Error(`Page object is not defined in config, so '${alias}' locator can not be defined`);
     const pageObjectRef = this.config.pageObject.prototype ?? this.config.pageObject;
     pageObjectRef[alias] = locator(selector);
 });

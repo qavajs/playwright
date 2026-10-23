@@ -1,6 +1,6 @@
 import { type DataTable } from '@qavajs/playwright-runner-adapter';
 import { type QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
-import { type APIResponse, type Expect } from '@playwright/test';
+import { type APIRequestContext, type APIResponse, type Expect } from '@playwright/test';
 
 /**
  * Parse 'x, y' string to coordinates array
@@ -21,6 +21,16 @@ export function parseCoordsAsObject(coords: string): { x: number, y: number } {
     return {x, y}
 }
 
+/**
+ * Browser side getter of element property (passed to locator.evaluate)
+ */
+export const propertyOf = (node: any, property: string) => node[property];
+
+/**
+ * Browser side getter of element computed css property (passed to locator.evaluate)
+ */
+export const cssPropertyOf = (node: Element, property: string) => getComputedStyle(node).getPropertyValue(property);
+
 export async function sleep(ms: number) {
     await new Promise(resolve => setTimeout(() => resolve(0), ms));
 }
@@ -31,8 +41,8 @@ export async function sleep(ms: number) {
  * @param dataTable
  * @return {Object}
  */
-export async function dataTable2Object(ctx: QavajsPlaywrightWorld, dataTable: DataTable): Promise<{ [key: string]: string }> {
-    const obj: { [key: string]: string } = {};
+export async function dataTable2Object(ctx: QavajsPlaywrightWorld, dataTable: DataTable): Promise<Record<string, any>> {
+    const obj: Record<string, any> = {};
     for (const [key, value] of dataTable.raw()) {
         obj[key] = await ctx.value(value);
     }
@@ -49,7 +59,9 @@ export function dataTable2Array(ctx: QavajsPlaywrightWorld, dataTable: DataTable
     return Promise.all(dataTable.raw().map(([value]) => ctx.value(value)));
 }
 
-export async function sendHttpRequest(world: QavajsPlaywrightWorld, requestUrl: string, options: Record<string, string>): Promise<APIResponse> {
+export type HttpRequestOptions = Parameters<APIRequestContext['fetch']>[1];
+
+export async function sendHttpRequest(world: QavajsPlaywrightWorld, requestUrl: string, options: HttpRequestOptions): Promise<APIResponse> {
     const response = await world.request.fetch(requestUrl, options);
     Object.defineProperty(response, 'payload', {
         get(): any {
@@ -81,7 +93,11 @@ export class GraphQl {
     };
 
     set variables(variables: string) {
-        this._variables = JSON.parse(variables);
+        try {
+            this._variables = JSON.parse(variables);
+        } catch (error) {
+            throw new Error(`GraphQL variables are not valid json: ${(error as Error).message}\n${variables}`);
+        }
         this.updateBody();
     };
 }

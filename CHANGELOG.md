@@ -38,6 +38,12 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - :pencil: `{validation}` and `{state}` parameter types are generated from implemented validations
 - :pencil: README: added Electron setup and custom steps sections
 - :pencil: README: documented `I define {value} as {value} locator` step
+- :rocket: `I create {value} request {value}` step resolves http method from memory
+- :beetle: clear errors when `pageObject` is not defined in config, page object path contains empty element, mock status code is not a number or GraphQL variables are not valid json
+- :beetle: fixed `I switch to {int} window` accepting index lower than 1
+- :beetle: fixed `I close current tab` setting current page to `undefined` when last tab is closed
+- :beetle: removed misleading `expect.toEqual` message from `equal` validation errors
+- :pencil: deduplicated `until` and `every element` steps, typed http request options and electron launch options
 - :pencil: fixed 17 step `@example` docs that did not match their step; unit test verifies every example matches exactly one step
 - :pencil: replaced `ts-node` with `tsx`
 - :pencil: added unit tests, `oxlint` type-aware linting and `engines` field (node >= 22)

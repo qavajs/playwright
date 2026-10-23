@@ -1,8 +1,28 @@
 import { type DataTable, Then } from '@qavajs/playwright-runner-adapter';
 import type { Locator } from '@playwright/test';
 import type { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
-import { dataTable2Array } from './utils';
+import { cssPropertyOf, dataTable2Array, propertyOf } from './utils';
 import type { MemoryValue, StateValidation, Validation } from './types';
+
+/**
+ * Poll validation of actual value of every element in collection
+ * @param collection - collection to verify
+ * @param getActual - getter of actual value of element
+ * @param validation - validation
+ * @param expectedValue - expected value
+ */
+async function pollEach(
+    collection: Locator,
+    getActual: (element: Locator) => Promise<unknown>,
+    validation: Validation,
+    expectedValue: unknown
+) {
+    const count = await collection.count();
+    for (let i = 0; i < count; i++) {
+        const element = collection.nth(i);
+        await validation.poll(() => getActual(element), expectedValue);
+    }
+}
 
 /**
  * Verify element condition
@@ -63,7 +83,7 @@ Then(
     async function (property: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
         const propertyName = await property.value();
         const expectedValue = await expected.value();
-        const actualValue = () => locator.evaluate((node: any, propertyName: string) => node[propertyName], propertyName);
+        const actualValue = () => locator.evaluate(propertyOf, propertyName);
         await expect.poll(actualValue, expectedValue);
     }
 );
@@ -182,10 +202,7 @@ Then(
     'I expect text of every element in {locator} collection {validation} {value}',
     async function (collection: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
-        for (let i = 0; i < await collection.count(); i++) {
-            const actualValue = () => collection.nth(i).innerText();
-            await expect.poll(actualValue, expectedValue);
-        }
+        await pollEach(collection, element => element.innerText(), expect, expectedValue);
     }
 );
 
@@ -201,10 +218,7 @@ Then(
     async function (attribute: MemoryValue, collection: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const attributeName = await attribute.value();
-        for (let i = 0; i < await collection.count(); i++) {
-            const actualValue = () => collection.nth(i).getAttribute(attributeName);
-            await expect.poll(actualValue, expectedValue);
-        }
+        await pollEach(collection, element => element.getAttribute(attributeName), expect, expectedValue);
     }
 );
 
@@ -220,12 +234,7 @@ Then(
     async function (property: MemoryValue, collection: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const propertyName = await property.value();
-        for (let i = 0; i < await collection.count(); i++) {
-            const actualValue = () => collection.nth(i).evaluate(
-                (node: any, property: string) => node[property], propertyName
-            );
-            await expect.poll(actualValue, expectedValue);
-        }
+        await pollEach(collection, element => element.evaluate(propertyOf, propertyName), expect, expectedValue);
     }
 );
 
@@ -242,12 +251,7 @@ Then(
     async function (this: QavajsPlaywrightWorld, propertyGetter: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const script: () => any = await propertyGetter.value();
-        for (let i = 0; i < await locator.count(); i++) {
-            const propertyValue = () => locator.nth(i).evaluate(
-                script
-            );
-            await expect.poll(propertyValue, expectedValue);
-        }
+        await pollEach(locator, element => element.evaluate(script), expect, expectedValue);
     }
 );
 
@@ -265,10 +269,7 @@ Then(
     async function (property: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
         const propertyName = await property.value();
         const expectedValue = await expected.value();
-        const actualValue = () => locator.evaluate(
-            (node: Element, propertyName: string) => getComputedStyle(node).getPropertyValue(propertyName),
-            propertyName
-        );
+        const actualValue = () => locator.evaluate(cssPropertyOf, propertyName);
         await expect.poll(actualValue, expectedValue);
     }
 );

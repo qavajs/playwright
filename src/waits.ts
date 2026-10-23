@@ -7,6 +7,37 @@ import type { StateValidation, MemoryValue, Validation } from './types';
 /** timeout of single condition check */
 const timeout = 5_000;
 
+const textOf = (locator: Locator) => locator.innerText({ timeout });
+const valueOf = (locator: Locator) => locator.inputValue({ timeout });
+
+/**
+ * Repeat action until element matches state condition
+ */
+function untilState(world: QavajsPlaywrightWorld, action: () => Promise<unknown>, targetLocator: Locator, validation: StateValidation) {
+    return tryThen(
+        world.expect,
+        () => validation(targetLocator, { timeout }),
+        action
+    );
+}
+
+/**
+ * Repeat action until actual value of element matches expected value
+ */
+function untilValue(
+    world: QavajsPlaywrightWorld,
+    action: () => Promise<unknown>,
+    getActual: () => Promise<unknown>,
+    validation: Validation,
+    expected: MemoryValue
+) {
+    return tryThen(
+        world.expect,
+        async () => validation(await getActual(), await expected.value()),
+        action
+    );
+}
+
 /**
  * Explicit wait
  * @param {number} ms - milliseconds
@@ -27,11 +58,7 @@ When('I wait {int} ms', async function (ms: number) {
 When(
     'I click {locator} until {locator} {state}',
     async function (this: QavajsPlaywrightWorld, clickLocator: Locator, targetLocator: Locator, validation: StateValidation) {
-        await tryThen(
-            this.expect,
-            () => validation(targetLocator, { timeout }),
-            () => clickLocator.click()
-        );
+        await untilState(this, () => clickLocator.click(), targetLocator, validation);
     }
 );
 
@@ -46,11 +73,7 @@ When(
 When(
     'I click {locator} until text of {locator} {validation} {value}',
     async function (this: QavajsPlaywrightWorld, clickLocator: Locator, targetLocator: Locator, validation: Validation, expected: MemoryValue) {
-        await tryThen(
-            this.expect,
-            async () => validation(await targetLocator.innerText({ timeout }), await expected.value()),
-            () => clickLocator.click()
-        );
+        await untilValue(this, () => clickLocator.click(), () => textOf(targetLocator), validation, expected);
     }
 );
 
@@ -65,11 +88,7 @@ When(
 When(
     'I click {locator} until value of {locator} {validation} {value}',
     async function (this: QavajsPlaywrightWorld, clickLocator: Locator, targetLocator: Locator, validation: Validation, expected: MemoryValue) {
-        await tryThen(
-            this.expect,
-            async () => validation(await targetLocator.inputValue({ timeout }), await expected.value()),
-            () => clickLocator.click()
-        );
+        await untilValue(this, () => clickLocator.click(), () => valueOf(targetLocator), validation, expected);
     }
 );
 
@@ -82,11 +101,7 @@ When(
 When(
     'I refresh page until {locator} {state}',
     async function (this: QavajsPlaywrightWorld, targetLocator: Locator, validation: StateValidation) {
-        await tryThen(
-            this.expect,
-            () => validation(targetLocator, { timeout }),
-            () => this.page.reload()
-        );
+        await untilState(this, () => this.page.reload(), targetLocator, validation);
     }
 );
 
@@ -100,11 +115,7 @@ When(
 When(
     'I refresh page until text of {locator} {validation} {value}',
     async function (this: QavajsPlaywrightWorld, targetLocator: Locator, validation: Validation, expected: MemoryValue) {
-        await tryThen(
-            this.expect,
-            async () => validation(await targetLocator.innerText({ timeout }), await expected.value()),
-            () => this.page.reload()
-        );
+        await untilValue(this, () => this.page.reload(), () => textOf(targetLocator), validation, expected);
     }
 );
 
@@ -118,10 +129,6 @@ When(
 When(
     'I refresh page until value of {locator} {validation} {value}',
     async function (this: QavajsPlaywrightWorld, targetLocator: Locator, validation: Validation, expected: MemoryValue) {
-        await tryThen(
-            this.expect,
-            async () => validation(await targetLocator.inputValue({ timeout }), await expected.value()),
-            () => this.page.reload()
-        );
+        await untilValue(this, () => this.page.reload(), () => valueOf(targetLocator), validation, expected);
     }
 );

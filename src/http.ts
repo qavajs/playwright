@@ -9,9 +9,10 @@ import { MemoryValue } from './types';
  *
  * @example
  * When I create 'GET' request 'request'
+ * When I create '$method' request 'request'
  */
-When('I create {string} request {value}', function (method: string, key: MemoryValue) {
-    key.set({ method });
+When('I create {value} request {value}', async function (method: MemoryValue, key: MemoryValue) {
+    key.set({ method: await method.value() });
 });
 
 /**

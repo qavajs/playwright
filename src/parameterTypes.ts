@@ -97,5 +97,6 @@ defineParameterType({
 defineParameterType({
     name: 'gqlRequestProperty',
     regexp: /query|variables/,
-    transformer: s => s
+    transformer: s => s,
+    useForSnippets: false
 });

@@ -96,8 +96,7 @@ type ExpectOptions = {
     expected?: any,
     reverse: boolean,
     poll?: boolean,
-    soft?: boolean,
-    message?: string
+    soft?: boolean
 };
 
 type ValueMatchers = ReturnType<typeof expect<unknown>>;
@@ -106,11 +105,11 @@ type ValueMatchers = ReturnType<typeof expect<unknown>>;
  * Build expect clause. Poll and regular matchers share the same (custom) matchers at runtime,
  * so poll clause is narrowed to the regular matchers type
  */
-function expectValue({ actual, reverse, poll, soft, message }: ExpectOptions): ValueMatchers {
+function expectValue({ actual, reverse, poll, soft }: ExpectOptions): ValueMatchers {
     const softExpect = expect.configure({ soft });
     const expectClause = poll
-        ? softExpect.poll(actual, message) as unknown as ValueMatchers
-        : softExpect<unknown>(actual, message);
+        ? softExpect.poll(actual) as unknown as ValueMatchers
+        : softExpect<unknown>(actual);
     return reverse ? expectClause.not : expectClause;
 }
 
@@ -131,7 +130,7 @@ const belowFn = ({ expected, ...options }: ExpectOptions) => expectValue(options
 
 const expects: Record<string, (options: ExpectOptions) => any> = {
     [validations.EQUAL]:
-        ({ expected, ...options }) => expectValue({ ...options, message: 'expect.toEqual' }).toSimpleEqual(expected),
+        ({ expected, ...options }) => expectValue(options).toSimpleEqual(expected),
     [validations.STRICTLY_EQUAL]:
         ({ expected, ...options }) => expectValue(options).toStrictEqual(expected),
     [validations.DEEPLY_EQUAL]:

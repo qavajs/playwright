@@ -18,7 +18,9 @@ When('I create mock for {value} as {value}', async function (urlTemplate: Memory
 
 async function respondWith(this: QavajsPlaywrightWorld, mockKey: MemoryValue, statusCode: MemoryValue, body: string): Promise<void> {
     const mockUrl: string = await mockKey.value();
-    const responseStatusCode: number = parseInt(await statusCode.value());
+    const statusCodeValue = await statusCode.value();
+    const responseStatusCode: number = Number.parseInt(statusCodeValue, 10);
+    if (Number.isNaN(responseStatusCode)) throw new Error(`Status code '${statusCodeValue}' is not a number`);
     const fulfillBody = responseBody(await this.value(body));
     await this.context.route(mockUrl, async (route: Route) => {
         await route.fulfill({

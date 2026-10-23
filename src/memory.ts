@@ -1,5 +1,5 @@
 import { type DataTable, When } from '@qavajs/playwright-runner-adapter';
-import { dataTable2Object } from './utils';
+import { cssPropertyOf, dataTable2Object, propertyOf } from './utils';
 import type { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import type { Locator } from '@playwright/test';
 import type { MemoryValue } from './types';
@@ -37,7 +37,7 @@ When('I save value of {locator} as {value}', async function (locator: Locator, k
  */
 When('I save {value} property of {locator} as {value}', async function (property: MemoryValue, locator: Locator, key: MemoryValue) {
     const propertyName = await property.value();
-    const value = await locator.evaluate((node: any, propertyName: string) => node[propertyName], propertyName);
+    const value = await locator.evaluate(propertyOf, propertyName);
     key.set(value);
 });
 
@@ -210,10 +210,7 @@ When('I save screenshot of {locator} as {value}', async function(locator: Locato
  */
 When('I save {value} css property of {locator} as {value}', async function (property: MemoryValue, locator: Locator, key: MemoryValue) {
     const propertyName = await property.value();
-    const value = await locator.evaluate(
-        (node: Element, propertyName: string) => getComputedStyle(node).getPropertyValue(propertyName),
-        propertyName
-    );
+    const value = await locator.evaluate(cssPropertyOf, propertyName);
     key.set(value);
 });
 

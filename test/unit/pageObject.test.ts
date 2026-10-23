@@ -20,6 +20,14 @@ class AppWithResolver {
 }
 
 describe('query', () => {
+    test('throws clear error if page object is not defined', () => {
+        assert.throws(() => query(undefined, 'Button'), /Page object is not defined in config, so 'Button' can not be resolved/);
+    });
+
+    test('throws clear error on empty path element', () => {
+        assert.throws(() => query(App, 'List >  > Title'), /Path 'List >  > Title' contains empty element/);
+    });
+
     test('resolves simple element', () => {
         const [item] = query(App, 'Button');
         assert.equal(item.alias, 'Button');

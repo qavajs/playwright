@@ -84,6 +84,7 @@ When('I clear {locator}', async function (locator: Locator) {
  * @example I switch to 2 window
  */
 When('I switch to {int} window', async function (this: QavajsPlaywrightWorld, index: number) {
+    if (index < 1) throw new Error(`Window index should be 1 or greater, but got ${index}`);
     await this.expect.poll(
         () => this.context.pages().length,
         { message: `expect window ${index} to be present` }
@@ -370,9 +371,11 @@ When('I open new tab', async function (this: QavajsPlaywrightWorld) {
  * Then I close current tab
  */
 When('I close current tab', async function (this: QavajsPlaywrightWorld) {
-    await this.page.close()
-    this.page = this.context.pages()[0]
-    if (this.page) {
+    await this.page.close();
+    // keep closed page if no other pages are left, so next steps fail with clear playwright error
+    const [nextPage] = this.context.pages();
+    if (nextPage) {
+        this.page = nextPage;
         await this.page.bringToFront();
     }
 });

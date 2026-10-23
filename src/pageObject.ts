@@ -92,12 +92,14 @@ export class ChainItem {
 }
 
 export function query(root: any, path: string) {
+    if (!root) throw new Error(`Page object is not defined in config, so '${path}' can not be resolved`);
     const elements = path.split(/\s*>\s*/);
     const tokens = [];
     let currentComponent = typeof root === 'function' ? new root() : root;
     let currentAlias = 'page object root';
     for (const element of elements) {
-        const groups = element.match(/^(?<alias>.+?)(?:\((?<argument>.+)\))?$/)?.groups as { alias: string, argument: string };
+        const groups = element.match(/^(?<alias>.+?)(?:\((?<argument>.+)\))?$/)?.groups as { alias: string, argument: string } | undefined;
+        if (!groups) throw new Error(`Path '${path}' contains empty element`);
         const alias = groups.alias.replace(/\s/g, '');
         let currentElement = currentComponent[alias];
         if (!currentElement && (!currentComponent.defaultResolver || typeof currentComponent.defaultResolver !== 'function')) {

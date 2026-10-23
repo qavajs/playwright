@@ -23,6 +23,11 @@ describe('GraphQl', () => {
         assert.deepEqual(request.headers, { 'Content-Type': 'application/json' });
         assert.deepEqual(request.data, { query: 'query { user(id: $id) { name } }', variables: { id: 1 } });
     });
+
+    test('throws clear error on invalid variables json', () => {
+        const request = new GraphQl();
+        assert.throws(() => { request.variables = '{ id: 1 }'; }, /GraphQL variables are not valid json/);
+    });
 });
 
 describe('responseBody', () => {
