@@ -1,0 +1,33 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "node"
+  ],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "typescript/no-floating-promises": "error",
+    "typescript/await-thenable": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/ban-ts-comment": "warn",
+    "typescript/no-implied-eval": "off",
+    "typescript/restrict-template-expressions": "off"
+  },
+  "ignorePatterns": [
+    "lib/**",
+    "node_modules/**",
+    "test-e2e/report/**"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "test/**/*.ts"
+      ],
+      "rules": {
+        "typescript/no-floating-promises": "off"
+      }
+    }
+  ]
+}

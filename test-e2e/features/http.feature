@@ -2,7 +2,7 @@ Feature: http
 
   Scenario: GraphQL send
     Given I create GraphQL request 'request'
-    And I add 'https://rickandmortyapi.com/graphql' url to '$request'
+    And I add 'http://localhost:3000/graphql' url to '$request'
     And I add query to GraphQL '$request':
     """
     query {  characters(page: 2, filter: { name: "rick" }) {
@@ -13,10 +13,11 @@ Feature: http
     And I send '$request' request and save response as 'response'
     And I parse '$response' body as json
     Then I expect '$response.status()' to equal '200'
+    And I expect '$response.payload.data.characters.results[0].name' to equal 'Rick Sanchez'
 
   Scenario: Verify simple send
     Given I create 'GET' request 'request'
-    And I add 'https://jsonplaceholder.typicode.com/todos/1' url to '$request'
+    And I add 'http://localhost:3000/api/todos/1' url to '$request'
     And I send '$request' request and save response as 'response'
     And I parse '$response' body as json
     Then I expect '$response.status()' to equal '200'
@@ -28,7 +29,7 @@ Feature: http
 
   Scenario: Verify POST with valid request body as Cucumber Doc String
     Given I create 'POST' request 'request'
-    And I add 'https://jsonplaceholder.typicode.com/posts' url to '$request'
+    And I add 'http://localhost:3000/api/posts' url to '$request'
     And I add body to '$request':
     """
       {
@@ -42,3 +43,4 @@ Feature: http
     And I parse '$response' body as json
     Then I expect '$response.status()' to equal '201'
     Then I expect '$response.statusText()' to equal 'Created'
+    Then I expect '$response.payload.id' to equal '$js(101)'

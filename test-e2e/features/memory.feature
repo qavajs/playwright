@@ -34,6 +34,7 @@ Feature: memory
   Scenario: page title
     Then I save page title as 'memory'
     Then I expect '$memory' to be equal '@qavajs'
+    And I expect '$memory.length' to be equal '7'
 
   Scenario: collection text of elements
     Then I save text of every element of 'Simple Text List Items' collection as 'memory'

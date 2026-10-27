@@ -1,4 +1,5 @@
 import type { Browser, BrowserContext, Page, Locator } from '@playwright/test';
+import type { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
 type SelectorDefinition = string | ((argument: string) => string) | ((argument: any) => any) | null;
 
@@ -46,7 +47,7 @@ export interface LocatorDefinition {
     template: (selector: (argument: string) => string) => Selector;
 
     /**
-     * Define selector using native wdio API
+     * Define selector using native Playwright API
      * @param {(argument: string) => string} selector - selector function
      */
     native: (selector: (params: NativeSelectorParams) => Locator) => Selector;
@@ -91,12 +92,14 @@ export class ChainItem {
 }
 
 export function query(root: any, path: string) {
+    if (!root) throw new Error(`Page object is not defined in config, so '${path}' can not be resolved`);
     const elements = path.split(/\s*>\s*/);
     const tokens = [];
     let currentComponent = typeof root === 'function' ? new root() : root;
     let currentAlias = 'page object root';
     for (const element of elements) {
-        const groups = element.match(/^(?<alias>.+?)(?:\((?<argument>.+)\))?$/)?.groups as { alias: string, argument: string };
+        const groups = element.match(/^(?<alias>.+?)(?:\((?<argument>.+)\))?$/)?.groups as { alias: string, argument: string } | undefined;
+        if (!groups) throw new Error(`Path '${path}' contains empty element`);
         const alias = groups.alias.replace(/\s/g, '');
         let currentElement = currentComponent[alias];
         if (!currentElement && (!currentComponent.defaultResolver || typeof currentComponent.defaultResolver !== 'function')) {
@@ -121,21 +124,20 @@ export function query(root: any, path: string) {
     return tokens;
 }
 
-export function element(this: any, path: string): Locator {
+export function element(this: QavajsPlaywrightWorld, path: string): Locator {
     const chain = query(this.config.pageObject, path);
-    const page = this.page as Page;
-    let current = page as unknown as Locator;
+    let current = this.page as unknown as Locator;
     for (const item of chain) {
         switch (item.type) {
             case 'simple': current = item.selector ? current.locator(item.selector) : current; break;
             case 'template': current = current.locator(item.selector(item.argument)); break;
             case 'native': current = item.selector({
-                driver: this.driver,
+                driver: this.browser,
                 browser: this.browser,
                 context: this.context,
                 page: this.page,
                 parent: current,
-                argument: item.argument
+                argument: item.argument as string
             }); break;
         }
     }

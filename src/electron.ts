@@ -3,11 +3,10 @@ import { MemoryValue } from './types';
 import { QavajsPlaywrightElectronWorld } from './QavajsPlaywrightElectronWorld';
 
 /**
- * Execute client function on electron process and save result into memory
+ * Execute client function on electron process
  * @param {string} functionKey - memory key of function
- * @param {string} memoryKey - memory key to store result
- * @example I execute '$fn' function and save result as 'result' // fn is function reference
- * @example I execute '$js(async ({ app }) => app.getAppPath())' function and save result as 'scroll'
+ * @example I execute '$fn' function on electron app // fn is function reference
+ * @example I execute '$js(async ({ app }) => app.showAboutPanel())' script on electron app
  */
 When('I execute {value} function/script on electron app', async function (this: QavajsPlaywrightElectronWorld, fn: MemoryValue) {
     await this.electron.evaluate(await fn.value());
@@ -17,7 +16,7 @@ When('I execute {value} function/script on electron app', async function (this: 
  * Execute client function on electron process and save result into memory
  * @param {string} functionKey - memory key of function
  * @param {string} memoryKey - memory key to store result
- * @example I execute '$fn' function and save result as 'result' // fn is function reference
+ * @example I execute '$fn' function on electron app and save result as 'result' // fn is function reference
  * @example I execute '$js(async ({ app }) => app.getAppPath())' function on electron app and save result as 'result'
  */
 When('I execute {value} function/script on electron app and save result as {value}', async function (this: QavajsPlaywrightElectronWorld, fn: MemoryValue, memoryKey: MemoryValue) {

@@ -1,7 +1,7 @@
 import { defineParameterType } from '@qavajs/playwright-runner-adapter';
-import { valueExpect } from './validationExpect';
+import { valueExpect, validationRegexpSource } from './validationExpect';
 import { MemoryValue, type Validation } from './types';
-import { conditionExpect } from './conditionExpect';
+import { conditionExpect, conditionRegexpSource } from './conditionExpect';
 import { Locator } from '@playwright/test';
 
 function transformString(fn: (value: string) => any) {
@@ -13,7 +13,7 @@ function transformString(fn: (value: string) => any) {
 
 defineParameterType({
     name: 'validation',
-    regexp: /((?:is |do |does |to )?(not |to not )?(?:to )?(?:be )?(softly )?(equal|strictly equal|deeply equal|have member|match|contain|above|below|greater than|less than|have type|satisfy|case insensitive equal)(?:s|es)?)/,
+    regexp: new RegExp(`(${validationRegexpSource})`),
     transformer: condition => {
         const validation: Validation = function (AR: any, ER: any) {
             return valueExpect(AR, ER, condition);
@@ -51,7 +51,7 @@ defineParameterType({
 
 defineParameterType({
     name: 'state',
-    regexp: /((not )?to (?:be )?(softly )?(present|clickable|visible|invisible|enabled|disabled|in viewport))/,
+    regexp: new RegExp(`(${conditionRegexpSource})`),
     transformer: (state) => (locator: Locator, options?: { timeout: number }) => conditionExpect(locator, state, options),
     useForSnippets: false
 });
@@ -60,6 +60,13 @@ defineParameterType({
     name: 'mouseButton',
     regexp: /(left|right|middle)/,
     transformer: p => p,
+    useForSnippets: false
+});
+
+defineParameterType({
+    name: 'storageType',
+    regexp: /(local|session)/,
+    transformer: p => `${p}Storage`,
     useForSnippets: false
 });
 
@@ -90,5 +97,6 @@ defineParameterType({
 defineParameterType({
     name: 'gqlRequestProperty',
     regexp: /query|variables/,
-    transformer: s => s
+    transformer: s => s,
+    useForSnippets: false
 });

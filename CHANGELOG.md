@@ -10,6 +10,45 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [Unreleased]
+- :rocket: implemented `have members`, `include members` and `have property` validations
+- :rocket: steps work without `memory` in config (plain values and `$saved` memory values are resolved)
+- :beetle: fixed `have member(s)` validation throwing `TypeError` instead of validating
+- :beetle: fixed `clickable` state throwing `expect is not implemented`
+- :beetle: fixed `strictly equal` validation behaving as `deeply equal`
+- :beetle: fixed `I scroll until {locator} to be visible` and `I scroll in {locator} until {locator} to be visible` steps hanging forever when element never appears (now limited by expect timeout)
+- :beetle: fixed `I click/refresh ... until ...` steps not having an upper time limit (now 60 seconds)
+- :rocket: mock steps accept objects/arrays as response body (sent as json)
+- :rocket: mocks apply to all pages of browser context, including new tabs
+- :rocket: alert checked by `I expect text of alert` step stays open and can be handled by `I accept alert`, `I dismiss alert` or `I type {value} to alert` steps
+- :rocket: `I press {value} key(s)` steps resolve memory values
+- :beetle: fixed `I restore all mocks` relying on private Playwright API (now `unrouteAll`)
+- :beetle: fixed `I expect text of alert` step registering new dialog listener on every poll attempt
+- :beetle: fixed unhandled rejection when interception created by `I create interception for {value} as {value}` is never awaited
+- :beetle: fixed `driver` parameter of `locator.native` selectors being `undefined` (now browser instance)
+- :beetle: fixed `I save page title as {value}` saving Promise instead of title
+- :beetle: fixed `I save {value} custom property of every element of {locator} collection as {value}` not awaiting property getter
+- :x: added `exports` field: only `@qavajs/playwright`, `@qavajs/playwright/steps.js` and `@qavajs/playwright/lib/electron.js` can be imported, deep imports of other `lib/*` modules are not supported anymore
+- :pencil: published package contains only `lib`, `src`, `steps.js` and docs; `lib` is cleaned before each build
+- :rocket: storage steps serialize non-string values as json
+- :beetle: fixed storage steps accepting any word as storage type and failing with unclear error (now only `local` or `session`)
+- :pencil: e2e http tests use local test server instead of public APIs
+- :pencil: added unit tests for `GraphQl`, mock response body, `until` steps timeout and native selector params; e2e tests for soft validations
+- :beetle: fixed swapped actual/expected values in `to equal`, `to have type` and `to satisfy` error messages
+- :pencil: `{validation}` and `{state}` parameter types are generated from implemented validations
+- :pencil: README: added Electron setup and custom steps sections
+- :pencil: README: documented `I define {value} as {value} locator` step
+- :rocket: `I create {value} request {value}` step resolves http method from memory
+- :beetle: clear errors when `pageObject` is not defined in config, page object path contains empty element, mock status code is not a number or GraphQL variables are not valid json
+- :beetle: fixed `I switch to {int} window` accepting index lower than 1
+- :beetle: fixed `I close current tab` setting current page to `undefined` when last tab is closed
+- :beetle: removed misleading `expect.toEqual` message from `equal` validation errors
+- :pencil: deduplicated `until` and `every element` steps, typed http request options and electron launch options
+- :pencil: fixed 17 step `@example` docs that did not match their step; unit test verifies every example matches exactly one step
+- :pencil: replaced `ts-node` with `tsx`
+- :pencil: added unit tests, `oxlint` type-aware linting and `engines` field (node >= 22)
+- :pencil: CI: test on push to main, npm and browser caching, actions v7, Dependabot, npm provenance
+
 ## [4.2.1]
 - :beetle: fixed race condition in `I switch to {value} window` step where re-polling after match could switch to a different page
 - :beetle: fixed missing `this` context in `I expect text of alert {validation} {value}` step

@@ -3,12 +3,19 @@ Feature: waits
   Background:
     When I open '$waitsPage' url
 
-  Scenario Outline: wait for condition
+  Scenario Outline: wait for condition (<element> <condition>)
     Then I expect '<element>' <condition>
 
     Examples:
-      | element         | condition     |
-      | Present Element | to be present |
+      | element         | condition           |
+      | Present Element | to be present       |
+      | Enabled Button  | to be clickable     |
+      | Enabled Button  | to be softly visible |
+      | Hidden Element  | not to be softly visible |
+      | Disabled Button | not to be clickable |
+      | Hidden Element  | not to be clickable |
+      | Enabled Button  | to be enabled       |
+      | Disabled Button | to be disabled      |
 
   Scenario Outline: wait for text (<condition>)
     Then I expect text of 'Loading' <condition> '<expectation>'

@@ -1,8 +1,28 @@
 import { type DataTable, Then } from '@qavajs/playwright-runner-adapter';
-import type { Dialog, Locator } from '@playwright/test';
+import type { Locator } from '@playwright/test';
 import type { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
-import { dataTable2Array } from './utils';
+import { cssPropertyOf, dataTable2Array, propertyOf } from './utils';
 import type { MemoryValue, StateValidation, Validation } from './types';
+
+/**
+ * Poll validation of actual value of every element in collection
+ * @param collection - collection to verify
+ * @param getActual - getter of actual value of element
+ * @param validation - validation
+ * @param expectedValue - expected value
+ */
+async function pollEach(
+    collection: Locator,
+    getActual: (element: Locator) => Promise<unknown>,
+    validation: Validation,
+    expectedValue: unknown
+) {
+    const count = await collection.count();
+    for (let i = 0; i < count; i++) {
+        const element = collection.nth(i);
+        await validation.poll(() => getActual(element), expectedValue);
+    }
+}
 
 /**
  * Verify element condition
@@ -21,7 +41,7 @@ Then('I expect {locator} {state}', async function (locator: Locator, expect: Sta
  * @param {string} alias - element to get text
  * @param {string} validationType - validation
  * @param {string} value - expected result
- * @example I expect text of 'Search Results (1)' equals to 'google'
+ * @example I expect text of 'Search Results (1)' to equal 'google'
  * @example I expect text of 'Search Results (2)' does not contain 'yahoo'
  */
 Then(
@@ -63,7 +83,7 @@ Then(
     async function (property: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
         const propertyName = await property.value();
         const expectedValue = await expected.value();
-        const actualValue = () => locator.evaluate((node: any, propertyName: string) => node[propertyName], propertyName);
+        const actualValue = () => locator.evaluate(propertyOf, propertyName);
         await expect.poll(actualValue, expectedValue);
     }
 );
@@ -175,17 +195,14 @@ Then('I expect every element in {locator} collection {state}', async function (c
  * @param {string} alias - collection to get texts
  * @param {string} validationType - validation
  * @param {string} value - expected result
- * @example I expect text of every element in 'Search Results' collection equals to 'google'
+ * @example I expect text of every element in 'Search Results' collection to equal 'google'
  * @example I expect text of every element in 'Search Results' collection does not contain 'google'
  */
 Then(
     'I expect text of every element in {locator} collection {validation} {value}',
     async function (collection: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
-        for (let i = 0; i < await collection.count(); i++) {
-            const actualValue = () => collection.nth(i).innerText();
-            await expect.poll(actualValue, expectedValue);
-        }
+        await pollEach(collection, element => element.innerText(), expect, expectedValue);
     }
 );
 
@@ -201,10 +218,7 @@ Then(
     async function (attribute: MemoryValue, collection: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const attributeName = await attribute.value();
-        for (let i = 0; i < await collection.count(); i++) {
-            const actualValue = () => collection.nth(i).getAttribute(attributeName);
-            await expect.poll(actualValue, expectedValue);
-        }
+        await pollEach(collection, element => element.getAttribute(attributeName), expect, expectedValue);
     }
 );
 
@@ -220,12 +234,7 @@ Then(
     async function (property: MemoryValue, collection: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const propertyName = await property.value();
-        for (let i = 0; i < await collection.count(); i++) {
-            const actualValue = () => collection.nth(i).evaluate(
-                (node: any, property: string) => node[property], propertyName
-            );
-            await expect.poll(actualValue, expectedValue);
-        }
+        await pollEach(collection, element => element.evaluate(propertyOf, propertyName), expect, expectedValue);
     }
 );
 
@@ -242,12 +251,7 @@ Then(
     async function (this: QavajsPlaywrightWorld, propertyGetter: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const script: () => any = await propertyGetter.value();
-        for (let i = 0; i < await locator.count(); i++) {
-            const propertyValue = () => locator.nth(i).evaluate(
-                script
-            );
-            await expect.poll(propertyValue, expectedValue);
-        }
+        await pollEach(locator, element => element.evaluate(script), expect, expectedValue);
     }
 );
 
@@ -265,16 +269,14 @@ Then(
     async function (property: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
         const propertyName = await property.value();
         const expectedValue = await expected.value();
-        const actualValue = () => locator.evaluate(
-            (node: Element, propertyName: string) => getComputedStyle(node).getPropertyValue(propertyName),
-            propertyName
-        );
+        const actualValue = () => locator.evaluate(cssPropertyOf, propertyName);
         await expect.poll(actualValue, expectedValue);
     }
 );
 
 /**
  * Verify that text of an alert meets expectation
+ * Alert stays open, so it can be handled by `I accept alert`, `I dismiss alert` or `I type {value} to alert` steps
  * @param {string} validationType - validation
  * @param {string} value - expected text value
  * @example I expect text of alert does not contain 'coffee'
@@ -282,11 +284,9 @@ Then(
 Then(
     'I expect text of alert {validation} {value}',
     async function (this: QavajsPlaywrightWorld, expect: Validation, expected: MemoryValue) {
-        const actualValue = () => new Promise<string>(resolve => this.page.once('dialog', async (dialog: Dialog) => {
-            resolve(dialog.message());
-        }));
+        const dialog = await this.waitForDialog({ keepOpen: true });
         const expectedValue = await expected.value();
-        await expect.poll(actualValue, expectedValue);
+        expect(dialog.message(), expectedValue);
     }
 );
 
@@ -297,7 +297,7 @@ Then(
  * @param {string} value1 - first value
  * @param {string} validation - validation
  * @param {string} value2 - second value
- * @example I expect '$value' equals to '$anotherValue'
+ * @example I expect '$value' to equal '$anotherValue'
  * @example I expect '$value' does not contain '56'
  */
 Then(
@@ -324,7 +324,7 @@ Then(
             try {
                 expect(value, expectedValue);
                 failCounter.pass++;
-            } catch (err) {
+            } catch {
                 failCounter.fail++;
             }
         }
@@ -387,7 +387,7 @@ Then(
  */
 Then(
     'I expect {value} array {validation}:',
-    async function (arr: MemoryValue, expect: Validation, members: DataTable) {
+    async function (this: QavajsPlaywrightWorld, arr: MemoryValue, expect: Validation, members: DataTable) {
         const array = await arr.value();
         const membersArray = await Promise.all(
             members.raw().map(memberKey => this.value(memberKey.pop() as string))

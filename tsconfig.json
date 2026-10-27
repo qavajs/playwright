@@ -2,9 +2,6 @@
   "include": [
     "src/**/*.ts"
   ],
-  "exclude": [
-    "test/**/*.spec.ts"
-  ],
   "compilerOptions": {
     "rootDir": "./src",
     "target": "es2023",

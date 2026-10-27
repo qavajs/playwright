@@ -1,29 +1,7 @@
 import { DataTable, When } from '@qavajs/playwright-runner-adapter';
-import { dataTable2Object, sendHttpRequest } from './utils';
+import { dataTable2Object, GraphQl, sendHttpRequest } from './utils';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 import { MemoryValue } from './types';
-
-export class GraphQl {
-    method = 'POST';
-    headers = {'Content-Type': 'application/json'}
-    _query = '';
-    _variables = {};
-    data = {};
-
-    private updateBody() {
-        this.data = {query: this._query, variables: this._variables};
-    };
-
-    set query(query: string) {
-        this._query = query;
-        this.updateBody();
-    };
-
-    set variables(variables: string) {
-        this._variables = JSON.parse(variables);
-        this.updateBody();
-    };
-}
 
 /**
  * Create request template and save it to memory
@@ -31,9 +9,10 @@ export class GraphQl {
  *
  * @example
  * When I create 'GET' request 'request'
+ * When I create '$method' request 'request'
  */
-When('I create {string} request {value}', function (method: string, key: MemoryValue) {
-    key.set({ method });
+When('I create {value} request {value}', async function (method: MemoryValue, key: MemoryValue) {
+    key.set({ method: await method.value() });
 });
 
 /**
@@ -107,7 +86,7 @@ When('I add body to {value}:', async function (this: QavajsPlaywrightWorld, requ
  *         }
  *      }
  **/
-When('I add {gqlRequestProperty} to GraphQL {value}:', async function (property: string, requestKey: MemoryValue, valueString: string) {
+When('I add {gqlRequestProperty} to GraphQL {value}:', async function (this: QavajsPlaywrightWorld, property: string, requestKey: MemoryValue, valueString: string) {
     const request: any = await requestKey.value();
     request[property] = await this.value(valueString);
 });

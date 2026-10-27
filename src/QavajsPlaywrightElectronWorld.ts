@@ -5,10 +5,15 @@ type ElectronFixture = {
     browser: ElectronApplication
 }
 
+type ElectronLaunchOptions = Parameters<typeof _electron.launch>[0];
+
 const electron = test.extend<ElectronFixture>({
-    browser: async ({ }, use: (used: any) => Promise<void>, workerInfo: WorkerInfo) => {
-        const options = workerInfo.project.use.launchOptions;
-        const electron = await _electron.launch(options as any)
+    // `use` is any because built-in `browser` fixture is typed as Browser, but electron app is provided instead
+    // oxlint-disable-next-line no-empty-pattern -- Playwright fixtures require object destructuring
+    browser: async ({ }, use: (electron: any) => Promise<void>, workerInfo: WorkerInfo) => {
+        // electron launch options are provided via `use.launchOptions` of playwright project
+        const options = workerInfo.project.use.launchOptions as ElectronLaunchOptions;
+        const electron = await _electron.launch(options);
         await use(electron);
         await electron.close();
     },
@@ -23,9 +28,6 @@ const electron = test.extend<ElectronFixture>({
 export class QavajsPlaywrightElectronWorld extends QavajsPlaywrightWorld {
     test = electron;
     electron!: ElectronApplication;
-    constructor(options: any) {
-        super(options);
-    }
 
     init = ({ browser, context, page }: { browser: ElectronApplication, context: BrowserContext, page: Page } ) => {
         this.browser = browser as unknown as Browser;
