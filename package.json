@@ -45,20 +45,20 @@
   },
   "homepage": "https://github.com/qavajs/playwright#readme",
   "devDependencies": {
-    "@cucumber/cucumber-expressions": "^19.0.1",
+    "@cucumber/cucumber-expressions": "^20.1.0",
     "@qavajs/playwright-console-reporter": "^0.1.0",
     "@types/express": "^5.0.6",
-    "@types/node": "^26.6.5",
-    "electron": "^45.0.0",
+    "@types/node": "^26.6.6",
+    "electron": "^45.2.3",
     "express": "^5.3.0",
-    "oxlint": "^1.89.0",
-    "oxlint-tsgolint": "^7.0.2004",
+    "oxlint": "^1.92.0",
+    "oxlint-tsgolint": "^7.0.2006",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "@playwright/test": "^1.64.1",
+    "@playwright/test": "^1.65.0",
     "@qavajs/memory": "^1.11.0",
-    "@qavajs/playwright-runner-adapter": "^2.3.3"
+    "@qavajs/playwright-runner-adapter": "^2.4.0"
   }
 }

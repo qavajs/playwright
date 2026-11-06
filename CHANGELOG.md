@@ -10,7 +10,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
-## [Unreleased]
+## [4.3.0]
 - :rocket: implemented `have members`, `include members` and `have property` validations
 - :rocket: steps work without `memory` in config (plain values and `$saved` memory values are resolved)
 - :beetle: fixed `have member(s)` validation throwing `TypeError` instead of validating
