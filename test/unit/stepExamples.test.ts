@@ -52,6 +52,12 @@ describe('step definition examples', () => {
         assert.deepEqual(declared.sort(), parameterTypes.map(([name]) => name).sort());
     });
 
+    test('inline validation and state regexps are in sync with implemented validations', () => {
+        const code = readFileSync(join(srcDir, 'parameterTypes.ts'), 'utf-8');
+        assert.ok(code.includes(`regexp: /(${validationRegexpSource})/,`), 'validation regexp is out of sync with validationRegexpSource');
+        assert.ok(code.includes(`regexp: /(${conditionRegexpSource})/,`), 'state regexp is out of sync with conditionRegexpSource');
+    });
+
     for (const { file, text } of examples) {
         test(`${file}: ${text}`, () => {
             const matches = steps.filter(step => step.expression.match(text));

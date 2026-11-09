@@ -10,6 +10,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [4.3.1]
+- :beetle: restored inline regexps of `validation` and `state` parameter types to fix step recognition in VS Code extension
+- :pencil: updated `@qavajs/playwright-runner-adapter` to 2.5.0
+
 ## [4.3.0]
 - :rocket: implemented `have members`, `include members` and `have property` validations
 - :rocket: steps work without `memory` in config (plain values and `$saved` memory values are resolved)
