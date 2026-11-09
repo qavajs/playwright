@@ -1,3 +1,4 @@
+import { inspect } from 'node:util';
 import { PlaywrightWorld } from '@qavajs/playwright-runner-adapter';
 import type { Dialog } from '@playwright/test';
 import memory from '@qavajs/memory';
@@ -21,6 +22,8 @@ export class QavajsPlaywrightWorld extends PlaywrightWorld {
 
     constructor(options: QavajsWorldOptions) {
         super(options);
+        // print logs to stdout instead of attaching them to each step
+        this.log = (data: unknown) => console.log(typeof data === 'string' ? data : inspect(data));
         this.config = (options.config ?? {}) as QavajsConfig;
         if (this.config.memory) {
             memory.register(this.config.memory);

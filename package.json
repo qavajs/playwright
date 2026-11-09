@@ -59,6 +59,6 @@
   "dependencies": {
     "@playwright/test": "^1.65.0",
     "@qavajs/memory": "^1.11.0",
-    "@qavajs/playwright-runner-adapter": "^2.5.0"
+    "@qavajs/playwright-runner-adapter": "^2.6.0"
   }
 }
