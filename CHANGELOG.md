@@ -10,7 +10,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
-## [Unreleased]
+## [4.4.0]
 - :rocket: all validations are implemented as custom matchers with playwright native error messages (`toSimpleEqual`, `toDeepEqual`, `toStrictlyEqual`, `toHaveMembers`, `toIncludeMembers`, `toHavePropertyPath`, `toMatchRegExp`, `toInclude`, `toBeAbove`, `toBeBelow`, `toHaveType`, `toSatisfy`, `toCaseInsensitiveEqual`, `toBeClickable`)
 - :rocket: polled validations produce a single report step (instead of step per attempt) and print locator, timeout and call log in error message
 - :rocket: `Validation.poll` accepts optional `{ locator, property, timeout }` options; getter receives `{ timeout }` of the attempt
