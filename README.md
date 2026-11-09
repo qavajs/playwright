@@ -38,6 +38,31 @@ export default defineConfig({
 });
 ```
 
+### Logging
+
+Steps log resolved memory values (`$url -> https://...`, `$key <- value`) and resolved locators (`Form > Button -> locator(...)`).
+Use `logger` option to control where logs are written and which values are masked:
+
+```typescript
+export default defineConfig({
+    // ...
+    logger: {
+        output: 'step', // 'console' (default) | 'step' | 'off'
+        mask: /password|token|ssn/i // keys whose values are masked, false disables masking
+    }
+});
+```
+
+- `console` - logs are printed to stdout (prefixed with worker index when tests run in parallel)
+- `step` - logs of a step are attached to that step in the report as a single `log` attachment
+- `off` - logs are not written
+
+Values of memory keys, object properties, query parameters and headers matching `mask` pattern are replaced with `***`.
+Masked values are remembered and masked wherever they appear later (e.g. interpolated into a url).
+Default pattern (`defaultSecretPattern`) covers password, secret, token, api key, authorization, credential, private key and cookie.
+Extend it as `new RegExp(defaultSecretPattern.source + '|ssn', 'i')`.
+Keep secrets in memory rather than in step text: step titles and Playwright action titles are not masked.
+
 ## Page Object
 
 Define your page object using `locator` helpers exported from this package:

@@ -3,3 +3,4 @@ export * from './pageObject';
 export * from './QavajsPlaywrightWorld';
 export * from './QavajsPlaywrightElectronWorld';
 export type * from './types';
+export { defaultSecretPattern, type LoggerConfig, type LoggerOutput } from './logger';

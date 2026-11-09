@@ -41,13 +41,7 @@ const expects: Record<string, (locator: Locator, reverse: boolean, soft: boolean
         reverse: boolean,
         soft: boolean,
         options?: { timeout: number }
-    ) => {
-        const pollClause = expect.configure({ soft }).poll(
-            async () => await locator.isVisible() && await locator.isEnabled(),
-            { message: `${locator} to be clickable`, ...options }
-        );
-        return reverse ? pollClause.not.toBe(true) : pollClause.toBe(true);
-    },
+    ) => expectLocator(locator, reverse, soft).toBeClickable(options),
     [conditionValidations.VISIBLE]: (
         locator: Locator,
         reverse: boolean,
