@@ -1,7 +1,7 @@
 import { defineParameterType } from '@qavajs/playwright-runner-adapter';
-import { valueExpect, validationRegexpSource } from './validationExpect';
+import { valueExpect } from './validationExpect';
 import { MemoryValue, type Validation } from './types';
-import { conditionExpect, conditionRegexpSource } from './conditionExpect';
+import { conditionExpect } from './conditionExpect';
 import { Locator } from '@playwright/test';
 
 function transformString(fn: (value: string) => any) {
@@ -13,7 +13,8 @@ function transformString(fn: (value: string) => any) {
 
 defineParameterType({
     name: 'validation',
-    regexp: new RegExp(`(${validationRegexpSource})`),
+    // keep inline: IDE extensions read parameter type regexps statically (must match validationRegexpSource)
+    regexp: /((?:is |do |does |to )?(?:not |to not )?(?:to )?(?:be )?(?:softly )?(?:equal|deeply equal|strictly equal|have member|include member|have property|match|contain|above|below|greater than|less than|have type|satisfy|case insensitive equal)(?:s|es)?)/,
     transformer: condition => {
         const validation: Validation = function (AR: any, ER: any) {
             return valueExpect(AR, ER, condition);
@@ -51,7 +52,8 @@ defineParameterType({
 
 defineParameterType({
     name: 'state',
-    regexp: new RegExp(`(${conditionRegexpSource})`),
+    // keep inline: IDE extensions read parameter type regexps statically (must match conditionRegexpSource)
+    regexp: /((?:not )?to (?:be )?(?:softly )?(?:present|clickable|visible|invisible|in viewport|enabled|disabled))/,
     transformer: (state) => (locator: Locator, options?: { timeout: number }) => conditionExpect(locator, state, options),
     useForSnippets: false
 });
