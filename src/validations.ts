@@ -13,14 +13,15 @@ import type { MemoryValue, StateValidation, Validation } from './types';
  */
 async function pollEach(
     collection: Locator,
-    getActual: (element: Locator) => Promise<unknown>,
+    getActual: (element: Locator, options: { timeout: number }) => Promise<unknown>,
     validation: Validation,
-    expectedValue: unknown
+    expectedValue: unknown,
+    property: string
 ) {
     const count = await collection.count();
     for (let i = 0; i < count; i++) {
         const element = collection.nth(i);
-        await validation.poll(() => getActual(element), expectedValue);
+        await validation.poll(options => getActual(element, options), expectedValue, { locator: element, property });
     }
 }
 
@@ -48,8 +49,8 @@ Then(
     'I expect text of {locator} {validation} {value}',
     async function (this: QavajsPlaywrightWorld, locator: Locator, valueExpect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
-        const actualValue = () => locator.innerText();
-        await valueExpect.poll(actualValue, expectedValue);
+        const actualValue = (options: { timeout: number }) => locator.innerText(options);
+        await valueExpect.poll(actualValue, expectedValue, { locator, property: 'text' });
     }
 );
 
@@ -64,8 +65,8 @@ Then(
     'I expect value of {locator} {validation} {value}',
     async function (locator: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
-        const actualValue = () => locator.inputValue();
-        await expect.poll(actualValue, expectedValue);
+        const actualValue = (options: { timeout: number }) => locator.inputValue(options);
+        await expect.poll(actualValue, expectedValue, { locator, property: 'value' });
     }
 );
 
@@ -83,8 +84,8 @@ Then(
     async function (property: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
         const propertyName = await property.value();
         const expectedValue = await expected.value();
-        const actualValue = () => locator.evaluate(propertyOf, propertyName);
-        await expect.poll(actualValue, expectedValue);
+        const actualValue = (options: { timeout: number }) => locator.evaluate(propertyOf, propertyName, options);
+        await expect.poll(actualValue, expectedValue, { locator, property: `'${propertyName}' property` });
     }
 );
 
@@ -101,8 +102,8 @@ Then(
     async function (attribute: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
         const attributeName = await attribute.value();
         const expectedValue = await expected.value();
-        const actualValue = () => locator.getAttribute(attributeName);
-        await expect.poll(actualValue, expectedValue);
+        const actualValue = (options: { timeout: number }) => locator.getAttribute(attributeName, options);
+        await expect.poll(actualValue, expectedValue, { locator, property: `'${attributeName}' attribute` });
     }
 );
 
@@ -120,9 +121,8 @@ Then(
     async function (this: QavajsPlaywrightWorld, propertyGetter: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
         const script: () => any = await propertyGetter.value();
         const expectedValue = await expected.value();
-        const actualValue =
-            () => locator.evaluate(script);
-        await expect.poll(actualValue, expectedValue);
+        const actualValue = (options: { timeout: number }) => locator.evaluate(script, undefined, options);
+        await expect.poll(actualValue, expectedValue, { locator, property: `'${propertyGetter.expression}' custom property` });
     }
 );
 
@@ -138,7 +138,7 @@ Then(
     async function (this: QavajsPlaywrightWorld, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const actualValue = () => this.page.url();
-        await expect.poll(actualValue, expectedValue);
+        await expect.poll(actualValue, expectedValue, { property: 'current url' });
     }
 );
 
@@ -156,7 +156,7 @@ Then(
     async function (locator: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const actualValue = () => locator.count();
-        await expect.poll(actualValue, expectedValue);
+        await expect.poll(actualValue, expectedValue, { locator, property: 'number of elements' });
     }
 );
 
@@ -171,8 +171,7 @@ Then(
     async function (this: QavajsPlaywrightWorld, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const actualValue = () => this.page.title();
-        await expect.poll(actualValue, expectedValue);
-
+        await expect.poll(actualValue, expectedValue, { property: 'page title' });
     }
 );
 
@@ -202,7 +201,7 @@ Then(
     'I expect text of every element in {locator} collection {validation} {value}',
     async function (collection: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
-        await pollEach(collection, element => element.innerText(), expect, expectedValue);
+        await pollEach(collection, (element, options) => element.innerText(options), expect, expectedValue, 'text');
     }
 );
 
@@ -218,7 +217,7 @@ Then(
     async function (attribute: MemoryValue, collection: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const attributeName = await attribute.value();
-        await pollEach(collection, element => element.getAttribute(attributeName), expect, expectedValue);
+        await pollEach(collection, (element, options) => element.getAttribute(attributeName, options), expect, expectedValue, `'${attributeName}' attribute`);
     }
 );
 
@@ -234,7 +233,7 @@ Then(
     async function (property: MemoryValue, collection: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const propertyName = await property.value();
-        await pollEach(collection, element => element.evaluate(propertyOf, propertyName), expect, expectedValue);
+        await pollEach(collection, (element, options) => element.evaluate(propertyOf, propertyName, options), expect, expectedValue, `'${propertyName}' property`);
     }
 );
 
@@ -251,7 +250,7 @@ Then(
     async function (this: QavajsPlaywrightWorld, propertyGetter: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
         const expectedValue = await expected.value();
         const script: () => any = await propertyGetter.value();
-        await pollEach(locator, element => element.evaluate(script), expect, expectedValue);
+        await pollEach(locator, (element, options) => element.evaluate(script, undefined, options), expect, expectedValue, `'${propertyGetter.expression}' custom property`);
     }
 );
 
@@ -269,8 +268,8 @@ Then(
     async function (property: MemoryValue, locator: Locator, expect: Validation, expected: MemoryValue) {
         const propertyName = await property.value();
         const expectedValue = await expected.value();
-        const actualValue = () => locator.evaluate(cssPropertyOf, propertyName);
-        await expect.poll(actualValue, expectedValue);
+        const actualValue = (options: { timeout: number }) => locator.evaluate(cssPropertyOf, propertyName, options);
+        await expect.poll(actualValue, expectedValue, { locator, property: `'${propertyName}' css property` });
     }
 );
 

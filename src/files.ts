@@ -1,4 +1,4 @@
-import { accessSync, constants, readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { When } from '@qavajs/playwright-runner-adapter';
 import { MemoryValue } from './types';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
@@ -58,13 +58,13 @@ When('I expect {value} text file content {validation} {value}', async function (
 When('I expect file matching {value} regexp exists in {value}', async function (this: QavajsPlaywrightWorld, file: MemoryValue, dir: MemoryValue) {
     const fileNameRegexp = new RegExp(await file.value());
     const dirName = await dir.value();
-    await this.expect.poll(() => {
-        const fileList = readdirSync(dirName);
-        return fileList.find(f => fileNameRegexp.test(f));
-    }, {
-        message: `File matching '${fileNameRegexp}' does not exist`,
+    // multiline flag, so ^ and $ anchors apply to each file name of the list
+    const multilineRegexp = new RegExp(fileNameRegexp.source, fileNameRegexp.flags.replace('m', '') + 'm');
+    await this.expect(() => readdirSync(dirName).join('\n')).toMatchRegExp(multilineRegexp, {
+        poll: true,
+        property: `files in '${dirName}'`,
         intervals: [ 1000 ]
-    }).toBeTruthy();
+    });
 });
 
 /**
@@ -76,15 +76,9 @@ When('I expect file matching {value} regexp exists in {value}', async function (
  */
 When('I expect {value} file exists', async function (this: QavajsPlaywrightWorld, file: MemoryValue) {
     const fileName = await file.value();
-    await this.expect.poll(() => {
-        try {
-            accessSync(fileName, constants.F_OK);
-            return true
-        } catch {
-            return false
-        }
-    }, {
-        message: `File '${fileName}' does not exist`,
+    await this.expect(() => existsSync(fileName) ? 'exists' : 'does not exist').toSimpleEqual('exists', {
+        poll: true,
+        property: `file '${fileName}'`,
         intervals: [ 1000 ]
-    }).toBeTruthy();
+    });
 });

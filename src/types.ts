@@ -1,4 +1,5 @@
 import { Locator } from '@playwright/test';
+import type { Getter, PollOptions } from './validationExpect';
 import { QavajsPlaywrightWorld } from './QavajsPlaywrightWorld';
 
 export class MemoryValue {
@@ -24,7 +25,13 @@ export class MemoryValue {
 export interface Validation {
     (AR: any, ER: any): void;
     type: string;
-    poll: (AR: any, ER: any) => Promise<void>
+    /**
+     * Poll actual value until it satisfies validation
+     * @param AR - getter of actual value
+     * @param ER - expected value
+     * @param options - locator and description of polled value (printed in error message), timeout
+     */
+    poll: (AR: Getter, ER: any, options?: Omit<PollOptions, 'poll'>) => Promise<void>
 }
 
 export type StateValidation = (locator: Locator, options?: { timeout: number }) => Promise<void>;

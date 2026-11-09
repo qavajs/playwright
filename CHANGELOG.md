@@ -10,6 +10,13 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [Unreleased]
+- :rocket: all validations are implemented as custom matchers with playwright native error messages (`toSimpleEqual`, `toDeepEqual`, `toStrictlyEqual`, `toHaveMembers`, `toIncludeMembers`, `toHavePropertyPath`, `toMatchRegExp`, `toInclude`, `toBeAbove`, `toBeBelow`, `toHaveType`, `toSatisfy`, `toCaseInsensitiveEqual`, `toBeClickable`)
+- :rocket: polled validations produce a single report step (instead of step per attempt) and print locator, timeout and call log in error message
+- :rocket: `Validation.poll` accepts optional `{ locator, property, timeout }` options; getter receives `{ timeout }` of the attempt
+- :rocket: window switching, file existence and scroll until visible waits use the same matchers (single report step, actual state in error message)
+- :pencil: step logs are printed to console instead of attaching them to steps
+
 ## [4.3.1]
 - :beetle: restored inline regexps of `validation` and `state` parameter types to fix step recognition in VS Code extension
 - :pencil: updated `@qavajs/playwright-runner-adapter` to 2.5.0

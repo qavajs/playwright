@@ -20,8 +20,8 @@ defineParameterType({
             return valueExpect(AR, ER, condition);
         }
         validation.type = condition;
-        validation.poll = function (AR: any, ER: any) {
-            return valueExpect(AR, ER, condition, { poll: true });
+        validation.poll = function (AR, ER, options) {
+            return valueExpect(AR, ER, condition, { ...options, poll: true });
         }
         return validation;
     },

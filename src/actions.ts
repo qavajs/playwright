@@ -85,10 +85,10 @@ When('I clear {locator}', async function (locator: Locator) {
  */
 When('I switch to {int} window', async function (this: QavajsPlaywrightWorld, index: number) {
     if (index < 1) throw new Error(`Window index should be 1 or greater, but got ${index}`);
-    await this.expect.poll(
-        () => this.context.pages().length,
-        { message: `expect window ${index} to be present` }
-    ).toBeGreaterThanOrEqual(index);
+    await this.expect(() => this.context.pages().length).toBeAbove(index - 1, {
+        poll: true,
+        property: 'number of windows'
+    });
     this.page = this.context.pages()[index - 1];
     await this.page.bringToFront();
 });
@@ -101,21 +101,24 @@ When('I switch to {int} window', async function (this: QavajsPlaywrightWorld, in
 When('I switch to {value} window', async function (this: QavajsPlaywrightWorld, matcher: MemoryValue) {
     const urlOrTitle = await matcher.value();
     let foundPage: Page | undefined;
-    const poll = async () => {
+    // urls and titles of all windows, so error message shows what windows are open
+    const windows = async () => {
         const pages = this.context.pages();
+        const descriptions: string[] = [];
         for (const currentPage of pages) {
-            if (currentPage.url().includes(urlOrTitle) || (await currentPage.title()).includes(urlOrTitle)) {
+            const url = currentPage.url();
+            const title = await currentPage.title();
+            if (!foundPage && (url.includes(urlOrTitle) || title.includes(urlOrTitle))) {
                 foundPage = currentPage;
-                return currentPage;
             }
+            descriptions.push(`${title} (${url})`);
         }
+        return descriptions.join('\n');
     };
-    await this.expect.poll(
-        poll,
-        {
-            message: `expect '${urlOrTitle}' window to be present`
-        }
-    ).toBeDefined();
+    await this.expect(windows).toInclude(urlOrTitle, {
+        poll: true,
+        property: 'windows (title and url)'
+    });
     this.page = foundPage as Page;
     await this.page.bringToFront();
 });
@@ -234,14 +237,16 @@ When('I scroll by {value} in {locator}', async function (this: QavajsPlaywrightW
  * Scroll by mouse wheel until target element becomes visible (limited by expect timeout)
  */
 async function scrollUntilVisible(world: QavajsPlaywrightWorld, targetLocator: Locator) {
-    await world.expect.poll(async () => {
+    await world.expect(async () => {
         const isVisible = await targetLocator.isVisible();
         if (!isVisible) await world.page.mouse.wheel(0, 100);
-        return isVisible;
-    }, {
-        message: `${targetLocator} is not visible after scrolling`,
+        return isVisible ? 'visible' : 'hidden';
+    }).toSimpleEqual('visible', {
+        poll: true,
+        locator: targetLocator,
+        property: 'visibility after scrolling',
         intervals: [ 50 ]
-    }).toBe(true);
+    });
 }
 
 /**
