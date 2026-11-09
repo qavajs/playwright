@@ -9,5 +9,6 @@ export default defineConfig({
         'test-e2e/step_definitions/*.ts'
     ],
     memory: new Memory(),
-    pageObject: new App()
+    pageObject: new App(),
+    logger: { output: 'step' }
 });

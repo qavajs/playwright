@@ -16,6 +16,8 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 - :rocket: `Validation.poll` accepts optional `{ locator, property, timeout }` options; getter receives `{ timeout }` of the attempt
 - :rocket: window switching, file existence and scroll until visible waits use the same matchers (single report step, actual state in error message)
 - :pencil: step logs are printed to console instead of attaching them to steps
+- :rocket: `logger.output` config option: `console` (default), `step` (single `log` attachment per step) or `off`
+- :rocket: sensitive values (passwords, tokens, api keys, etc.) are masked in logs; pattern is configurable via `logger.mask`
 
 ## [4.3.1]
 - :beetle: restored inline regexps of `validation` and `state` parameter types to fix step recognition in VS Code extension
