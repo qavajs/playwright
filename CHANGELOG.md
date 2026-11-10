@@ -10,6 +10,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [4.4.1]
+- :pencil: updated `@qavajs/playwright-runner-adapter` to 2.6.1
+
 ## [4.4.0]
 - :rocket: all validations are implemented as custom matchers with playwright native error messages (`toSimpleEqual`, `toDeepEqual`, `toStrictlyEqual`, `toHaveMembers`, `toIncludeMembers`, `toHavePropertyPath`, `toMatchRegExp`, `toInclude`, `toBeAbove`, `toBeBelow`, `toHaveType`, `toSatisfy`, `toCaseInsensitiveEqual`, `toBeClickable`)
 - :rocket: polled validations produce a single report step (instead of step per attempt) and print locator, timeout and call log in error message
