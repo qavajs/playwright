@@ -10,6 +10,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 :pencil: - chore  
 :microscope: - experimental
 
+## [4.5.0]
+- :pencil: updated `@qavajs/playwright-runner-adapter` to 3.0.0
+- :pencil: updated `@playwright/test` to 1.65.1
+- :pencil: updated dev dependencies
+
 ## [4.4.1]
 - :pencil: updated `@qavajs/playwright-runner-adapter` to 2.6.1
 

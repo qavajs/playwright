@@ -1,6 +1,6 @@
 {
   "name": "@qavajs/playwright",
-  "version": "4.4.1",
+  "version": "4.5.0",
   "description": "steps to interact with playwright",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -45,20 +45,20 @@
   },
   "homepage": "https://github.com/qavajs/playwright#readme",
   "devDependencies": {
-    "@cucumber/cucumber-expressions": "^20.1.0",
+    "@cucumber/cucumber-expressions": "^20.2.0",
     "@qavajs/playwright-console-reporter": "^0.1.0",
     "@types/express": "^5.0.6",
     "@types/node": "^26.6.6",
-    "electron": "^45.2.3",
+    "electron": "^45.4.1",
     "express": "^5.3.0",
-    "oxlint": "^1.92.0",
-    "oxlint-tsgolint": "^7.0.2006",
+    "oxlint": "^1.94.0",
+    "oxlint-tsgolint": "^7.0.2007",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "@playwright/test": "^1.65.0",
+    "@playwright/test": "^1.65.1",
     "@qavajs/memory": "^1.11.0",
-    "@qavajs/playwright-runner-adapter": "^2.6.1"
+    "@qavajs/playwright-runner-adapter": "^3.0.0"
   }
 }
